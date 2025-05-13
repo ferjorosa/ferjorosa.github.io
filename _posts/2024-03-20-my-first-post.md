@@ -3,6 +3,8 @@ layout: post
 title: "My First Post"
 date: 2024-03-20
 categories: blog
+description: "This is my first blog post, where I introduce myself and share my first thoughts."
+tags: [Research]
 ---
 
 This is my first blog post! Here you can write your content using Markdown.
