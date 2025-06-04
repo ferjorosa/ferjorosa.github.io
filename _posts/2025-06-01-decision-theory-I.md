@@ -10,6 +10,10 @@ tags: [Research, Decision Theory, Decision Analysis]
 > This is the first of a series of posts where we explore **decision theory**:
 > 1. **Introduction to Decision Theory**
 
+> **TODO**
+> Seguir con el ejemplo con Arboles de decision, luego comentar sus problemas / limitaciones y comentar que existe una alternativa, que son los diagramas de influencia, los cuales los comentaremos en el siguiente post.
+
+
 ## The Challenge of Decision-Making
 
 Imagine you are the CEO of an oil company and you are offered the opportunity to purchase a new oil field. Like any diligent executive, you gather your team to examine satellite images, geological surveys, and consult the team's experience with similar fields in the region.
