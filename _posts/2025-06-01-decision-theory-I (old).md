@@ -12,20 +12,17 @@ tags: [Research, Decision Theory, Decision Analysis]
 
 ## The Challenge of Decision-Making
 
-Imagine you are the CEO of an oil company and you are offered the opportunity to purchase a new oil field. Like any diligent executive, you gather your team to examine satellite images, geological surveys, and consult the team's experience with similar fields in the region.
+Imagine you're the CEO of an oil company, and you're considering whether to buy a new field. The problem? You don't know how much oil is really there.
 
-This research helps form your initial assessment of the field's potential. However, the reality is that until you actually start drilling, there's no way to know for sure how much oil is down there. This leaves you with a classic dilemma:
-
-* Play it safe and walk away.
-* Make a calculated bet based on the evidence you've gathered.
+Before signing any contract, you gather the information you can: high-resolution satellite images, geological surveys from third parties, and your team's prior experiences with similar fields. Each piece of evidence nudges your belief—your prior—about which quality grade you'll actually find. But no amount of remote sensing can guarantee what you'll hit when you start drilling. Should you play it safe and walk away? Or place your bet and hope the data don't betray you?
 
 <center>
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/oil_field_image.jpg" alt="Oil field image" width="400">
     </td>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/oil_field_heatmap.jpg" alt="Oil field heatmap" width="400">
     </td>
   </tr>
@@ -37,70 +34,103 @@ This research helps form your initial assessment of the field's potential. Howev
 </table>
 </center>
 
-This tension between what you know, what you don't know, and what you truly value is at the heart of every important decision. How do you weigh the potential upside against the risk of a bad draw? How much should your assessment count in the final call? 
+This tension between what you know, what you don't know, and what you value is at the heart of every important decision. How do you weigh the potential upside against the risk of a bad draw? How much should your imperfect information—your priors—count in the final call? 
 
-<u><a href="https://en.wikipedia.org/wiki/Decision_theory"><strong>Decision theory</strong></a></u> offers a framework to answer exactly these questions. It's about systematically looking at the likelihood of different scenarios and weighing them against how much you value each potential result. By doing this, it guides you toward the action that's most likely to give you the best overall outcome.
+Decision theory offers a language and a framework to answer exactly these questions: by systematically combining probabilities (your beliefs) with utilities (your preferences over outcomes), it tells you which action maximizes your expected benefit.
 
-Let's return to the oil field example. Suppose you've sized up the field and think it could fall into one of three quality levels:
-* **High**, promising oil reserves.
-* **Medium**, meaning a decent output but nothing groundbreaking.
-* **Low**, where you'd barely break even or could even end up losing money.
+Let's return to the oil field example. Suppose you classify the field into three possible quality levels:
 
-The dilemma, then, becomes quite clear. If you decide to buy and the field turns out to be high-quality, you've struck gold. If you buy and it's low-quality, you'll lose your investment. But if you choose not to buy, you avoid any potential loss, though you might also miss out on a good opportunity.
+* High: Massive reserves, huge profits.
+
+* Medium: Decent output, but not groundbreaking.
+
+* Low: Barely enough to break even (or worse, a loss).
+
+The dilemma is clear:
+
+* If you buy and the field is high-quality, you win big.
+
+* If you buy and it's low-quality, you lose money.
+
+* If you don't buy, you avoid risk—but might miss out on a golden opportunity.
 
 ## The Anatomy of a Decision Problem
 
-At its core, any decision problem can be broken down into a few fundamental components: the actions we can take, the uncertain conditions that might influence the outcome (often referred to as states of nature), the probabilities we assign to these conditions based on our best estimates, and the potential outcomes for each action under each condition.
+To make decisions more systematically, we first need to break them down into parts. Decision theory gives us a clear structure for doing this. Any decision problem, no matter how complex, can be described using a few key components:
 
-So, let's use the Decision theory framework for our oil field case.
+* Actions – the choices available to the decision-maker
 
-### Structuring the Oil field Decision Problem
+* States of nature – the uncertain factors that affect the outcome
 
-First, what are the <span style="color:red; font-weight:bold;">possible actions</span>? The company faces a straightforward choice: either <span style="color:red;">buy the oil field</span>, investing capital now with the hope of future profits, or <span style="color:red;">do not buy</span>, which means avoiding the risk but also potentially missing out on gains.
+* Probabilities – the decision-maker's beliefs about how likely each state is
 
-Next, we consider the <span style="color:purple; font-weight:bold;">states of nature</span> – the things we can't control. In this case, it's the true quality of the oil field. We've simplified this into three possibilities: the field could be <span style="color:purple;">high</span> quality, <span style="color:purple;">medium</span> quality, or <span style="color:purple;">low</span> quality.
+* Outcomes – the result of taking an action in a particular state
 
-Then, we need to assign <span style="color:purple; font-weight:bold;">probabilities</span> to these states. The company doesn't know the field's true quality for sure, but based on all the geological data and expert opinions, they've estimated the chances: a <span style="color:purple;">35%</span> chance of it being high quality, a <span style="color:purple;">45%</span> chance for medium quality, and a <span style="color:purple;">20%</span> chance for low quality.
+## Structuring the Oil field Decision Problem
 
-Finally, let's look at the <span style="color:blue; font-weight:bold;">outcomes</span>, specifically the financial implications (in millions of dollars) for each scenario. These are summarized in the table below:
+Now that we've outlined the problem, let's break it down using decision theory.
+
+### A. Possible actions
+
+The company has two primary options:
+
+* Buy the oil field – Invest capital now for potential future profits.
+
+* Do not buy – Avoid risk, but potentially miss out on gains.
+
+### B. States of nature
+
+The true quality of the field, which we classify into three groups: high, medium, or low.
+
+### C. Probabilities
+
+The company doesn't know the field's true quality. However, it can estimate probabilities based on available data:
+
+* High quality (35% chance).
+
+* Medium quality (45% chance).
+
+* Low quality (20% chance).
+
+### D. Outcomes (in $M)
 
 <center>
 <table align="center">
   <tr>
-    <th style="color:red;">Action</th>
-    <th style="color:purple;">Field Quality</th>
-    <th style="color:blue;">Outcome ($M)</th>
+    <th>Action</th>
+    <th>Field Quality</th>
+    <th>Outcome</th>
   </tr>
   <tr>
-    <td style="color:red;">Buy</td>
-    <td style="color:purple;">High</td>
-    <td style="color:blue;">+$1,250M</td>
+    <td>Buy</td>
+    <td>High</td>
+    <td>+$1,250</td>
   </tr>
   <tr>
-    <td style="color:red;">Buy</td>
-    <td style="color:purple;">Medium</td>
-    <td style="color:blue;">+$630M</td>
+    <td>Buy</td>
+    <td>Medium</td>
+    <td>+$630</td>
   </tr>
   <tr>
-    <td style="color:red;">Buy</td>
-    <td style="color:purple;">Low</td>
-    <td style="color:blue;">+$0M</td>
+    <td>Buy</td>
+    <td>Low</td>
+    <td>$0</td>
   </tr>
   <tr>
-    <td style="color:red;">Do not buy</td>
-    <td style="color:purple;">Any</td>
-    <td style="color:blue;">+$350M</td>
+    <td>Do not buy</td>
+    <td>Any</td>
+    <td>+$350</td>
   </tr>
 </table>
 </center>
 
-> ***Why is there a profit for not buying?***
+> ❓ *Why is there a profit for not buying?*
 >
 > This could represent a baseline alternative, like investing the capital elsewhere for a guaranteed return of $350M.
 
-### Calculating Expected Monetary Value
+## Calculating Expected Monetary Value
 
-So, how do we weigh these possibilities financially? A common approach is to calculate the Expected Monetary Value (EMV). For the 'Buy' option, the EMV considers each potential outcome, its likelihood, and its financial value. Here's how it breaks down:
+The Expected Monetary Value (EMV) of buying accounts for all possible outcomes:
 
 $$
 \begin{align*}
@@ -110,19 +140,20 @@ EMV(\text{Buy}) &= (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) +
 \end{align*}
 $$
 
-This gives us an EMV of $721 million if we decide to buy. Now, let's look at the 'Do not buy' option. Its EMV is simpler:
+Compare this to the alternative:
 
 $$ EMV(\text{Do not buy}) = \$350\text{M} $$
 
-Purely from an EMV perspective, buying the field seems to be the stronger choice, offering an expected $721 million versus $350 million.
+Decision: Buying has a higher expected value ($721M vs. $350M).
 
-### Beyond Money: Utility and Risk Preferences
+## Beyond Money: Utility and Risk Preferences
 
-But EMV doesn't always tell the full story. What if not making any profit from this project could be catastrophic for our company, or conversely, where a large payout isn't absolutely essential. EMV values each dollar equally, but real-world decisions often hinge on our risk tolerance.
+But what if getting $0M from a low-quality field would severely impact the company's operations, while the difference between $630M and $1,250M is less critical? EMV assumes that each additional dollar has the same value, but real-world decision-makers often have more nuanced preferences.
 
-That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u><b>Utility theory</b></u></a> comes in handy. Instead of just using dollar amounts, we assign a "utility score" to each outcome, reflecting how much it's *truly* worth to us. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, similar to EMV.
+This is where utility theory comes in (to be covered in a future post):
 
-For this article, we'll keep things straightforward and assume EMV and EU point to the same decision. In reality, though, considering utility can completely change which option looks best.
+* A risk-averse company might prefer the guaranteed $350M over a 35% chance of $1,250M
+* A risk-seeking company might be drawn to that 35% chance of a $1,250M windfall
 
 ## Decision Analysis: A Dynamic, Iterative Process
 
@@ -131,7 +162,7 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
 <center>
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/decision_analysis.png" alt="Decision analysis process" width="200">
     </td>
   </tr>
@@ -172,11 +203,11 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
 
     *Example for oil company:*
     
-    $$ EMV(\text{Buy}) = (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) + (0.20 \times \$0\text{M}) = \$721\text{M} $$
+    $$ EU(Buy) = (0.35 \times 1250) + (0.45 \times 630) + (0.20 \times 0) = 721 $$
     
-    $$ EMV(\text{Do not buy}) = \$350\text{M} $$
+    $$ EMV(\text{Do not buy}) = \$350 $$
     
-    Optimal choice: Buy ($721M > $350M)
+    Optimal choice: Buy (721 > 350)
 
 5. **Sensitivity Analysis**: Test robustness by perturbing key inputs.
 
@@ -184,13 +215,13 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
 
     What if "high quality" probability drops to 25%?
     
-    $$ EMV(\text{Buy}) = (0.25 \times \$1,250\text{M}) + (0.55 \times \$630\text{M}) + (0.20 \times \$0\text{M}) = \$616.5\text{M} $$
+    $$ EU(Buy) = (0.25 \times 1250) + (0.55 \times 630) + (0.20 \times 0) = 616.5 $$
     
     → Still better than $350M (robust)
 
     What if "low quality" outcome worsens to $-200M$?
     
-    $$ EMV(\text{Buy}) = (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) + (0.20 \times -\$200\text{M}) = \$681.5\text{M} $$
+    $$ EU(Buy) = (0.35 \times 1250) + (0.45 \times 630) + (0.20 \times -200) = 681.5 $$
     
     → Still optimal, but riskier
 
@@ -214,7 +245,7 @@ Just as the company is about to move forward, a new opportunity arises: it can c
 <center>
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/rock_porosity.jpg" alt="Rock porosity illustration" width="600">
     </td>
   </tr>
@@ -243,7 +274,7 @@ This two-stage problem—with interdependent decisions and probabilistic updates
 <center>
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/oil_decision_tree.png" alt="Oil decision tree" width="400">
     </td>
   </tr>
@@ -260,7 +291,7 @@ This two-stage problem—with interdependent decisions and probabilistic updates
 <center>
 <table>
   <tr>
-    <td align="center">
+    <td>
       <img src="/assets/2025-06-01-decision-theory-I/oil_influence_diagram.png" alt="Oil influence diagram" width="700">
     </td>
   </tr>
@@ -282,27 +313,27 @@ This two-stage problem—with interdependent decisions and probabilistic updates
     <th>Key Focus</th>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/howard_matheson_1983.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><img src="/assets/2025-06-01-decision-theory-I/howard_matheson_1983.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Howard & Matheson (1983)</strong><br><em>Readings on Decision Analysis</em><br>DOI: 10.1287/opre.31.4.813</td>
     <td>Classic collection of papers on decision analysis methodology and applications</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/robert_clemens_1995.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><img src="/assets/2025-06-01-decision-theory-I/robert_clemens_1995.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Robert T. Clemens (1995)</strong><br><em>Making Hard Decisions</em><br>ISBN: 978-0534260347</td>
     <td>Practical guide to structuring decisions and handling uncertainty with real-world examples</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/russel_norvig_2021.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><img src="/assets/2025-06-01-decision-theory-I/russel_norvig_2021.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Russell & Norvig (2010)</strong><br><em>AI: A Modern Approach</em> (Ch. 16)<br>ISBN: 978-0134610993</td>
     <td>Decision Theory & Decision Networks</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/koller_friedman.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><img src="/assets/2025-06-01-decision-theory-I/koller_friedman.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Koller & Friedman (2009)</strong><br><em>Probabilistic Graphical Models</em> (Ch. 22, 23)<br>ISBN: 978-0262013192</td>
     <td>Advanced coverage of decision networks and their integration with probabilistic reasoning</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/insua_lozoya_2002.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><img src="/assets/2025-06-01-decision-theory-I/insua_lozoya_2002.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Ríos Insua et al. (2002)</strong><br><em>Fundamentos de los Sistemas de Ayuda a la Decisión</em><br>ISBN: 978-8478972746</td>
     <td>Comprehensive introduction to decision support systems with emphasis on theoretical foundations</td>
   </tr>
