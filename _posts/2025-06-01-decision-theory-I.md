@@ -128,14 +128,14 @@ That's where <a href="https://plato.stanford.edu/entries/rationality-normative-u
 
 **So how do we figure out these utility scores?** We start by anchoring the utility scale to simplify comparisons: 
 
-* Set best monetary outcome → $$U(\$1,250M) = 1$$
+* Set best monetary outcome → $$U(\$1,250\text{M}) = 1$$
 * Set worst monetary outcome → $$U(\$0) = 0$$
 
 Then, we need to find utility values for those outcomes in the middle ($350M, $630M). This depends on the **decision maker's risk preferences**. A common method is the <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u><b>standard gamble</b></u></a>. It works like this: ask the decision maker what chance of winning the best outcome (i.e., \$1,250M) they'd accept in a lottery — versus taking a guaranteed amount. For example:
 
 *"Would you rather take a sure \$630M, or a gamble with a 70% chance of \$1,250M and 30% chance of \$0M?"*
 
-If they say they're indifferent, we assign: $$U(350M) = 0.7$$. If they are also indifferent between a sure \$630M, and a lottery with 90% chance of \$1250M and 10% chance of \$0, we assign: $$U(630M) = 0.7$$.
+If they say they're indifferent, we assign: $$U(350\text{M}) = 0.7$$. If they are also indifferent between a sure \$630M, and a lottery with 90% chance of \$1250M and 10% chance of \$0, we assign: $$U(630\text{M}) = 0.7$$.
 
 <center>
 <table align="center">
@@ -181,28 +181,13 @@ $$
 \end{align*}
 $$
 
-EMV would pick **Buy** (\$721M > \$350M). EU also picks **Buy**, but the margin is smaller (0.755 > 0.7). A more risk-averse executive (e.g., someone with $$U(350M)=0.8$$) would flip the decision.
+EMV suggests to **Buy** (\$721M > \$350M). EU also suggests to **Buy**, but the margin is smaller (0.755 > 0.7). A more risk-averse person (e.g., someone with $$U(\$350M)=0.8$$) would flip the decision.
 
-For this article, we'll keep things straightforward and assume EMV and EU point to the same decision (i.e., risk neutral decision maker). In reality, though, considering utility can change which option looks best.
+Previous case is just a hypothetical example. For this article, we'll keep things straightforward and **assume EMV and EU point to the same decision** (i.e., risk neutral decision maker). In reality, though, considering utility can change which option looks best.
 
-> Another well-known example illustrating EMV's limitations is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>. In this scenario, a casino offers a gamble where a fair coin is tossed until heads appears. If the first head appears on the nth toss, the prize is $$2^{n}$$. Assuming the game continues indefinitely and the casino has unlimited resources, the EMV is infinite. This suggests one should pay any amount to play, yet most people wouldn't pay more than \$8-\$16. The reason is that the large payouts are so improbable that we mentally discount them, thus creating the paradox.
+> Another well-known example illustrating EMV's limitations is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>. In this scenario, a casino offers a gamble where a fair coin is tossed until heads appears. If the first head appears on the nth toss, the prize is $$2^{n}$$. Assuming the game continues indefinitely and the casino has unlimited resources, the EMV is infinite. This suggests one should pay any amount to play, yet most people wouldn't pay more than \$8 - \$16. The reason is that the large payouts are so improbable that we mentally discount them, thus creating the paradox.
 
-<!-- Another example, very discussed in the literature, that shows the limitations of EMV is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>, in which a casino offers the possibility the opportunity to participate in a gamble that consists in tossing a fair coin into the air until heads appears. If the first head appears in n-time, the prize will be $2^{n}$. Assuming the game can continue as long as the coin toss results in tails and, in particular, that the casino has unlimited resources, the EMV is thus
-
-$$
-\begin{align*}
-\sum_{n=1}^{\infty} 2^{n} \cdot (0.5)^{n} &= 2^{1} \cdot (0.5)^{1} + 2^{2} \cdot (0.5)^{2} + 2^{3} \cdot (0.5)^{3} + \dots \\
-&= 2 \cdot \frac{1}{2} + 4 \cdot \frac{1}{4} + 8 \cdot \frac{1}{8} + \dots \\
-&= 1 + 1 + 1 + \dots \\
-&= \infty
-\end{align*}
-$$
-
-The EMV is infinite! So by that logic, we should be willing to pay any amount (e.g., 1,000,000$) to play. In reality, most people wouldn't pay more than 8$-16$ to play. Why? Because the big payouts are so unlikely that we heavily discount them in our minds, hence the paradox. -->
-
-
-
-## Decision Analysis: A Dynamic, Iterative Process
+<!-- ## Decision Analysis: A Dynamic, Iterative Process
 
 Decision-making isn't a one-shot task—it's a cycle of refinement. As new information emerges or priorities shift, we revisit and update our analysis. Here's the structured flow:
 
@@ -283,11 +268,49 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
     Triggers for iteration:
     - Uncertainty too high? → Gather more data (e.g., seismic tests)
     - Missing variables? → Add environmental/social costs
-    - New alternatives? → Explore partnerships
+    - New alternatives? → Explore partnerships -->
+
+## Decision Analysis: A Dynamic, Iterative Process
+
+Decision-making isn't a one-shot task—it's a cycle of refinement. As new information emerges or priorities shift, we revisit and update our analysis. This structured approach ensures that our choices are not only well-founded but also adaptable.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-01-decision-theory-I/decision_analysis.png" alt="Decision analysis process" width="200">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <i><b>Figure 2.</b> Flow diagram of the decision analysis process</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+The process begins with getting clear on what we're trying to achieve. Instead of a vague goal like "maximize profits," we break it down into specific, measurable objectives. For our oil company, this means not only aiming for the highest return but also minimizing downside risk, limiting upfront costs, and ensuring the project aligns with their strategic reserves.
+
+With these objectives in mind, the next step is to brainstorm all feasible actions, not just the obvious ones. Beyond simply buying or not buying the field, perhaps there's a third path, like delaying the decision to commission an extra study for more data.
+
+Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <b><u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u></b> and <b><u><a href="https://en.wikipedia.org/wiki/Influence_diagram">influence diagrams</a></u></b> become useful for visualizing the entire problem.
+
+With the model built, we can calculate the optimal path forward. As we saw, computing the EU helps us compare the options. Based on the EU, we know that buying is the stronger choice. But a good analysis doesn't stop there. We need to ask, "what if?" This is the role of <b><u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u></b>: testing how robust our decision is by tweaking the key inputs. What if the outcome for a "low quality" field isn't breaking even, but a loss of \$200M? 
+
+$$ 
+EU(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} 
+$$
+
+The EU for buying is now \$681.5M, still the optimal choice, but the risk profile has clearly changed. 
+
+This stress-testing leads to the final step: implement or iterate. If the optimal choice proves robust and aligns with the company's objectives, it's time to move forward. But if the analysis reveals too much uncertainty or uncovers new risks, it’s a signal to revisit the earlier stages. Maybe the uncertainty is too high, and it's worth gathering more data. Perhaps other variables, like environmental costs, need to be factored into the model. Or maybe new alternatives, like exploring a partnership to share the risk, have become more attractive.
 
 ## When New Information Becomes an Option
 
-Just as the company is about to move forward, a new opportunity arises: it can choose to perform a geological test before deciding whether to purchase the oil field. This test doesn't reveal the true quality of the field directly—it provides a report on the porosity of the reservoir rock. High porosity often suggests greater oil potential, but the test is imperfect, and its results come with uncertainty.
+Just as the company is about to move forward, a new opportunity arises: it can choose to perform a geological test before deciding whether to purchase the oil field. This test won't reveal the true quality of the field, but it will measure the rock's porosity, which measures how much empty space the rock contains that could hold oil. The test has two possible outcomes:
+
+* **Pass:** Porosity is ≥ 15%, indicating a significant amount of pore (void) space in the rocks, which suggests a higher likelihood of finding oil.
+* **Fail:** Porosity is < 15%, indicating less void space and therefore a lower potential for oil.
 
 <center>
 <table>
@@ -304,17 +327,39 @@ Just as the company is about to move forward, a new opportunity arises: it can c
 </table>
 </center>
 
-The test has two possible outcomes:
+In a perfect scenario, the test would be highly accurate. However, real-world tests are not perfect. The table below introduces these measurement imperfections by showing the conditional probability of each test result given the quality of the oil field:
 
-* Pass: Porosity is ≥ 15%, indicating significant percentage of pore (void)space in the rocks that can hold fluids like oil or gas.
-* Fail: Porosity is < 15%, indicating lower void space and thus lower oil potential.
+<table>
+  <tr>
+    <th></th>
+    <th>high</th>
+    <th>medium</th>
+    <th>low</th>      
+  </tr>
+  <tr>
+    <td>pass</td>
+    <td>0.95</td>
+    <td>0.7</td>
+    <td>0.15</td>      
+  </tr>
+  <tr>
+    <td>fail</td>
+    <td>0.05</td>
+    <td>0.3</td>
+    <td>0.85</td> 
+  </tr>
+</table>
+
 
 The test itself comes at a cost, and even after receiving its result, the company will still need to decide whether to proceed with the purchase. So now, instead of a single decision, we have two decisions in sequence:
 
 * Should we perform the test?
 * Depending on the result, should we buy the field?
 
-This two-stage problem—with interdependent decisions and probabilistic updates—can't be solved with simple payoff tables. We'll need:
+This two-stage problem—with interdependent decisions and probabilistic updates—can't be solved with simple payoff tables. 
+
+
+We'll need:
 
 * Decision trees (not to be confused with the ones used in machine learning), which map out possible actions, chance events, and outcomes in a step-by-step visual format.
 
