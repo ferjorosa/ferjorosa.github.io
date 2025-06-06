@@ -73,7 +73,7 @@ Finally, let's look at the <span style="color:blue; font-weight:bold;">outcomes<
   <tr>
     <th style="color:red;">Action</th>
     <th style="color:purple;">Field Quality</th>
-    <th style="color:blue;">Outcome ($M)</th>
+    <th style="color:blue;">Monetary Outcome</th>
   </tr>
   <tr>
     <td style="color:red;">Buy</td>
@@ -98,9 +98,9 @@ Finally, let's look at the <span style="color:blue; font-weight:bold;">outcomes<
 </table>
 </center>
 
-> ***Why is there a profit for not buying?***
+>**Why is there a profit for not buying?**
 >
-> This could represent a baseline alternative, like investing the capital elsewhere for a guaranteed return of $350M.
+>This could represent a baseline alternative, like investing the capital elsewhere for a guaranteed return of $350M.
 
 ### Calculating Expected Monetary Value
 
@@ -108,25 +108,99 @@ So, how do we weigh these possibilities financially? A common approach is to cal
 
 $$
 \begin{align*}
-EMV(\text{Buy}) &= (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) + (0.20 \times \$0\text{M}) \\
+EMV(\text{Buy}) &= (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) \\
 &= \$437.5\text{M} + \$283.5\text{M} + \$0\text{M} \\
 &= \$721\text{M}
 \end{align*}
 $$
 
-This gives us an EMV of $721 million if we decide to buy. Now, let's look at the 'Do not buy' option. Its EMV is simpler:
+This gives us an EMV of $721M if we decide to buy. Now, let's look at the 'Do not buy' option. Its EMV is simpler:
 
 $$ EMV(\text{Do not buy}) = \$350\text{M} $$
 
-Purely from an EMV perspective, buying the field seems to be the stronger choice, offering an expected $721 million versus $350 million.
+Purely from an EMV perspective, buying the field seems to be the stronger choice, offering an expected $721M versus $350M.
 
 ### Beyond Money: Utility and Risk Preferences
 
-But EMV doesn't always tell the full story. What if not making any profit from this project could be catastrophic for our company, or conversely, where a large payout isn't absolutely essential. EMV values each dollar equally, but real-world decisions often hinge on our risk tolerance.
+But EMV doesn't always tell the whole story. What if not making a profit from this project could be disastrous for our company, or on the flip side, a big payout isn't really necessary? EMV treats every dollar the same. However, real-world decisions often depend on how much risk we're willing to take.
 
-That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u><b>Utility theory</b></u></a> comes in handy. Instead of just using dollar amounts, we assign a "utility score" to each outcome, reflecting how much it's *truly* worth to us. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, similar to EMV.
+That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u><b>Utility theory</b></u></a> comes in. Instead of just looking at dollar amounts, we give each outcome a "utility score" to show how much it really matters to us. EMV assumes linear utility, which only holds if the decision maker is risk-neutral. Utility theory allows us to account for different risk preferences. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, just like we do with EMV.
 
-For this article, we'll keep things straightforward and assume EMV and EU point to the same decision. In reality, though, considering utility can completely change which option looks best.
+**So how do we figure out these utility scores?** We start by anchoring the utility scale to simplify comparisons: 
+
+* Set best monetary outcome → $$U(\$1,250M) = 1$$
+* Set worst monetary outcome → $$U(\$0) = 0$$
+
+Then, we need to find utility values for those outcomes in the middle ($350M, $630M). This depends on the **decision maker's risk preferences**. A common method is the <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u><b>standard gamble</b></u></a>. It works like this: ask the decision maker what chance of winning the best outcome (i.e., \$1,250M) they'd accept in a lottery — versus taking a guaranteed amount. For example:
+
+*"Would you rather take a sure \$630M, or a gamble with a 70% chance of \$1,250M and 30% chance of \$0M?"*
+
+If they say they're indifferent, we assign: $$U(350M) = 0.7$$. If they are also indifferent between a sure \$630M, and a lottery with 90% chance of \$1250M and 10% chance of \$0, we assign: $$U(630M) = 0.7$$.
+
+<center>
+<table align="center">
+  <tr>
+    <th style="color:red;">Action</th>
+    <th style="color:purple;">Field Quality</th>
+    <th style="color:blue;">Monetary Outcome</th>
+    <th style="color:blue;">Utility Outcome</th>
+  </tr>
+  <tr>
+    <td style="color:red;">Buy</td>
+    <td style="color:purple;">High</td>
+    <td style="color:blue;">+$1,250M</td>
+    <td style="color:blue;">1</td>    
+  </tr>
+  <tr>
+    <td style="color:red;">Buy</td>
+    <td style="color:purple;">Medium</td>
+    <td style="color:blue;">+$630M</td>
+    <td style="color:blue;">0.9</td>        
+  </tr>
+  <tr>
+    <td style="color:red;">Buy</td>
+    <td style="color:purple;">Low</td>
+    <td style="color:blue;">+$0M</td>
+    <td style="color:blue;">0</td>    
+  </tr>
+  <tr>
+    <td style="color:red;">Do not buy</td>
+    <td style="color:purple;">Any</td>
+    <td style="color:blue;">+$350M</td>
+    <td style="color:blue;">0.7</td>    
+  </tr>
+</table>
+</center>
+
+Let's compute the EU:
+
+$$
+\begin{align*}
+&EU(\text{Buy}) = (0.35 \cdot 1.0) + (0.45 \cdot 0.9) + (0.20 \cdot 0.0) = 0.755 \\ \\
+&EU(\text{Do not buy}) = 0.7
+\end{align*}
+$$
+
+EMV would pick **Buy** (\$721M > \$350M). EU also picks **Buy**, but the margin is smaller (0.755 > 0.7). A more risk-averse executive (e.g., someone with $$U(350M)=0.8$$) would flip the decision.
+
+For this article, we'll keep things straightforward and assume EMV and EU point to the same decision (i.e., risk neutral decision maker). In reality, though, considering utility can change which option looks best.
+
+> Another well-known example illustrating EMV's limitations is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>. In this scenario, a casino offers a gamble where a fair coin is tossed until heads appears. If the first head appears on the nth toss, the prize is $$2^{n}$$. Assuming the game continues indefinitely and the casino has unlimited resources, the EMV is infinite. This suggests one should pay any amount to play, yet most people wouldn't pay more than \$8-\$16. The reason is that the large payouts are so improbable that we mentally discount them, thus creating the paradox.
+
+<!-- Another example, very discussed in the literature, that shows the limitations of EMV is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>, in which a casino offers the possibility the opportunity to participate in a gamble that consists in tossing a fair coin into the air until heads appears. If the first head appears in n-time, the prize will be $2^{n}$. Assuming the game can continue as long as the coin toss results in tails and, in particular, that the casino has unlimited resources, the EMV is thus
+
+$$
+\begin{align*}
+\sum_{n=1}^{\infty} 2^{n} \cdot (0.5)^{n} &= 2^{1} \cdot (0.5)^{1} + 2^{2} \cdot (0.5)^{2} + 2^{3} \cdot (0.5)^{3} + \dots \\
+&= 2 \cdot \frac{1}{2} + 4 \cdot \frac{1}{4} + 8 \cdot \frac{1}{8} + \dots \\
+&= 1 + 1 + 1 + \dots \\
+&= \infty
+\end{align*}
+$$
+
+The EMV is infinite! So by that logic, we should be willing to pay any amount (e.g., 1,000,000$) to play. In reality, most people wouldn't pay more than 8$-16$ to play. Why? Because the big payouts are so unlikely that we heavily discount them in our minds, hence the paradox. -->
+
+
 
 ## Decision Analysis: A Dynamic, Iterative Process
 
@@ -176,11 +250,11 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
 
     *Example for oil company:*
     
-    $$ EMV(\text{Buy}) = (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) + (0.20 \times \$0\text{M}) = \$721\text{M} $$
+    $$ EMV(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) = \$721\text{M} $$
     
     $$ EMV(\text{Do not buy}) = \$350\text{M} $$
     
-    Optimal choice: Buy ($721M > $350M)
+    Optimal choice: Buy (\$721M > \$350M)
 
 5. **Sensitivity Analysis**: Test robustness by perturbing key inputs.
 
@@ -188,13 +262,13 @@ Decision-making isn't a one-shot task—it's a cycle of refinement. As new infor
 
     What if "high quality" probability drops to 25%?
     
-    $$ EMV(\text{Buy}) = (0.25 \times \$1,250\text{M}) + (0.55 \times \$630\text{M}) + (0.20 \times \$0\text{M}) = \$616.5\text{M} $$
+    $$ EMV(\text{Buy}) = (0.25 \cdot \$1,250\text{M}) + (0.55 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) = \$616.5\text{M} $$
     
-    → Still better than $350M (robust)
+    → Still better than \$350M (robust)
 
     What if "low quality" outcome worsens to $-200M$?
     
-    $$ EMV(\text{Buy}) = (0.35 \times \$1,250\text{M}) + (0.45 \times \$630\text{M}) + (0.20 \times -\$200\text{M}) = \$681.5\text{M} $$
+    $$ EMV(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} $$
     
     → Still optimal, but riskier
 
