@@ -120,7 +120,7 @@ Purely from an EMV perspective, buying the field seems to be the stronger choice
 
 But EMV doesn't always tell the whole story. What if not making a profit from this project could be disastrous for our company, or on the flip side, a big payout isn't really necessary? EMV treats every dollar the same. However, real-world decisions often depend on how much risk we're willing to take.
 
-That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a> comes in. Instead of just looking at dollar amounts, we give each outcome a "utility score" to show how much it really matters to us. EMV assumes linear utility, which only holds if the decision maker is risk-neutral. Utility theory allows us to account for different risk preferences. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, just like we do with EMV.
+That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a> comes in. Instead of just looking at dollar amounts, we give each outcome a "utility score" to show how much it really matters to us. EMV assumes linear utility, which only holds if the decision maker is risk-neutral. Utility theory allows us to account for different risk preferences. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities (<a href="https://dwulff.github.io/_Goodchoices/Literature/Von%20NeumannMorgenstern1944TheoryOfGamesAndEconomicBehaviour.pdf"><u>von Neumann & Morgenstern, 1944</u></a>), just like we do with EMV.
 
 **So how do we figure out these utility scores?** We start by anchoring the utility scale to simplify comparisons: 
 
@@ -264,7 +264,7 @@ In an ideal situation, the test would be extremely accurate. However, real-world
 </table>
 
 
-The test costs $30 million, and even after getting the results, the company still has to decide whether to buy the field. This means there are now two decisions to make: first, whether to conduct the test, and second, whether to purchase the field based on the test results. This kind of two-step decision-making, where each choice affects the next and involves probabilities, can't be handled with simple payoff tables. Instead, we'll need to use a decision tree or a decision network to figure it out.
+**The test costs $30 million**, and even after getting the results, the company still has to decide whether to buy the field. This means there are now two decisions to make: first, whether to conduct the test, and second, whether to purchase the field based on the test results. This kind of two-step decision-making, where each choice affects the next and involves probabilities, can't be handled with simple payoff tables. Instead, we'll need to use a decision tree or a decision network to figure it out.
 
 ## Modelling the Problem with a Decision Tree
 
@@ -410,11 +410,11 @@ We compare the EU of buying versus not buying after a "fail" result:
 </table>
 </center>
 
-### No test performed
+### No Test Performed
 
-If the company chooses not to perform the porosity test, then it must decide whether to buy or not buy the oil field based solely on the **prior probabilities** of the field's quality.
+If the company decides not to conduct the porosity test, it must choose whether to purchase the oil field based solely on the **prior probabilities** of the field's quality.
 
-We compute the expected utility of buying the field using the given prior distribution for field quality:
+We calculate the EU of purchasing the field using the provided prior distribution for field quality:
 
 $$
 \begin{aligned}
@@ -424,12 +424,15 @@ $$
 \end{aligned}
 $$
 
-We compare the expected utility of buying versus not buying:
+We then compare the EU of buying versus not buying:
 
    * **Buying:** \$721M
    * **Not Buying:** \$350M
 
-Since \$721M > \$350M, it is better to **buy** the oil field if the company chooses **not to test**.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+Since \$721M > \$350M, it is better to <b>buy</b> the oil field if the company opts <b>not to test</b>.
+</div>
+<br>
 
 <center>
 <table>
@@ -446,15 +449,11 @@ Since \$721M > \$350M, it is better to **buy** the oil field if the company choo
 </table>
 </center>
 
-#### ▶ Evaluating the Root Decision: Test vs. No Test
+### Evaluating the Root Decision: Test vs. No Test
 
-We now return to the **top-level decision**:  
+The final step is to determine whether the company should **conduct the porosity test** or **proceed without testing**. This hinges on comparing the EU of both options.
 
-> **Should the company perform the porosity test or skip it entirely?**
-
-1. Expected Utility of Performing the Test
-
-If the company performs the test, the overall expected utility is computed by weighting the outcomes of both possible test results:
+If the company performs the test, the overall EU is computed by weighting the outcomes of both possible test results:
 
 $$
 \begin{aligned}
@@ -465,21 +464,17 @@ $$
 \end{aligned}
 $$
 
-Here, we assume the company **buys** the field if the test **passes**, and **does not buy** if it **fails** (i.e., the rational decision).
+Here, we assume the company **buys** the field if the test **passes**, and **does not buy** if it **fails** (i.e., the rational decision). Without conducting the test, the company’s best decision is to buy the field outright, resulting in an EU of \$721M.
 
-2. Expected Utility of Not Performing the Test
+We then compare the options:
 
-From earlier:
-- The company would **buy** the field directly.
-- Expected utility = **\$721M**
-
-
-3. Compare the Options
-
-- **Perform Test:** \$696.95M  
+- **Test:** \$696.95M  
 - **No Test:** \$721M
 
-> 🔍 **Conclusion:** Since \$721M > \$696.95M, the company should **not perform the test** and proceed directly to **buy** the oil field.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+Since \$721M > \$696.95M, the company should <b>not perform the test</b> and proceed directly to <b>buy</b> the oil field.
+</div>
+<br>
 
 <center>
 <table>
@@ -500,7 +495,7 @@ From earlier:
 
 In this post, we explored the foundations of decision theory through a practical oil field investment scenario. We learned how to structure decision problems by identifying actions, uncertainties, probabilities, and outcomes. We looked at how to use EMV and EU to guide decision-making, and how risk preferences can shape the optimal choice. We also introduced decision trees as a valuable tool for analyzing sequential decisions under uncertainty, and showed how new information, such as a geological test result, can be incorporated into the analysis.
 
-**In the next post**, we'll discuss the limitations of decision trees and introduce decision networks (influence diagrams), which offer a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
+**In the next post**, we'll discuss the limitations of decision trees and introduce decision networks, which offer a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
 
 **For more examples** of real-world decision analysis, check out:
 * [Ride-hailing subscription service](https://github.com/ferjorosa/decision-theory-llms/tree/main/decision_problems/ride_hailing): Should a ride-hailing company offer a retention deal to prevent customer churn?
@@ -517,7 +512,7 @@ In this post, we explored the foundations of decision theory through a practical
   </tr>
   <tr>
     <td align="center"><img src="/assets/2025-06-01-decision-theory-I/howard_matheson_1983.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Howard & Matheson (1983)</strong><br><em>Readings on Decision Analysis</em><br><a href="https://gwern.net/doc/statistics/decision/1983-howard-readingsondecisionanalysis-v1.pdf"><b>PDF link</b></a></td>
+    <td><strong>Howard & Matheson (1983)</strong><br><em>Readings on Decision Analysis</em><br><a href="https://gwern.net/doc/statistics/decision/1983-howard-readingsondecisionanalysis-v1.pdf">PDF link</a></td>
     <td>Classic collection of papers on decision analysis methodology and applications</td>
   </tr>
   <tr>
@@ -546,16 +541,20 @@ In this post, we explored the foundations of decision theory through a practical
 
 ## References
 
-1. Wikipedia page on <u><a href="https://en.wikipedia.org/wiki/Decision_theory">decision theory</a></u>
+1. Wikipedia page on <u><a href="https://en.wikipedia.org/wiki/Decision_theory">decision theory</a></u>.
 <br><br>
-2. Standford's Encyclopedia page on <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a> 
+2. Standford's Encyclopedia page on <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a>.
 <br><br>
-3. Ontosight article on <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u>standard gamble</u></a>
+3. von Neumann J., Morgenstern, O. (1944). <a href="https://dwulff.github.io/_Goodchoices/Literature/Von%20NeumannMorgenstern1944TheoryOfGamesAndEconomicBehaviour.pdf"><u>Theory of Games and Economic Behavior</u></a>. Princeton University Press.
 <br><br>
-4. Wikipedia article on <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u>St. Petersburg Paradox</u></a>
+3. Ontosight article on <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u>standard gamble</u></a>.
 <br><br>
-5. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u>
+4. Wikipedia article on <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u>St. Petersburg Paradox</u></a>.
 <br><br>
-6. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u>
+5. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u>.
 <br><br>
-7. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>
+6. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u>.
+<br><br>
+7. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>.
+<br><br>
+8. Raiffa, H., Schlaifer, R. (1961). <a href="https://gwern.net/doc/statistics/decision/1961-raiffa-appliedstatisticaldecisiontheory.pdf"><u>Applied statistical decision theory</u></a>. John Wiley & Sons.
