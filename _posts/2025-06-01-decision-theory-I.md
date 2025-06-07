@@ -357,7 +357,7 @@ The test costs $30 million, and even after getting the results, the company stil
 
 Decision trees, originating from the work of <a href="https://gwern.net/doc/statistics/decision/1961-raiffa-appliedstatisticaldecisiontheory.pdf"><u><b>Raiffa & Schlaifer (1961)</b></u></a>, are a powerful tool for visualizing and analyzing decision-making problems. They map out the sequence of decisions and chance events, providing a clear picture of the possible outcomes and their associated probabilities. A decision tree consists of three types of nodes:
 
-* <span style="color:red;"><strong>Decision nodes</strong></span>. These are points where you need to make a choice. In our case, the first decision here is whether to do the geological test. If the test is conducted, the next decision is whether to buy the oil field based on the test results.
+* <span style="color:red;"><strong>Decision nodes</strong></span>. These are points where you need make a choice and take an action. In our case, the first decision here is whether to do the geological test. If the test is conducted, the next decision is whether to buy the oil field based on the test results.
 
 * <span style="color:purple;"><strong>Chance nodes</strong></span>. These nodes represent states of nature or events that can affect the outcome. For our problem, the chance nodes include the possible results of the geological test and the actual quality of the oil field.
 
