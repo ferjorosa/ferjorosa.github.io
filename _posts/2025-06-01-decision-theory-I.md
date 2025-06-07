@@ -108,7 +108,7 @@ So, how do we weigh these possibilities financially? A common approach is to cal
 
 $$
 \begin{align*}
-EMV(\text{Buy}) &= (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) \\
+\mathbb{E}[MV(\text{Buy})] &= (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) \\
 &= \$437.5\text{M} + \$283.5\text{M} + \$0\text{M} \\
 &= \$721\text{M}
 \end{align*}
@@ -116,7 +116,7 @@ $$
 
 This gives us an EMV of $721M if we decide to buy. Now, let's look at the 'Do not buy' option. Its EMV is simpler:
 
-$$ EMV(\text{Do not buy}) = \$350\text{M} $$
+$$ \mathbb{E}[MV(\text{Do not buy})] = \$350\text{M} $$
 
 Purely from an EMV perspective, buying the field seems to be the stronger choice, offering an expected $721M versus $350M.
 
@@ -176,8 +176,8 @@ Let's compute the EU:
 
 $$
 \begin{align*}
-&EU(\text{Buy}) = (0.35 \cdot 1.0) + (0.45 \cdot 0.9) + (0.20 \cdot 0.0) = 0.755 \\ \\
-&EU(\text{Do not buy}) = 0.7
+&\mathbb{E}[U(\text{Buy})] = (0.35 \cdot 1.0) + (0.45 \cdot 0.9) + (0.20 \cdot 0.0) = 0.755 \\ \\
+&\mathbb{E}[U(\text{Do not buy})] = 0.7
 \end{align*}
 $$
 
@@ -293,12 +293,12 @@ The process begins with getting clear on what we're trying to achieve. Instead o
 
 With these objectives in mind, the next step is to brainstorm all feasible actions, not just the obvious ones. Beyond simply buying or not buying the field, perhaps there's a third path, like delaying the decision to commission an extra study for more data.
 
-Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <b><u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u></b> and <b><u><a href="https://en.wikipedia.org/wiki/Influence_diagram">influence diagrams</a></u></b> become useful for visualizing the entire problem.
+Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <b><u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u></b> and <b><u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u></b> (i.e., influence diagrams) become useful for visualizing the entire problem.
 
 With the model built, we can calculate the optimal path forward. As we saw, computing the EU helps us compare the options. Based on the EU, we know that buying is the stronger choice. But a good analysis doesn't stop there. We need to ask, "what if?" This is the role of <b><u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u></b>: testing how robust our decision is by tweaking the key inputs. What if the outcome for a "low quality" field isn't breaking even, but a loss of \$200M? 
 
 $$ 
-EU(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} 
+\mathbb{E}[U(\text{Buy})] = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} 
 $$
 
 The EU for buying is now \$681.5M, still the optimal choice, but the risk profile has clearly changed. 
@@ -327,7 +327,7 @@ Just as the company is about to move forward, a new opportunity arises: it can c
 </table>
 </center>
 
-In a perfect scenario, the test would be highly accurate. However, real-world tests are not perfect. The table below introduces these measurement imperfections by showing the conditional probability of each test result given the quality of the oil field:
+In an ideal situation, the test would be extremely accurate. However, real-world tests are not perfect. The table below illustrates these measurement inaccuracies by presenting the conditional probability of each test result based on the quality of the oil field:
 
 <table>
   <tr>
@@ -351,17 +351,21 @@ In a perfect scenario, the test would be highly accurate. However, real-world te
 </table>
 
 
-The test itself comes at a cost, and even after receiving its result, the company will still need to decide whether to proceed with the purchase. So now, instead of a single decision, we have two decisions in sequence:
+The test costs $30 million, and even after getting the results, the company still has to decide whether to buy the field. This means there are now two decisions to make: first, whether to conduct the test, and second, whether to purchase the field based on the test results. This kind of two-step decision-making, where each choice affects the next and involves probabilities, can't be handled with simple payoff tables. Instead, we'll need to use a decision tree or a decision network to figure it out.
 
-* Should we perform the test?
-* Depending on the result, should we buy the field?
+## Modelling the Problem with a Decision Tree
 
-This two-stage problem—with interdependent decisions and probabilistic updates—can't be solved with simple payoff tables. 
+Decision trees, originating from the work of <a href="https://gwern.net/doc/statistics/decision/1961-raiffa-appliedstatisticaldecisiontheory.pdf"><u><b>Raiffa & Schlaifer (1961)</b></u></a>, are a powerful tool for visualizing and analyzing decision-making problems. They map out the sequence of decisions and chance events, providing a clear picture of the possible outcomes and their associated probabilities. A decision tree consists of three types of nodes:
 
+* <span style="color:red;"><strong>Decision nodes</strong></span>. These are points where you need to make a choice. In our case, the first decision here is whether to do the geological test. If the test is conducted, the next decision is whether to buy the oil field based on the test results.
 
-We'll need:
+* <span style="color:purple;"><strong>Chance nodes</strong></span>. These nodes represent states of nature or events that can affect the outcome. For our problem, the chance nodes include the possible results of the geological test and the actual quality of the oil field.
 
-* Decision trees (not to be confused with the ones used in machine learning), which map out possible actions, chance events, and outcomes in a step-by-step visual format.
+* <span style="color:blue;"><strong>Outcome nodes</strong></span>. These are the final nodes that show the result of a particular path through the tree. 
+
+To construct the tree, begin by identifying the root node, which represents the first event observed over time: either a decision or an uncertainty factor. From the root, add chance or decision nodes, outlining the different paths to follow, until you reach a terminal node, where the corresponding consequence will be indicated. The decision tree is then completed by including the utilities at the terminal nodes. At these nodes, a value is assigned to a final result, assuming this result has been achieved without considering probabilities.
+
+Below is the decision tree for the oil drilling scenario:
 
 <center>
 <table>
@@ -378,22 +382,22 @@ We'll need:
 </table>
 </center>
 
-* Decision networks (or influence diagrams), which provide a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
+## Evaluating the Decision Tree
 
-<center>
-<table>
-  <tr>
-    <td align="center">
-      <img src="/assets/2025-06-01-decision-theory-I/oil_influence_diagram.png" alt="Oil influence diagram" width="700">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <i><b>Figure 5.</b> Oil decision network, before and after introducing memory arcs</i>
-    </td>
-  </tr>
-</table>
-</center>
+To figure out the best course of action in a decision tree, we need to look at every possible decision path. This boils down to two key steps:
+
+1. **Estimating Probabilities**. This involves using both marginal and conditional probabilities.
+2. **Calculating Expected Utilities**. This requires evaluating the outcomes for each decision.
+
+The expected utility of a decision is computed by multiplying the utility of each outcome by its associated probability and summing these products across all possible outcomes under that decision. The decision with the highest expected utility at each decision node is the optimal choice.
+
+## Next Post
+
+In Part II, we'll:
+
+2. Present the limitations of Decision Trees and why decision networks may be preferred in certain situations.
+
+* Decision networks (or influence diagrams), which provide a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
 
 ## Where to Read More
 
@@ -432,10 +436,7 @@ We'll need:
 </table>
 </center>
 
-## Next Post
 
-In Part II, we'll:
+## References
 
-1. Build and solve a decision tree for the oil field problem, incorporating the geological test
-
-2. Present the limitations of Decision Trees and why decision networks may be preferred in certain situations.
+1. Wikipedia page on
