@@ -3,16 +3,12 @@ layout: post
 title: "Introduction to Decision Theory"
 date: 2025-06-01
 categories: blog
-description: "An introduction to decision theory through a practical oil field investment example, covering key concepts like expected monetary value, risk preferences, and decision analysis frameworks."
-tags: [Research, Decision Theory, Decision Analysis]
+description: "An introduction to decision theory through a practical oil field investment example, covering key concepts like expected monetary value, risk preferences, and decision trees."
+tags: [Decision Theory]
 ---
 
 > This is the first of a series of posts where we explore **decision theory**:
 > 1. **Introduction to Decision Theory**
-
-> **TODO**
-> Seguir con el ejemplo con Arboles de decision, luego comentar sus problemas / limitaciones y comentar que existe una alternativa, que son los diagramas de influencia, los cuales los comentaremos en el siguiente post.
-
 
 ## The Challenge of Decision-Making
 
@@ -43,7 +39,7 @@ This research helps form your initial assessment of the field's potential. Howev
 
 This tension between what you know, what you don't know, and what you truly value is at the heart of every important decision. How do you weigh the potential upside against the risk of a bad draw? How much should your assessment count in the final call? 
 
-<u><a href="https://en.wikipedia.org/wiki/Decision_theory"><strong>Decision theory</strong></a></u> offers a framework to answer exactly these questions. It's about systematically looking at the likelihood of different scenarios and weighing them against how much you value each potential result. By doing this, it guides you toward the action that's most likely to give you the best overall outcome.
+<u><a href="https://en.wikipedia.org/wiki/Decision_theory">Decision Theory</a></u> offers a framework to answer exactly these questions. It's about systematically looking at the likelihood of different scenarios and weighing them against how much you value each potential result. By doing this, it guides you toward the action that's most likely to give you the best overall outcome.
 
 Let's return to the oil field example. Suppose you've sized up the field and think it could fall into one of three quality levels:
 * **High**, promising oil reserves.
@@ -56,7 +52,7 @@ The dilemma, then, becomes quite clear. If you decide to buy and the field turns
 
 At its core, any decision problem can be broken down into a few fundamental components: the actions we can take, the uncertain conditions that might influence the outcome (often referred to as states of nature), the probabilities we assign to these conditions based on our best estimates, and the potential outcomes for each action under each condition.
 
-So, let's use the Decision theory framework for our oil field case.
+So, let's use the decision theory framework for our oil field case.
 
 ### Structuring the Oil field Decision Problem
 
@@ -78,7 +74,7 @@ Finally, let's look at the <span style="color:blue; font-weight:bold;">outcomes<
   <tr>
     <td style="color:red;">Buy</td>
     <td style="color:purple;">High</td>
-    <td style="color:blue;">+$1,250M</td>
+    <td style="color:blue;">+$1250M</td>
   </tr>
   <tr>
     <td style="color:red;">Buy</td>
@@ -108,7 +104,7 @@ So, how do we weigh these possibilities financially? A common approach is to cal
 
 $$
 \begin{align*}
-\mathbb{E}[MV(\text{Buy})] &= (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) \\
+\mathbb{E}[MV(\text{Buy})] &= (0.35 \cdot \$1250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) \\
 &= \$437.5\text{M} + \$283.5\text{M} + \$0\text{M} \\
 &= \$721\text{M}
 \end{align*}
@@ -124,16 +120,16 @@ Purely from an EMV perspective, buying the field seems to be the stronger choice
 
 But EMV doesn't always tell the whole story. What if not making a profit from this project could be disastrous for our company, or on the flip side, a big payout isn't really necessary? EMV treats every dollar the same. However, real-world decisions often depend on how much risk we're willing to take.
 
-That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u><b>Utility theory</b></u></a> comes in. Instead of just looking at dollar amounts, we give each outcome a "utility score" to show how much it really matters to us. EMV assumes linear utility, which only holds if the decision maker is risk-neutral. Utility theory allows us to account for different risk preferences. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, just like we do with EMV.
+That's where <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a> comes in. Instead of just looking at dollar amounts, we give each outcome a "utility score" to show how much it really matters to us. EMV assumes linear utility, which only holds if the decision maker is risk-neutral. Utility theory allows us to account for different risk preferences. Then we calculate an Expected Utility (EU) by weighing these scores by their probabilities, just like we do with EMV.
 
 **So how do we figure out these utility scores?** We start by anchoring the utility scale to simplify comparisons: 
 
-* Set best monetary outcome → $$U(\$1,250\text{M}) = 1$$
+* Set best monetary outcome → $$U(\$1250\text{M}) = 1$$
 * Set worst monetary outcome → $$U(\$0) = 0$$
 
-Then, we need to find utility values for those outcomes in the middle ($350M, $630M). This depends on the **decision maker's risk preferences**. A common method is the <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u><b>standard gamble</b></u></a>. It works like this: ask the decision maker what chance of winning the best outcome (i.e., \$1,250M) they'd accept in a lottery — versus taking a guaranteed amount. For example:
+Then, we need to find utility values for those outcomes in the middle ($350M, $630M). This depends on the **decision maker's risk preferences**. A common method is the <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u>standard gamble</u></a>. It works like this: ask the decision maker what chance of winning the best outcome (i.e., \$1250M) they'd accept in a lottery — versus taking a guaranteed amount. For example:
 
-*"Would you rather take a sure \$630M, or a gamble with a 70% chance of \$1,250M and 30% chance of \$0M?"*
+*"Would you rather take a sure \$630M, or a gamble with a 70% chance of \$1250M and 30% chance of \$0M?"*
 
 If they say they're indifferent, we assign: $$U(350\text{M}) = 0.7$$. If they are also indifferent between a sure \$630M, and a lottery with 90% chance of \$1250M and 10% chance of \$0, we assign: $$U(630\text{M}) = 0.7$$.
 
@@ -148,7 +144,7 @@ If they say they're indifferent, we assign: $$U(350\text{M}) = 0.7$$. If they ar
   <tr>
     <td style="color:red;">Buy</td>
     <td style="color:purple;">High</td>
-    <td style="color:blue;">+$1,250M</td>
+    <td style="color:blue;">+$1250M</td>
     <td style="color:blue;">1</td>    
   </tr>
   <tr>
@@ -181,94 +177,11 @@ $$
 \end{align*}
 $$
 
-EMV suggests to **Buy** (\$721M > \$350M). EU also suggests to **Buy**, but the margin is smaller (0.755 > 0.7). A more risk-averse person (e.g., someone with $$U(\$350M)=0.8$$) would flip the decision.
+EMV suggests to **Buy** (\$721M > \$350M). EU also suggests to **Buy**, but the margin is smaller (0.755 > 0.7). A more risk-averse person (e.g., someone with $$U(\$350\text{M})=0.8$$) would flip the decision.
 
 Previous case is just a hypothetical example. For this article, we'll keep things straightforward and **assume EMV and EU point to the same decision** (i.e., risk neutral decision maker). In reality, though, considering utility can change which option looks best.
 
-> Another well-known example illustrating EMV's limitations is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u><b>St. Petersburg Paradox</b></u></a>. In this scenario, a casino offers a gamble where a fair coin is tossed until heads appears. If the first head appears on the nth toss, the prize is $$2^{n}$$. Assuming the game continues indefinitely and the casino has unlimited resources, the EMV is infinite. This suggests one should pay any amount to play, yet most people wouldn't pay more than \$8 - \$16. The reason is that the large payouts are so improbable that we mentally discount them, thus creating the paradox.
-
-<!-- ## Decision Analysis: A Dynamic, Iterative Process
-
-Decision-making isn't a one-shot task—it's a cycle of refinement. As new information emerges or priorities shift, we revisit and update our analysis. Here's the structured flow:
-
-<center>
-<table>
-  <tr>
-    <td align="center">
-      <img src="/assets/2025-06-01-decision-theory-I/decision_analysis.png" alt="Decision analysis process" width="200">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <i><b>Figure 2.</b> Flow diagram of the decision analysis process</i>
-    </td>
-  </tr>
-</table>
-</center>
-
-1. **Define Objectives**: Break down the global objective (e.g., "Maximize long-term profits") into specific, measurable sub-objectives.
-
-    *Example for oil company:*
-    - Goal: Maximize the company's profit from the oil field
-    - Sub-objectives:
-        - Minimize downside risk
-        - Limit upfront cost
-        - Align with strategic reserves
-
-2. **Generate Alternatives**: Brainstorm all feasible actions—not just obvious ones.
-
-    *Example for oil company:*
-    - Buy the field
-    - Don't buy
-    - **New:** Delay decision and commission an extra study
-
-3. **Model the Decision Problem**: Structure uncertainty, outcomes and preferences.
-
-    *Example for oil company:*
-    - Define states (field quality: high/medium/low)
-    - Assign probabilities (35%/45%/20%)
-    - Map outcomes to utilities (e.g., profit values)
-
-    **Toolkit:** Decision trees, influence diagrams
-
-4. **Calculate Optimal Decision**: Compute expected utilities and select the best action.
-
-    *Example for oil company:*
-    
-    $$ EMV(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) = \$721\text{M} $$
-    
-    $$ EMV(\text{Do not buy}) = \$350\text{M} $$
-    
-    Optimal choice: Buy (\$721M > \$350M)
-
-5. **Sensitivity Analysis**: Test robustness by perturbing key inputs.
-
-    *Example for oil company:*
-
-    What if "high quality" probability drops to 25%?
-    
-    $$ EMV(\text{Buy}) = (0.25 \cdot \$1,250\text{M}) + (0.55 \cdot \$630\text{M}) + (0.20 \cdot \$0\text{M}) = \$616.5\text{M} $$
-    
-    → Still better than \$350M (robust)
-
-    What if "low quality" outcome worsens to $-200M$?
-    
-    $$ EMV(\text{Buy}) = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} $$
-    
-    → Still optimal, but riskier
-
-6. **Implement or Iterate**
-
-    Decision point:
-    - If satisfied (optimal choice is robust and aligns with objectives) → Implement
-    - If not → Revisit earlier phases
-
-    *Example for oil company:*
-    
-    Triggers for iteration:
-    - Uncertainty too high? → Gather more data (e.g., seismic tests)
-    - Missing variables? → Add environmental/social costs
-    - New alternatives? → Explore partnerships -->
+> Another well-known example illustrating EMV's limitations is the <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u>St. Petersburg Paradox</u></a>. In this scenario, a casino offers a gamble where a fair coin is tossed until heads appears. If the first head appears on the nth toss, the prize is $$2^{n}$$. Assuming the game continues indefinitely and the casino has unlimited resources, the EMV is infinite. This suggests one should pay any amount to play, yet most people wouldn't pay more than \$8 - \$16. The reason is that the large payouts are so improbable that we mentally discount them, thus creating the paradox.
 
 ## Decision Analysis: A Dynamic, Iterative Process
 
@@ -293,12 +206,12 @@ The process begins with getting clear on what we're trying to achieve. Instead o
 
 With these objectives in mind, the next step is to brainstorm all feasible actions, not just the obvious ones. Beyond simply buying or not buying the field, perhaps there's a third path, like delaying the decision to commission an extra study for more data.
 
-Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <b><u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u></b> and <b><u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u></b> (i.e., influence diagrams) become useful for visualizing the entire problem.
+Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u> and <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u> (i.e., influence diagrams) become useful for visualizing the entire problem.
 
-With the model built, we can calculate the optimal path forward. As we saw, computing the EU helps us compare the options. Based on the EU, we know that buying is the stronger choice. But a good analysis doesn't stop there. We need to ask, "what if?" This is the role of <b><u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u></b>: testing how robust our decision is by tweaking the key inputs. What if the outcome for a "low quality" field isn't breaking even, but a loss of \$200M? 
+With the model built, we can calculate the optimal path forward. As we saw, computing the EU helps us compare the options. Based on the EU, we know that buying is the stronger choice. But a good analysis doesn't stop there. We need to ask, "what if?" This is the role of <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>: testing how robust our decision is by tweaking the key inputs. What if the outcome for a "low quality" field isn't breaking even, but a loss of \$200M? 
 
 $$ 
-\mathbb{E}[U(\text{Buy})] = (0.35 \cdot \$1,250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} 
+\mathbb{E}[U(\text{Buy})] = (0.35 \cdot \$1250\text{M}) + (0.45 \cdot \$630\text{M}) + (0.20 \cdot -\$200\text{M}) = \$681.5\text{M} 
 $$
 
 The EU for buying is now \$681.5M, still the optimal choice, but the risk profile has clearly changed. 
@@ -365,7 +278,7 @@ Decision trees, originating from the work of <a href="https://gwern.net/doc/stat
 
 To construct the tree, begin by identifying the root node, which represents the first event observed over time: either a decision or an uncertainty factor. From the root, add chance or decision nodes, outlining the different paths to follow, until you reach a terminal node, where the corresponding consequence will be indicated. The decision tree is then completed by including the utilities at the terminal nodes. At these nodes, a value is assigned to a final result, assuming this result has been achieved without considering probabilities.
 
-Below is the decision tree for the oil drilling scenario:
+Below is the decision tree for the oil drilling scenario. In this diagram, <span style="color:red;"><strong>T</strong></span> represents the decision node for conducting the test, <span style="color:purple;"><strong>R</strong></span> indicates the test result, <span style="color:red;"><strong>B</strong></span> denotes the decision to buy or not buy, and <span style="color:purple;"><strong>Q</strong></span> signifies the quality of the oil field.
 
 <center>
 <table>
@@ -389,17 +302,211 @@ To figure out the best course of action in a decision tree, we need to look at e
 1. **Estimating Probabilities**. This involves using both marginal and conditional probabilities.
 2. **Calculating Expected Utilities**. This requires evaluating the outcomes for each decision.
 
-The expected utility of a decision is computed by multiplying the utility of each outcome by its associated probability and summing these products across all possible outcomes under that decision. The decision with the highest expected utility at each decision node is the optimal choice.
+Same as before, the expected utility of a decision is computed by multiplying the utility of each outcome by its associated probability and summing these products across all possible outcomes under that decision. The decision with the highest expected utility at each decision node is the optimal choice.
 
-## Next Post
+### Perform the Test and the Result is "pass"
 
-In Part II, we'll:
+From the test accuracy table, we know  $$P(R \mid Q)$$, which is the probability of each test result given the true field quality. But to evaluate the decision tree, we need the opposite: $$P(Q \mid R)$$, the probability of each field quality given the observed test result. This is important because once we see the test result, we have to decide whether to buy based on the updated belief about the field quality. We use **Bayes' Theorem** to calculate these posterior probabilities of <span style="color:purple;"><strong>Q</strong></span> given that the test result is a "pass".
 
-2. Present the limitations of Decision Trees and why decision networks may be preferred in certain situations.
 
-* Decision networks (or influence diagrams), which provide a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
+First, we compute the marginal probability of obtaining a "pass" result:
 
-## Where to Read More
+$$
+\begin{align*}
+P(R = \text{pass}) &= P(R = \text{pass} | Q = \text{high}) \cdot P(Q = \text{high}) \\
+&\quad + P(R = \text{pass} | Q = \text{medium}) \cdot P(Q = \text{medium}) \\
+&\quad + P(R = \text{pass} | Q = \text{low}) \cdot P(Q = \text{low}) \\
+&= 0.95 \cdot 0.35 + 0.7 \cdot 0.45 + 0.15 \cdot 0.20 = 0.3325 + 0.315 + 0.03 = 0.6775
+\end{align*}
+$$
+
+Then, we apply the theorem:
+
+$$
+\begin{align*}
+P(Q = \text{high} \mid R = \text{pass}) &= \frac{0.95 \cdot 0.35}{0.6775} = 0.4908 \\
+P(Q = \text{medium} \mid R = \text{pass}) &= \frac{0.7 \cdot 0.45}{0.6775} = 0.4649 \\
+P(Q = \text{low} \mid R = \text{pass}) &= \frac{0.15 \cdot 0.20}{0.6775} = 0.0443
+\end{align*}
+$$
+
+We now compute the EU of buying the oil field after a "pass" result:
+
+$$
+\mathbb{E}[U \mid R = \text{pass}, \text{buy}] = 0.4908 \cdot \$1220\text{M} + 0.4649 \cdot \$600\text{M} + 0.0443 \cdot (-\$30\text{M}) = \$876.39\text{M}
+$$
+
+We compare the EU of buying versus not buying after a "pass" result:
+   
+   * **Buying:** \$876.39M
+   * **Not Buying:** \$320M
+
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+Since \$876.39M > \$320M, it is better to <b>buy</b> the oil field if the test result is <b>pass</b>.
+</div>
+<br>
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-01-decision-theory-I/evaluated_oil_tree_1.png" alt="Evaluated Oil decision tree #1" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <i><b>Figure 5.</b> Evaluated Oil decision tree #1</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+### Perform the test and the result is "fail"
+
+As in the previous scenario, we first calculate the marginal probability of obtaining a "fail" result:
+
+$$
+P(R = \text{fail}) = 1 - P(R = \text{pass}) = 1 - 0.6775 = 0.3225
+$$
+
+Next, we apply **Bayes' Theorem** to determine the posterior probabilities of <span style="color:purple;"><strong>Q</strong></span> given that the test result is "fail":
+
+$$
+\begin{align*}
+P(Q = \text{high} \mid R = \text{fail}) &= \frac{0.05 \cdot 0.35}{0.3225} = 0.0543 \\
+P(Q = \text{medium} \mid R = \text{fail}) &= \frac{0.3 \cdot 0.45}{0.3225} = 0.4186 \\
+P(Q = \text{low} \mid R = \text{fail}) &= \frac{0.85 \cdot 0.20}{0.3225} = 0.5271
+\end{align*}
+$$
+
+We then calculate the EU of purchasing the oil field after a "fail" result:
+
+$$
+\mathbb{E}[U \mid R = \text{fail}, \text{buy}] = 0.0543 \cdot \$1220\text{M} + 0.4186 \cdot \$600\text{M} + 0.5271 \cdot (-\$30\text{M}) = \$301.59\text{M}
+$$
+
+We compare the EU of buying versus not buying after a "fail" result:
+   
+   * **Buying:** \$301.59M
+   * **Not Buying:** \$320M
+
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+  Since \$301.59M < \$320M, it is better to <strong>not buy</strong> the oil field if the test result is <strong>fail</strong>.
+</div>
+<br>
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-01-decision-theory-I/evaluated_oil_tree_2.png" alt="Evaluated Oil decision tree #2" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <i><b>Figure 5.</b> Evaluated Oil decision tree #2</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+### No test performed
+
+If the company chooses not to perform the porosity test, then it must decide whether to buy or not buy the oil field based solely on the **prior probabilities** of the field's quality.
+
+We compute the expected utility of buying the field using the given prior distribution for field quality:
+
+$$
+\begin{aligned}
+\mathbb{E}[U \mid \text{no test}, \text{buy}] &= 0.35 \cdot \$1250\text{M} + 0.45 \cdot \$630\text{M} + 0.20 \cdot \$0\text{M} \\
+&= \$437.5\text{M} + \$283.5\text{M} + \$0\text{M} \\
+&= \$721\text{M} \\
+\end{aligned}
+$$
+
+We compare the expected utility of buying versus not buying:
+
+   * **Buying:** \$721M
+   * **Not Buying:** \$350M
+
+Since \$721M > \$350M, it is better to **buy** the oil field if the company chooses **not to test**.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-01-decision-theory-I/evaluated_oil_tree_3.png" alt="Evaluated Oil decision tree #3" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <i><b>Figure 5.</b> Evaluated Oil decision tree #3</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+#### ▶ Evaluating the Root Decision: Test vs. No Test
+
+We now return to the **top-level decision**:  
+
+> **Should the company perform the porosity test or skip it entirely?**
+
+1. Expected Utility of Performing the Test
+
+If the company performs the test, the overall expected utility is computed by weighting the outcomes of both possible test results:
+
+$$
+\begin{aligned}
+\mathbb{E}[U \mid \text{test}] &= P(R = \text{pass}) \cdot \mathbb{E}[U \mid R = \text{pass}] \\
+&\quad + P(R = \text{fail}) \cdot \mathbb{E}[U \mid R = \text{fail}] \\
+&= 0.6775 \cdot \$876.39M + 0.3225 \cdot \$320M \\
+&= \$696.95M 
+\end{aligned}
+$$
+
+Here, we assume the company **buys** the field if the test **passes**, and **does not buy** if it **fails** (i.e., the rational decision).
+
+2. Expected Utility of Not Performing the Test
+
+From earlier:
+- The company would **buy** the field directly.
+- Expected utility = **\$721M**
+
+
+3. Compare the Options
+
+- **Perform Test:** \$696.95M  
+- **No Test:** \$721M
+
+> 🔍 **Conclusion:** Since \$721M > \$696.95M, the company should **not perform the test** and proceed directly to **buy** the oil field.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-01-decision-theory-I/evaluated_oil_tree_4.png" alt="Evaluated Oil decision tree #4" width="400">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <i><b>Figure 5.</b> Evaluated Oil decision tree #4</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+## Conclusion
+
+In this post, we explored the foundations of decision theory through a practical oil field investment scenario. We learned how to structure decision problems by identifying actions, uncertainties, probabilities, and outcomes. We looked at how to use EMV and EU to guide decision-making, and how risk preferences can shape the optimal choice. We also introduced decision trees as a valuable tool for analyzing sequential decisions under uncertainty, and showed how new information, such as a geological test result, can be incorporated into the analysis.
+
+**In the next post**, we'll discuss the limitations of decision trees and introduce decision networks (influence diagrams), which offer a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
+
+**For more examples** of real-world decision analysis, check out:
+* [Ride-hailing subscription service](https://github.com/ferjorosa/decision-theory-llms/tree/main/decision_problems/ride_hailing): Should a ride-hailing company offer a retention deal to prevent customer churn?
+* [Logistics center automation](https://github.com/ferjorosa/decision-theory-llms/tree/main/decision_problems/automated_logistics_center): Should an e-commerce company upgrade its logistics center with robotics?
+
+**To read more** about decision theory and its applications consider the following bibliography:
 
 <center>
 <table>
@@ -410,33 +517,45 @@ In Part II, we'll:
   </tr>
   <tr>
     <td align="center"><img src="/assets/2025-06-01-decision-theory-I/howard_matheson_1983.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Howard & Matheson (1983)</strong><br><em>Readings on Decision Analysis</em><br>DOI: 10.1287/opre.31.4.813</td>
+    <td><strong>Howard & Matheson (1983)</strong><br><em>Readings on Decision Analysis</em><br><a href="https://gwern.net/doc/statistics/decision/1983-howard-readingsondecisionanalysis-v1.pdf"><b>PDF link</b></a></td>
     <td>Classic collection of papers on decision analysis methodology and applications</td>
   </tr>
   <tr>
     <td align="center"><img src="/assets/2025-06-01-decision-theory-I/robert_clemens_1995.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Robert T. Clemens (1995)</strong><br><em>Making Hard Decisions</em><br>ISBN: 978-0534260347</td>
+    <td><strong>Robert T. Clemens (1995)</strong><br><em>Making Hard Decisions</em></td>
     <td>Practical guide to structuring decisions and handling uncertainty with real-world examples</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/russel_norvig_2021.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Russell & Norvig (2010)</strong><br><em>AI: A Modern Approach</em> (Ch. 16)<br>ISBN: 978-0134610993</td>
-    <td>Decision Theory & Decision Networks</td>
+    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/insua_lozoya_2002.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><strong>Ríos Insua et al. (2002)</strong><br><em>Fundamentos de los Sistemas de Ayuda a la Decisión</em></td>
+    <td>Comprehensive introduction to decision support systems with emphasis on theoretical foundations</td>
   </tr>
   <tr>
     <td align="center"><img src="/assets/2025-06-01-decision-theory-I/koller_friedman.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Koller & Friedman (2009)</strong><br><em>Probabilistic Graphical Models</em> (Ch. 22, 23)<br>ISBN: 978-0262013192</td>
+    <td><strong>Koller & Friedman (2009)</strong><br><em>Probabilistic Graphical Models</em><br>(Ch. 22, 23)<br><a href="http://mcb111.org/w06/KollerFriedman.pdf">PDF Link</a></td>
     <td>Advanced coverage of decision networks and their integration with probabilistic reasoning</td>
   </tr>
   <tr>
-    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/insua_lozoya_2002.jpg" width="100" height="100" style="object-fit: cover;"></td>
-    <td><strong>Ríos Insua et al. (2002)</strong><br><em>Fundamentos de los Sistemas de Ayuda a la Decisión</em><br>ISBN: 978-8478972746</td>
-    <td>Comprehensive introduction to decision support systems with emphasis on theoretical foundations</td>
-  </tr>
+    <td align="center"><img src="/assets/2025-06-01-decision-theory-I/russel_norvig_2021.jpg" width="100" height="100" style="object-fit: cover;"></td>
+    <td><strong>Russell & Norvig (2010)</strong><br><em>AI: A Modern Approach</em><br>(Ch. 16)<br><a href="http://lib.ysu.am/disciplines_bk/efdd4d1d4c2087fe1cbe03d9ced67f34.pdf">PDF Link</a></td>
+    <td>Introduction to decision theory & decision networks</td>
+  </tr>  
 </table>
 </center>
 
 
 ## References
 
-1. Wikipedia page on
+1. Wikipedia page on <u><a href="https://en.wikipedia.org/wiki/Decision_theory">decision theory</a></u>
+<br><br>
+2. Standford's Encyclopedia page on <a href="https://plato.stanford.edu/entries/rationality-normative-utility/"><u>utility theory</u></a> 
+<br><br>
+3. Ontosight article on <a href="https://ontosight.ai/glossary/term/von-neumann-morgenstern-standard-gamble-theory--679f4e9e38099fda3c01d216"><u>standard gamble</u></a>
+<br><br>
+4. Wikipedia article on <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox"><u>St. Petersburg Paradox</u></a>
+<br><br>
+5. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u>
+<br><br>
+6. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u>
+<br><br>
+7. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>
