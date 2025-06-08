@@ -11,15 +11,14 @@ GEM
       http_parser.rb (~> 0)
     eventmachine (1.2.7)
     ffi (1.17.2)
-    ffi (1.17.2-aarch64-linux-gnu)
+    ffi (1.17.2-aarch64-linux)
     ffi (1.17.2-aarch64-linux-musl)
-    ffi (1.17.2-arm-linux-gnu)
+    ffi (1.17.2-arm-linux)
     ffi (1.17.2-arm-linux-musl)
     ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x86-linux-gnu)
+    ffi (1.17.2-x86-linux)
     ffi (1.17.2-x86-linux-musl)
     ffi (1.17.2-x86_64-darwin)
-    ffi (1.17.2-x86_64-linux-gnu)
     ffi (1.17.2-x86_64-linux-musl)
     forwardable-extended (2.6.0)
     google-protobuf (4.30.2)
@@ -61,6 +60,8 @@ GEM
       webrick (~> 1.7)
     jekyll-feed (0.17.0)
       jekyll (>= 3.7, < 5.0)
+    jekyll-reading-time (0.1.0)
+      jekyll
     jekyll-sass-converter (3.1.0)
       sass-embedded (~> 1.75)
     jekyll-seo-tag (2.8.0)
@@ -95,31 +96,29 @@ GEM
     sass-embedded (1.88.0)
       google-protobuf (~> 4.30)
       rake (>= 13)
-    sass-embedded (1.88.0-aarch64-linux-android)
+    sass-embedded (1.88.0-aarch64-linux)
       google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-aarch64-linux-gnu)
+    sass-embedded (1.88.0-aarch64-linux-android)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-aarch64-linux-musl)
       google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-arm-linux-androideabi)
+    sass-embedded (1.88.0-arm-linux)
       google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-arm-linux-gnueabihf)
+    sass-embedded (1.88.0-arm-linux-androideabi)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-arm-linux-musleabihf)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-arm64-darwin)
       google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-riscv64-linux-android)
+    sass-embedded (1.88.0-riscv64-linux)
       google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-riscv64-linux-gnu)
+    sass-embedded (1.88.0-riscv64-linux-android)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-riscv64-linux-musl)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-x86_64-darwin)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-x86_64-linux-android)
-      google-protobuf (~> 4.30)
-    sass-embedded (1.88.0-x86_64-linux-gnu)
       google-protobuf (~> 4.30)
     sass-embedded (1.88.0-x86_64-linux-musl)
       google-protobuf (~> 4.30)
@@ -130,21 +129,21 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  aarch64-linux
   aarch64-linux-android
-  aarch64-linux-gnu
   aarch64-linux-musl
+  arm-linux
+  arm-linux
   arm-linux-androideabi
-  arm-linux-gnu
-  arm-linux-gnueabihf
   arm-linux-musl
   arm-linux-musleabihf
   arm64-darwin
+  riscv64-linux
   riscv64-linux-android
-  riscv64-linux-gnu
   riscv64-linux-musl
   ruby
   x86-linux
-  x86-linux-gnu
+  x86-linux
   x86-linux-musl
   x86_64-darwin
   x86_64-linux
@@ -154,6 +153,7 @@ PLATFORMS
 DEPENDENCIES
   jekyll (~> 4.3.2)
   jekyll-feed (~> 0.12)
+  jekyll-reading-time
   jekyll-sitemap (~> 1.4)
   minima (~> 2.5)
   webrick (~> 1.8)

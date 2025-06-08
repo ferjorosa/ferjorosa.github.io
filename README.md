@@ -13,20 +13,49 @@ This is my personal blog/website built with [Jekyll](https://jekyllrb.com) and h
 
 ### 1. Install Ruby and Required Packages
 
-On Ubuntu/Debian systems:
+#### On Ubuntu/Debian systems:
 
 ```bash
 sudo apt update
 sudo apt install ruby-full build-essential zlib1g-dev
 ```
 
-Verify Ruby and RubyGems installation:
+#### On macOS:
+
+We recommend using `rbenv` to manage Ruby versions:
+
+1. Install rbenv and ruby-build using Homebrew:
 ```bash
-ruby -v    # Should be >= 2.7.0 (preferably 3.1.x)
-gem -v     # RubyGems version
+# Install Homebrew if not already installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install rbenv and ruby-build
+brew update
+brew install rbenv ruby-build
 ```
 
-> Note: To match the GitHub Pages build environment, it's recommended to use Ruby 3.1.x. You can manage Ruby versions with rbenv or rvm.
+2. Set up rbenv in your shell:
+```bash
+# For zsh (macOS default since Catalina)
+echo 'eval "$(rbenv init - zsh)"' >> ~/.zshrc
+source ~/.zshrc
+
+# For bash
+# echo 'eval "$(rbenv init - bash)"' >> ~/.bash_profile
+# source ~/.bash_profile
+```
+
+3. Install and set Ruby 3.1.2:
+```bash
+rbenv install 3.1.2
+rbenv global 3.1.2
+```
+
+4. Verify the installation:
+```bash
+ruby -v    # Should show ruby 3.1.2
+which ruby # Should point to ~/.rbenv/versions/3.1.2/bin/ruby
+```
 
 ### 2. Configure RubyGems Environment
 
