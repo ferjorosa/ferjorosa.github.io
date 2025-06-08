@@ -56,7 +56,7 @@ nav: About
   </div>
   <div class="profile-desc">
     <h1>Fernando Rodriguez Sanchez</h1>
-    <h2>AI Engineer. PhD <a href="https://www.upm.es/">@UPM</a>. I like to create cool things 🤖 🏞️ 🖌️</h2>
+    <h2><i>I like to create cool things</i> 🤖 🏞️ 🖌️</h2>
     <div class="social-icons">
         <a href="https://github.com/ferjorosa" title="GitHub"><img src="https://cdn.simpleicons.org/github" alt="GitHub"></a>
         <a href="https://huggingface.co/ferjorosa" title="HuggingFace">
@@ -77,9 +77,11 @@ nav: About
   </div>
 </div>
 
-I am a Senior AI Engineer at Aliy Labs. I specialize in NLP and Agentic Reasoning, with a focus on integrating Large Language Models with Probabilistic Graphical Models. Prior to this role, I was a Senior Research Scientist at Nielsen IQ. 
+I am currently a Senior AI Engineer at Aliy Labs, where I focus on Natural Language Processing and Agentic Reasoning. My work primarily involves integrating Large Language Models with Probabilistic Graphical Models. Before joining Aliy Labs, I worked as a Senior Research Scientist at Nielsen IQ.
 
 I hold a PhD in Artificial Intelligence from the Polytechnic University of Madrid. My PhD focused on on learning Bayesian networks with multiple latent variables for clustering and density estimation of  continuous, categorical, and mixed data. My advisors were [Pedro Larrañaga](https://dia.fi.upm.es/personaldia/pedro-larranaga/) and [Concha Bielza](https://muia.dia.fi.upm.es/es/personal/bielza-lozoya-concepcion/).
+
+I enjoy 3D printing and painting miniatures, mostly from the Warhammer universe.
 
 ### Teaching
 
