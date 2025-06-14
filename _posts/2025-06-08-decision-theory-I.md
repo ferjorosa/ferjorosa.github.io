@@ -7,8 +7,7 @@ description: "An introduction to decision theory through a practical oil field i
 tags: [Decision Theory]
 ---
 
-<!-- > This is the first of a series of posts where we explore **decision theory**:
-> 1. **Introduction to Decision Theory** -->
+
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 <summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Table of Contents</summary>
