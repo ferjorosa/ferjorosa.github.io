@@ -7,20 +7,20 @@ description: "Explores the strengths and limitations of decision trees, introduc
 tags: [Decision Theory]
 ---
 
-<h2 id="decision-trees-strengths-limitations">Strenghts and Weaknesses of Decision Trees</h2>
+<h2 id="decision-trees-strengths-limitations">Strengths and Limitations of Decision Trees</h2>
 
 Decision trees provide a straightforward way to model decisions under uncertainty. Each path from start to finish shows a sequence of choices and events that lead to a specific outcome. The left-to-right layout makes the timing of decisions and chance events visually clear, helping to avoid confusion about what is known at each point. 
 
 For small problems with only a few stages, decision trees can be evaluated using basic arithmetic. This simplicity makes them accessible to a wide audience, including those without technical training. They serve as effective tools for teaching, storytelling, and supporting real-world decisions. 
 
-Yet this intuitive structure comes with notable drawbacks. One issue is the risk of combinatorial explosion. Another limitation is that decision trees do not explicitly show conditional independencies. Let's 
+Yet this intuitive structure comes with notable drawbacks. One issue is the risk of combinatorial explosion. Another limitation is that decision trees do not explicitly show conditional independencies.
 
 <h3 id="combinatorial-explosion">Combinatorial Explosion</h3>
 The memory required to store a decision tree and the time required to process it both **increase
 exponentially** with the number of variables and their possible states, whether they are decisions or
 probabilistic outcomes. In a symmetric problem with $$n$$ variables, each having $$k$$ possible outcomes, you face $$k^{n}$$ distinct paths. Since a decision tree represents all scenarios explicitly, a problem with 50 binary variables would yield an impractical $$2^{50}$$ paths ([Shenoy, 2009](https://pshenoy.ku.edu/Papers/EOLSS09.pdf)).
 
-The number of decision paths is profoundly affected by the order and meaning of the variables (i.e., the problem's definition). In our original oil field investment problem from <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html">Part I</a>, the options to "Not Test" or "Do Not Buy" prune the tree, resulting in 12 distinct decision paths. This is an *asymmetric* problem structure:
+The number of decision paths is profoundly affected by the order and meaning of the variables (i.e., the problem's definition). In our original oil field investment problem from <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html">Part I</a>, the options "Not Test" and "Do Not Buy" prune the tree, resulting in 12 distinct decision paths. This is an *asymmetric* problem structure:
 
 <center>
 <table>
@@ -56,66 +56,306 @@ Conversely, a problem with the same types of variables, but structured *symmetri
 
 Even this revised example demonstrates how swiftly a decision tree can escalate beyond practical use. For instance, merely replacing the three-level oil quality (high/medium/low) with a more granular five-level scale (excellent/good/average/poor/dry) would push the total from 24 to 40 terminal nodes. This occurs without even considering longer time horizons, dynamic market-price scenarios, or additional complex choices.
 
-This **combinatorial explosion** not only affects computational tractability but, even at more modest levels, severely compromises interpretability. As trees grow larger (e.g., once they reach around a hundred terminal nodes), they lose their key strength: easy readability and intuitive understanding.
+This **combinatorial explosion** not only affects computational tractability but, even at more modest levels, severely compromises interpretability. As a rule of thumb, once a tree approaches about 100 terminal nodes, they lose their key strength: easy readability and intuitive understanding.
 
 
 <h3 id="hidden-independence">Hidden Conditional Independencies</h3>
 
-Decision trees, by their very structure, imply a strict chain of dependence. Every variable in a given branch is implicitly assumed to be conditioned on *all* preceding events on that path. This makes it impossible to represent that two random variables are independent once a third variable is known.
+In addition to the issue of combinatorial explosion, decision trees have another important limitation: they assume a strict, linear chain of dependence. In a decision tree, every variable is implicitly conditioned on *all* previous events along its particular path. This rigid structure prevents us from explicitly representing one of the most important concepts in probabilistic modeling: <b><a href="https://en.wikipedia.org/wiki/Conditional_independence"><u>conditional independence</u></a></b>.
 
-Let's consider an example where we have 4 random variables. Variables $$A$$ and $$B$$ have three states each ($$a_{1}$$, $$a_{2}$$, $$a_{3}$$ and $$b_{1}$$, $$b_{2}$$, $$b_{3}$$), while variables $$C$$ and $$D$$ are binary ($$c_{0}$$, $$c_{1}$$ and $$d_{0}$$, $$d_{1}$$). A decision tree cannot represent conditional independencies and thus we must esplicitly specify the joint probability distribution:
+To illustrate this, consider a generic problem with four random variables: $$A$$ and $$B$$ (each with two possible states, $$a_1, a_2$$ and $$b_1, b_2$$, respectively), and $$C$$ and $$D$$ (each with three possible states, $$c_1, c_2, c_3$$ and $$d_1, d_2, d_3$$). In a traditional decision tree, where conditional independencies cannot be explicitly represented, you must specify the entire joint probability distribution for all variables. This means assigning a probability to every possible combination of outcomes, as shown in the joint probability table below:
 
-| State of A | State of B | State of C | State of D | Probability     |
-|------------|------------|------------|------------|-----------------|
-| A1         | B1         | C1         | D1         | P(A1,B1,C1,D1)  |
-| A1         | B1         | C1         | D2         | P(A1,B1,C1,D2)  |
-| A1         | B1         | C1         | D3         | P(A1,B1,C1,D3)  |
-| A1         | B1         | C2         | D1         | P(A1,B1,C2,D1)  |
-| A1         | B1         | C2         | D2         | P(A1,B1,C2,D2)  |
-| A1         | B1         | C2         | D3         | P(A1,B1,C2,D3)  |
-| A1         | B1         | C3         | D1         | P(A1,B1,C3,D1)  |
-| A1         | B1         | C3         | D2         | P(A1,B1,C3,D2)  |
-| A1         | B1         | C3         | D3         | P(A1,B1,C3,D3)  |
-| A1         | B2         | C1         | D1         | P(A1,B2,C1,D1)  |
-| A1         | B2         | C1         | D2         | P(A1,B2,C1,D2)  |
-| A1         | B2         | C1         | D3         | P(A1,B2,C1,D3)  |
-| A1         | B2         | C2         | D1         | P(A1,B2,C2,D1)  |
-| A1         | B2         | C2         | D2         | P(A1,B2,C2,D2)  |
-| A1         | B2         | C2         | D3         | P(A1,B2,C2,D3)  |
-| A1         | B2         | C3         | D1         | P(A1,B2,C3,D1)  |
-| A1         | B2         | C3         | D2         | P(A1,B2,C3,D2)  |
-| A1         | B2         | C3         | D3         | P(A1,B2,C3,D3)  |
-| A2         | B1         | C1         | D1         | P(A2,B1,C1,D1)  |
-| A2         | B1         | C1         | D2         | P(A2,B1,C1,D2)  |
-| A2         | B1         | C1         | D3         | P(A2,B1,C1,D3)  |
-| A2         | B1         | C2         | D1         | P(A2,B1,C2,D1)  |
-| A2         | B1         | C2         | D2         | P(A2,B1,C2,D2)  |
-| A2         | B1         | C2         | D3         | P(A2,B1,C2,D3)  |
-| A2         | B1         | C3         | D1         | P(A2,B1,C3,D1)  |
-| A2         | B1         | C3         | D2         | P(A2,B1,C3,D2)  |
-| A2         | B1         | C3         | D3         | P(A2,B1,C3,D3)  |
-| A2         | B2         | C1         | D1         | P(A2,B2,C1,D1)  |
-| A2         | B2         | C1         | D2         | P(A2,B2,C1,D2)  |
-| A2         | B2         | C1         | D3         | P(A2,B2,C1,D3)  |
-| A2         | B2         | C2         | D1         | P(A2,B2,C2,D1)  |
-| A2         | B2         | C2         | D2         | P(A2,B2,C2,D2)  |
-| A2         | B2         | C2         | D3         | P(A2,B2,C2,D3)  |
-| A2         | B2         | C3         | D1         | P(A2,B2,C3,D1)  |
-| A2         | B2         | C3         | D2         | P(A2,B2,C3,D2)  |
-| A2         | B2         | C3         | D3         | P(A2,B2,C3,D3)  |
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(A, B, C, D)</summary>
 
-Now, let's say that conditional independies do exist in this problem. For instance, let's say that $$D$$ is conditionally independent of $$A$$ and $$B$$ given $$C$$. In that case:
+<table>
+  <thead>
+    <tr>
+      <th>$$A$$</th>
+      <th>$$B$$</th>
+      <th>$$C$$</th>
+      <th>$$D$$</th>
+      <th style="text-align: center;">Probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{1},c_{1},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{1},c_{1},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{1},c_{1},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{1},c_{2},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{1},c_{2},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{1},c_{2},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{1},c_{3},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{1},c_{3},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{1},c_{3},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{2},c_{1},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{2},c_{1},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{2},c_{1},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{2},c_{2},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{2},c_{2},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{2},c_{2},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{1},b_{2},c_{3},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{1},b_{2},c_{3},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{1},b_{2},c_{3},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{1},c_{1},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{1},c_{1},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{1},c_{1},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{1},c_{2},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{1},c_{2},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{1},c_{2},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{1},c_{3},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{1},c_{3},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{1},c_{3},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{2},c_{1},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{2},c_{1},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{2},c_{1},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{2},c_{2},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{2},c_{2},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{2},c_{2},d_{3})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(a_{2},b_{2},c_{3},d_{1})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(a_{2},b_{2},c_{3},d_{2})$$</td>
+    </tr>
+    <tr>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(a_{2},b_{2},c_{3},d_{3})$$</td>
+    </tr>
+  </tbody>
+</table>
+
+</details>
+
+In this example, that means $$2$$ (for A) $$\times 2$$ (for B) $$\times 3$$ (for C) $$\times 3$$ (for D) $$= \mathbf{36}$$ **distinct probabilities** that must be elicited and entered into the joint probability table.
+
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+  This example demonstrates conditional independencies using a simplified version of a decision tree, where all nodes are probabilistic (often called a <a href="https://en.wikipedia.org/wiki/Tree_diagram_(probability_theory)"><u>probability tree</u></a>). However, the core concepts and benefits of explicit representation apply equally to the chance nodes within any general decision tree.
+</div>
+<br>
+
+Now, let's say that conditional independencies do exist in this problem. For instance, let's say that $$B$$ is conditionally independent of $$C$$ and $$D$$ given $$A$$. We denote that statement by $$(B \bot \{C, D\} \mid A)$$. In that case:
 
 $$
-P(A, B, D \mid C) = P(A,B \mid C) \codt P(D \mid C)
+P(B \mid A, C, D) = P(B \mid A)
 $$
 
-We denote this statement $$ D \bot \{A,B\} \mid C$$. Now, we can represent those conditional independencies with a graph, this is one of the core ideas of Bayesian networks. Figure 3 implies the following conditional independence statements over the set of variables:
+This fundamental concept allows us to represent relationships far more efficiently. Consider Figure 3, which implies the following conditional independence statements:
+* &nbsp;$$ (B \bot \{C, D\} \mid A)$$
+* &nbsp;$$ (C \bot B \mid A)$$
+* &nbsp;$$ (D \bot \{A,B\} \mid C)$$
 
-* $$ B \bot \{C, D\} \mid A$$
-* $$ C \bot B \mid A$$
-* $$ D \bot \{A,B\} \mid C$$
+The diagram corresponds to the directed acyclic graph of a Bayesian network, which visually encodes these independencies: arrows indicate direct probabilistic influence, while the absence of an arrow between two nodes reflects a conditional independence given their parents.
 
 <center>
 <table>
@@ -126,167 +366,197 @@ We denote this statement $$ D \bot \{A,B\} \mid C$$. Now, we can represent those
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <i><b>Figure 3.</b> TODO.</i>
+      <i><b>Figure 3.</b> Bayesian network illustrating conditional independencies among A, B, C, and D.</i>
     </td>
   </tr>
 </table>
 </center>
 
-If conditional independencies are present. It does not make sense to have this big of a table, we can use a Bayesian network and decompose the table into smaller ones. With this we go from $2 \times 2 \times 3 \times 3 = 36$ possible outcomes to $2 + 4 + 6 + 9 = 21$.
+When these conditional independencies are recognized and modeled, the burden of data elicitation drastically shrinks. Instead of one big joint table, the full joint probability can be decomposed into a product of smaller, more manageable conditional probability tables. For our example, this decomposition means we only need to specify:
+
+* &nbsp;$$ P(A) \rightarrow 2 = 2 $$ entries
+* &nbsp;$$ P(B \mid A) \rightarrow 2 \cdot 2 = 4 $$ entries  
+* &nbsp;$$ P(C \mid A) \rightarrow 2 \cdot 3 = 6 $$ entries
+* &nbsp;$$ P(D \mid C) \rightarrow 3 \cdot 3 = 9 $$ entries
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(A)</summary>
 
 <table>
-  <caption>P(A)</caption>
   <thead>
     <tr>
-      <th>State of A</th>
-      <th>Probability</th>
+      <th>$$A$$</th>
+      <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>A1</td>
-      <td>P(A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$P(a_{1})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>P(A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$P(a_{2})$$</td>
     </tr>
   </tbody>
 </table>
 
+</details>
+
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(B | A)</summary>
+
 <table>
-  <caption>P(B | A)</caption>
   <thead>
     <tr>
-      <th>State of A</th>
-      <th>State of B</th>
-      <th>Probability</th>
+      <th>$$A$$</th>
+      <th>$$B$$</th>
+      <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>A1</td>
-      <td>B1</td>
-      <td>P(B1 | A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$P(b_{1} \mid a_{1})$$</td>
     </tr>
     <tr>
-      <td>A1</td>
-      <td>B2</td>
-      <td>P(B2 | A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$P(b_{2} \mid a_{1})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>B1</td>
-      <td>P(B1 | A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{1}$$</td>
+      <td>$$P(b_{1} \mid a_{2})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>B2</td>
-      <td>P(B2 | A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$b_{2}$$</td>
+      <td>$$P(b_{2} \mid a_{2})$$</td>
     </tr>
   </tbody>
 </table>
 
+</details>
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(C | A)</summary>
+
 <table>
-  <caption>P(C | A)</caption>
   <thead>
     <tr>
-      <th>State of A</th>
-      <th>State of C</th>
-      <th>Probability</th>
+      <th>$$A$$</th>
+      <th>$$C$$</th>
+      <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>A1</td>
-      <td>C1</td>
-      <td>P(C1 | A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$P(c_{1} \mid a_{1})$$</td>
     </tr>
     <tr>
-      <td>A1</td>
-      <td>C2</td>
-      <td>P(C2 | A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$P(c_{2} \mid a_{1})$$</td>
     </tr>
     <tr>
-      <td>A1</td>
-      <td>C3</td>
-      <td>P(C3 | A1)</td>
+      <td>$$a_{1}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$P(c_{3} \mid a_{1})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>C1</td>
-      <td>P(C1 | A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$c_{1}$$</td>
+      <td>$$P(c_{1} \mid a_{2})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>C2</td>
-      <td>P(C2 | A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$c_{2}$$</td>
+      <td>$$P(c_{2} \mid a_{2})$$</td>
     </tr>
     <tr>
-      <td>A2</td>
-      <td>C3</td>
-      <td>P(C3 | A2)</td>
+      <td>$$a_{2}$$</td>
+      <td>$$c_{3}$$</td>
+      <td>$$P(c_{3} \mid a_{2})$$</td>
     </tr>
   </tbody>
 </table>
 
+</details>
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(D | C)</summary>
+
 <table>
-  <caption>P(D | C)</caption>
   <thead>
     <tr>
-      <th>State of C</th>
-      <th>State of D</th>
-      <th>Probability</th>
+      <th>$$C$$</th>
+      <th>$$D$$</th>
+      <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>C1</td>
-      <td>D1</td>
-      <td>P(D1 | C1)</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(d_{1} \mid c_{1})$$</td>
     </tr>
     <tr>
-      <td>C1</td>
-      <td>D2</td>
-      <td>P(D2 | C1)</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(d_{2} \mid c_{1})$$</td>
     </tr>
     <tr>
-      <td>C1</td>
-      <td>D3</td>
-      <td>P(D3 | C1)</td>
+      <td>$$c_{1}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(d_{3} \mid c_{1})$$</td>
     </tr>
     <tr>
-      <td>C2</td>
-      <td>D1</td>
-      <td>P(D1 | C2)</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(d_{1} \mid c_{2})$$</td>
     </tr>
     <tr>
-      <td>C2</td>
-      <td>D2</td>
-      <td>P(D2 | C2)</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(d_{2} \mid c_{2})$$</td>
     </tr>
     <tr>
-      <td>C2</td>
-      <td>D3</td>
-      <td>P(D3 | C2)</td>
+      <td>$$c_{2}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(d_{3} \mid c_{2})$$</td>
     </tr>
     <tr>
-      <td>C3</td>
-      <td>D1</td>
-      <td>P(D1 | C3)</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{1}$$</td>
+      <td>$$P(d_{1} \mid c_{3})$$</td>
     </tr>
     <tr>
-      <td>C3</td>
-      <td>D2</td>
-      <td>P(D2 | C3)</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{2}$$</td>
+      <td>$$P(d_{2} \mid c_{3})$$</td>
     </tr>
     <tr>
-      <td>C3</td>
-      <td>D3</td>
-      <td>P(D3 | C3)</td>
+      <td>$$c_{3}$$</td>
+      <td>$$d_{3}$$</td>
+      <td>$$P(d_{3} \mid c_{3})$$</td>
     </tr>
   </tbody>
 </table>
+
+</details>
+
+**Total distinct probabilities:** $$2 + 4 + 6 + 9 = \mathbf{21}$$.
+
+This is a remarkable reduction from the original 36 entries in the full joint table. Not only does this significantly cut down the amount of data that needs to be estimated, but it also makes the model far more transparent and easier to update. Each table focuses on a localized relationship, simplifying parameter estimation and model maintenance. As problems grow more complex, the benefits of explicitly representing conditional independencies become exponentially more pronounced.
 
 <!-- However, you *dont need* to have those values written in the table because since they are independent you know their value is simply the multiplication of P(A) * P(B)-->
 
