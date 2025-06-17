@@ -363,7 +363,7 @@ The diagram corresponds to the directed acyclic graph of a <a href="https://en.w
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="200">
+      <img src="/assets/2025-06-14-decision-theory-II/bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="300">
     </td>
   </tr>
   <tr>
@@ -562,37 +562,65 @@ This represents a dramatic decrease from the 36 entries required in the full joi
 
 <h2 id="decision_networks">Decision networks</h2>
 
-<!-- Introduce decision networks by commenting on previous limitations and how they tackle them -->
+Building on the foundation of Bayesian networks, **decision networks** (<a href=""><u>Howard & Matheson, 1984</u></a>), also known as an **influence diagrams** provide a powerful extension that seamlessly integrates decision-making into probabilistic models. Unlike decision trees, decision networks avoid combinatorial explosion by factorizing the joint probability distribution, and they naturally express conditional independencies through their graphical structure. 
 
-<h3 id="formal_definition">Formal Definition</h3>
-
-
-A **decision network** (<a href=""><u>Howard & Matheson, 1984</u></a>), also known as an **influence diagram** is a directed acyclic graph represented as $$G = (N, E)$$, where:
-
-The set of nodes $$N$$ is partitioned into three subsets:
+A decision network augments a Bayesian network with two extra node types:
 
 * <span style="color:red;"><b>Decision nodes</b></span>: Shown as squares, these indicate points where the decision-maker selects among available actions.
-* <span style="color:purple;"><b>Chance nodes</b></span>: Depicted as circles, these capture uncertain factors or random events that affect the decision process.
 * <span style="color:blue;"><b>Outcome nodes</b></span>: Illustrated as diamonds, these reflect the resulting utilities or values associated with different decision paths.
 
+<span style="color:purple;"><b>Chance nodes</b></span> (circles) are exactly the same as in a Bayesian network and often reuse the same conditional‐probability tables. Arcs into a decision node indicate what information will be available when the choice is made. Arcs into a utility node show which variables affect the final payoff.
 
-The set of edges $$E$$ includes two types of arcs, depending on the type of node they point to:
+<h2> Modelling the Oil Problem with a Decision Network</h2>
 
-* **Informational Arcs**. These arcs connect to decision nodes and indicate temporal precedence. In other words, the variable at the origin of the arc represents information that is available and known at the time the decision is made at the destination node.
-* **Conditional Arcs**. These arcs connect to value or chance nodes and represent dependencies, either functional or probabilistic, on the values of the parent nodes. They do not imply causality or temporal precedence.
+<h2> Evaluating the Decision Network </h2>
 
-<h2 id="sensitivity_analysis"></h2>
+Decision networks were originally developed as a more compact way to represent decision problems, which were then converted into decision trees for evaluation. Their intuitive structure allowed decision makers to model problems as they understood them, making communication between decision makers and analysts much easier. However, the main drawback was that the decision network still had to be transformed into a different format—a decision tree—in order to be evaluated.
 
-<script
+In the 1980s, algorithms were introduced for evaluating decision networks that operated directly on the network itself; see Olmsted (1983) and Shachter (1986). This transformed decision networks into a graphical modeling language that can be used both for decision analysis and probabilistic inference.
+
+The main methods for evaluating decision networks are:
+
+* **Arc Reversal and Node Reduction**: This technique systematically transforms the network by reversing arcs, eliminating chance nodes (by summing them out), and removing decision nodes (by maximizing over them) to determine the optimal expected utility. It was pioneered by Shachter (1986).
+* **Variable Elimination**: An extension of variable elimination used in Bayesian networks, this method also incorporates decision and utility nodes. It involves calculating expected utilities and optimizing over decision variables.
+* **Junction Tree Methods**: These approaches construct a tree of variable clusters (cliques) and use message passing to propagate information and optimize decisions. Junction tree methods are particularly effective for networks with low treewidth (Jensen et al., 1994).
+* **Shenoy-Shafer Method**: An exact belief propagation algorithm that generalizes junction tree techniques. It is used for evidential reasoning and for handling imprecise probabilities in graphical models (Shafer & Shenoy, 1987).
+* **Approximation Methods**: For highly complex problems, approximate solutions can be obtained using techniques such as Monte Carlo sampling or variational methods, which rely on tractable families of policies.
+
+<h3 id="computational-complexity">Computational Complexity</h3>
+
+The computational complexity of decision network evaluation depends fundamentally on the network's structural properties:
+
+- **Treewidth**: Networks with low treewidth can be solved in polynomial time, while high treewidth networks may require exponential time.
+- **Number of decision nodes**: Each additional decision node can multiply the complexity, though the actual impact depends on the temporal structure.
+- **Domain sizes**: Larger state spaces for variables increase both time and space requirements.
+
+In practice, most real-world decision networks have sufficient structure to be solved efficiently, but pathological cases can arise that challenge even the most sophisticated algorithms.
+
+
+<h2 id="sensitivity_analysis">Sensitivity Analysis</h2>
+
+<!-- <script
 	type="module"
 	src="https://gradio.s3-us-west-2.amazonaws.com/5.31.0/gradio.js"
-></script>
+></script> -->
 
 <gradio-app src="https://ferjorosa-oil-field-purchase-decision.hf.space"></gradio-app>
 
+
+<h2>Conclusion</h2>
+
+<!-- Comentar donde seguir aprendiendo mas sobre este tema y aspectos interesantes actuales como que:
+
+es un tema poco explorado, no hemos tocado causalidad (ahi hay mas chicha), relacion con LLMs, variables probabilisticas continuas (poner referencia), etc. -->
 
 <h2 id="references">References</h2>
 
 1. Shenoy, P. P. (2009). <a href="https://pshenoy.ku.edu/Papers/EOLSS09.pdf"><u>Decision trees and influence diagrams</u></a>. Encyclopedia of life support systems, 280-298.
 
 X. Howard, R. A., Matheson, J. E. (1984). <u>Influence diagrams</u>. The Principles and Applications of Decision Analysis (Vol. II), 719-762
+
+Jensen, F., Jensen, F. V., & Dittmer, S. (1994). From influence diagrams to junction trees. In Proceedings of the 10th Conference on Uncertainty in Artificial Intelligence (UAI) (pp. 367-373).
+
+
+Shachter, R. D. (1986). Evaluating Influence Diagrams. Operations Research, 34(6), 871-882.
