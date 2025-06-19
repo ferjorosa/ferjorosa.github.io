@@ -28,7 +28,7 @@ The number of decision paths is profoundly affected by the order and meaning of 
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="200">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="240">
     </td>
   </tr>
   <tr>
@@ -45,7 +45,7 @@ Conversely, a problem with the same types of variables, but structured *symmetri
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="200">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="240">
     </td>
   </tr>
   <tr>
@@ -560,20 +560,77 @@ When these conditional independencies are recognized and modeled, we no longer n
 
 This represents a dramatic decrease from the 36 entries required in the full joint probability table. By reducing the number of parameters that must be specified, the model becomes much more manageable, transparent, and easier to modify. As decision problems increase in complexity, the advantages of explicitly modeling conditional independencies grow even more significant.
 
-<h2 id="decision_networks">Decision networks</h2>
+<h2 id="decision_networks">Decision Networks</h2>
 
-Building on the foundation of Bayesian networks, **decision networks** (<a href=""><u>Howard & Matheson, 1984</u></a>), also known as an **influence diagrams** provide a powerful extension that seamlessly integrates decision-making into probabilistic models. Unlike decision trees, decision networks avoid combinatorial explosion by factorizing the joint probability distribution, and they naturally express conditional independencies through their graphical structure. 
+Building on the foundation of Bayesian networks, **decision networks** (<a href=""><u>Howard & Matheson, 1984</u></a>), also known as **influence diagrams**, provide a powerful extension that seamlessly integrates decision-making into probabilistic models. Unlike decision trees, decision networks avoid combinatorial explosion by factorizing the joint probability distribution and naturally express conditional independencies through their graphical structure.
 
-A decision network augments a Bayesian network with two extra node types:
+A decision network enhances a Bayesian network by adding two types of nodes:
 
-* <span style="color:red;"><b>Decision nodes</b></span>: Shown as squares, these indicate points where the decision-maker selects among available actions.
-* <span style="color:blue;"><b>Outcome nodes</b></span>: Illustrated as diamonds, these reflect the resulting utilities or values associated with different decision paths.
+* <span style="color:red;"><b>Decision nodes</b></span>: Shown as squares, these represent points where the decision-maker chooses among available actions.
+* <span style="color:blue;"><b>Outcome nodes</b></span>: Illustrated as diamonds, these indicate the resulting utilities or values associated with different decision paths.
 
-<span style="color:purple;"><b>Chance nodes</b></span> (circles) are exactly the same as in a Bayesian network and often reuse the same conditional‐probability tables. Arcs into a decision node indicate what information will be available when the choice is made. Arcs into a utility node show which variables affect the final payoff.
+<span style="color:purple;"><b>Chance nodes</b></span> (circles) function as in Bayesian networks, often reusing the same conditional probability tables. In decision networks, arcs serve two main purposes: **informational arcs** (into decision nodes) indicate what information is available when a choice is made, while **conditional arcs** (into chance or utility nodes) represent probabilistic or functional dependencies on parent variables, showing which factors affect outcomes or payoffs—without implying causality or temporal order.
 
-<h2> Modelling the Oil Problem with a Decision Network</h2>
 
-<h2> Evaluating the Decision Network </h2>
+<h2 id="modelling_oil_problem">Modelling the Oil Problem with a Decision Network</h2>
+
+Modeling takes place at multiple levels. Similar to constructing a decision tree, drawing the decision network represents the qualitative description of the problem (structural or graphical level). Next, quantitative information is incorporated (numerical level) to fully specify the model.
+
+One important caveat of decision networks is that they only work with symmetric problems. In the case of an asymmetric problem, techniques are used to convert it into a symmetric one. This leads to an increase in the size of the problem, since artificial states (sometimes unintuitive) are usually defined, and as a result, the computational burden increases.
+
+In large and highly asymmetric problems, it is not so straightforward to use these kinds of resources (artificial alternatives and states, degenerate probabilities and utilities) to convert a problem into an equivalent symmetric one. For more information on this topic, see <a href="https://cig.fi.upm.es/wp-content/uploads/2024/01/A-Comparison-of-Graphical-Techniques-for-Asymmetric-Decision-Problems.pdf"><u>Bielza & Shenoy (1999)</u></a>.
+
+In this article, we will use a standard influence diagram. To maintain problem symmetry, an extra state <span style="color:purple;">no_results</span> should be added to the test results (<span style="color:purple;"><b>R</b></span>) variable . This is because results are only observed if the test is performed.
+
+<h3 id="modelling_oil_problem_qualitative">Modeling Qualitative Information</h3>
+
+The following image displays the influence diagram structure for the oil problem:
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil.png" alt="Decision network structure of the asymmetric oil problem from Part I" height="175">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <i><b>Figure 1a.</b> Traditional influence diagram for the oil problem. Informational arcs arcs</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+This diagram illustrates a traditional influence diagram, which operates under the assumption of perfect recall. The information arcs indicate that the Test / No Test (<span style="color:red;"><b>T</b></span>) decision is made prior to the Buy / No Buy (<span style="color:red;"><b>B</b></span>) decision. Furthermore, no information is available before making the test decision, and the test results are known when making the buy decision. This establishes the temporal sequence of variables: <span style="color:red;"><b>T</b></span>, <span style="color:purple;"><b>R</b></span>, <span style="color:red;"><b>B</b></span>, and finally <span style="color:purple;"><b>Q</b></span> (oil field quality).
+
+However, traditional influence diagrams can become computationally complex to solve, particularly for intricate problems, and they may not accurately reflect the realistic limitations of human decision-making. For these reasons, LIMIDs (<a href="https://web.math.ku.dk/~lauritzen/papers/limids.pdf">Lauritzen & Nilsson, 2001)</a> are often the preferred choice. These models relax the perfect recall assumption and allow for explicit representation of limited memory. Memory arcs in LIMIDs explicitly specify which past decisions and observations are remembered and used for each current decision.
+
+The subsequent image presents the corresponding LIMID, enhanced with a green memory arc. This memory arc extends from <span style="color:red;"><b>T</b></span> to <span style="color:red;"><b>B</b></span> because the outcome of the porosity test decision is crucial for the subsequent decision on buying or not buying the field.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Decision network structure of the asymmetric oil problem from Part I" height="175">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <i><b>Figure 1b.</b> LIMID for the oil problem with a memory arc shown in green.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+For this problem, we will utilize the LIMID version of the oil decision problem.
+
+<h3 id="modelling_oil_problem_quantitative">Modellin Quantitative Information</h3>
+
+Dado que todas nuestras variables aleatorias son categoricas, podemos representar dicha informacion en forma tabular.
+
+Poner aqui debajo en colapsables las diferentes probabilidades condicionadas y la tabla de utilidades.
+
+<h2 id="evaluating_oil_problem"> Evaluating the Decision Network </h2>
 
 Decision networks were originally developed as a more compact way to represent decision problems, which were then converted into decision trees for evaluation. Their intuitive structure allowed decision makers to model problems as they understood them, making communication between decision makers and analysts much easier. However, the main drawback was that the decision network still had to be transformed into a different format—a decision tree—in order to be evaluated.
 
@@ -587,7 +644,7 @@ The main methods for evaluating decision networks are:
 * **Shenoy-Shafer Method**: An exact belief propagation algorithm that generalizes junction tree techniques. It is used for evidential reasoning and for handling imprecise probabilities in graphical models (Shafer & Shenoy, 1987).
 * **Approximation Methods**: For highly complex problems, approximate solutions can be obtained using techniques such as Monte Carlo sampling or variational methods, which rely on tractable families of policies.
 
-<h3 id="computational-complexity">Computational Complexity</h3>
+<h3 id="computational_complexity">Computational Complexity</h3>
 
 The computational complexity of decision network evaluation depends fundamentally on the network's structural properties:
 
@@ -624,3 +681,5 @@ Jensen, F., Jensen, F. V., & Dittmer, S. (1994). From influence diagrams to junc
 
 
 Shachter, R. D. (1986). Evaluating Influence Diagrams. Operations Research, 34(6), 871-882.
+
+Lauritzen, S. L., & Nilsson, D. (2001). Representing and solving decision problems with limited information. Management Science, 47(9), 1235-1251.
