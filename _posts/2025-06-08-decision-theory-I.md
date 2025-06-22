@@ -243,7 +243,7 @@ The process begins with getting clear on what we're trying to achieve. Instead o
 
 With these objectives in mind, the next step is to brainstorm all feasible actions, not just the obvious ones. Beyond simply buying or not buying the field, perhaps there's a third path, like delaying the decision to commission an extra study for more data.
 
-Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u> and <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u> (i.e., influence diagrams) become useful for visualizing the entire problem.
+Once the alternatives are on the table, we model the decision. This involves structuring the uncertainties (like the field's quality), assigning probabilities (a 35% chance of high quality, etc.), and mapping outcomes to their values. This is where tools like <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u> and <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">influence diagrams</a></u> (i.e., decision networks) become useful for visualizing the entire problem.
 
 With the model built, we can calculate the optimal path forward. As we saw, computing the EU helps us compare the options. Based on the EU, we know that buying is the stronger choice. But a good analysis doesn't stop there. We need to ask, "what if?" This is the role of <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>: testing how robust our decision is by tweaking the key inputs. What if the outcome for a "low quality" field isn't breaking even, but a loss of \$200M? 
 
@@ -282,18 +282,18 @@ In an ideal situation, the test would be extremely accurate. However, real-world
 <table>
   <tr>
     <th></th>
-    <th>high</th>
-    <th>medium</th>
-    <th>low</th>      
+    <th><span style="color: purple;">high</span></th>
+    <th><span style="color: purple;">medium</span></th>
+    <th><span style="color: purple;">low</span></th>      
   </tr>
   <tr>
-    <td>pass</td>
+    <td><span style="color: purple;">pass</span></td>
     <td>0.95</td>
     <td>0.7</td>
     <td>0.15</td>      
   </tr>
   <tr>
-    <td>fail</td>
+    <td><span style="color: purple;">fail</span></td>
     <td>0.05</td>
     <td>0.3</td>
     <td>0.85</td> 
@@ -301,7 +301,7 @@ In an ideal situation, the test would be extremely accurate. However, real-world
 </table>
 
 
-**The test costs $30 million**, and even after getting the results, the company still has to decide whether to buy the field. This means there are now two decisions to make: first, whether to conduct the test, and second, whether to purchase the field based on the test results. This kind of two-step decision-making, where each choice affects the next and involves probabilities, can't be handled with simple payoff tables. Instead, we'll need to use a decision tree or a decision network to figure it out.
+**The test costs $30 million**, and even after getting the results, the company still has to decide whether to buy the field. This means there are now two decisions to make: first, whether to conduct the test, and second, whether to purchase the field based on the test results. This kind of two-step decision-making, where each choice affects the next and involves probabilities, can't be handled with simple payoff tables. Instead, we'll need to use a decision tree or an influence diagram to figure it out.
 
 <h2 id="modelling-the-problem-with-a-decision-tree">Modelling the Problem with a Decision Tree</h2>
 
@@ -532,7 +532,7 @@ Since 721 > 696.95, the company should <b>not perform the test</b> and proceed d
 
 In this post, we explored the foundations of decision theory through a practical investment scenario. We learned how to structure decision problems by identifying actions, uncertainties, probabilities, and outcomes. We looked at how to use EU to guide decision-making, and how risk preferences can shape the optimal choice. We also introduced decision trees as a valuable tool for analyzing sequential decisions under uncertainty, and showed how new information, such as a geological test result, can be incorporated into the analysis.
 
-**In the next post**, we'll discuss the limitations of decision trees and introduce decision networks, which offer a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
+**In the next post**, we'll discuss the limitations of decision trees and introduce influence diagrams, which offer a more compact and flexible way to represent complex decision problems with multiple variables and dependencies.
 
 **For more examples** of decision analysis, check out:
 * [Ride-hailing subscription service](https://github.com/ferjorosa/decision-theory-llms/tree/main/decision_problems/ride_hailing): Should a ride-hailing company offer a retention deal to prevent customer churn?
@@ -565,12 +565,12 @@ In this post, we explored the foundations of decision theory through a practical
   <tr>
     <td align="center"><img src="/assets/2025-06-08-decision-theory-I/koller_friedman.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Koller & Friedman (2009)</strong><br><em>Probabilistic Graphical Models</em><br>(Ch. 22, 23)<br><a href="http://mcb111.org/w06/KollerFriedman.pdf">PDF Link</a></td>
-    <td>Advanced coverage of decision networks and their integration with probabilistic reasoning</td>
+    <td>Advanced coverage of influence diagrams and their integration with probabilistic reasoning</td>
   </tr>
   <tr>
     <td align="center"><img src="/assets/2025-06-08-decision-theory-I/russel_norvig_2021.jpg" width="100" height="100" style="object-fit: cover;"></td>
     <td><strong>Russell & Norvig (2010)</strong><br><em>AI: A Modern Approach</em><br>(Ch. 16)<br><a href="http://lib.ysu.am/disciplines_bk/efdd4d1d4c2087fe1cbe03d9ced67f34.pdf">PDF Link</a></td>
-    <td>Introduction to decision theory & decision networks</td>
+    <td>Introduction to decision theory & influence diagrams</td>
   </tr>  
 </table>
 </center>
@@ -590,7 +590,7 @@ In this post, we explored the foundations of decision theory through a practical
 <br><br>
 5. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Decision_tree">decision trees</a></u>.
 <br><br>
-6. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">decision networks</a></u>.
+6. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Influence_diagram">influence diagrams</a></u>.
 <br><br>
 7. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Sensitivity_analysis">sensitivity analysis</a></u>.
 <br><br>
