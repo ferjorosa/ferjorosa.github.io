@@ -760,11 +760,11 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
 
 Influence diagrams were conceived as a compact, intuitive way to describe decision problems, yet practitioners still had to transform them into a different format (i.e., a decision tree) in order to evaluate them. Until the 1980s, when Shachter (1986) showed how to evaluate the network directly, turning the diagram into a self-contained modelling and inference language.
 
-Shachter's arc reversal / node reduction algorithm reverses arcs and sequentially eliminates variables, summing over chance nodes and maximising over decision nodes while pushing expected-utility information forward.
+Shachter's **arc-reversal / node-reduction algorithm** reverses arcs and sequentially eliminates variables, summing over chance nodes and maximising over decision nodes while pushing expected-utility information forward.
 
 <h3 id="local-graph-operations">Four Local Graph Operations</h3>
 
-The arc–reversal / node–reduction algorithm employs a set of fundamental, local graph operations. Each operation ensures that the decision problem remains *semantically equivalent*, meaning the attainable utilities under any strategy are preserved:
+The arc-reversal / node-reduction algorithm employs a set of fundamental, local graph operations. Each operation ensures that the decision problem remains *semantically equivalent*, meaning the attainable utilities under any strategy are preserved:
 
 1. **Barren-Node Deletion:**
     Any chance or decision node that has no children and is not a parent of a outcome node can be immediately removed from the diagram. Such nodes do not affect the utility and are therefore irrelevant to the decision problem.
@@ -1035,50 +1035,70 @@ The arc–reversal / node–reduction algorithm employs a set of fundamental, lo
 
 <h3 id="node-reduction-algorithm">The Node-Reduction Algorithm</h3>
 
-This algorithm is for LIMIDs, so step 0 is to add memory arcs.
+The algorithm incrementally eliminates nodes by repeatedly applying the four local graph operations described above, until only a single value node remains. The number stored in this final value node is the **maximum expected utility (MEU)**, and the collection of recorded decision rules forms an **optimal policy** for the original decision problem.
 
-The arc–reversal / node–reduction algorithm systematically transforms the influence diagram until only a single value node remains, yielding the maximum expected utility (MEU) and an optimal policy for every decision node.
-
-**Input:** A well-formed influence diagram.
+**Input:** A well-formed influence diagram (or LIMID).  
 **Output:** MEU and an optimal policy for every decision node.
 
-**Step 0 (Canonical Form, Optional):**
-If the diagram does not satisfy a total order of decisions and no decision is a parent of chance nodes, preliminary arc reversals are performed to achieve this.
+**Preparatory steps:** 
+- **Canonical form:** If the diagram does not already satisfy the standard conventions (total order of decisions, and no arcs from decisions to chance nodes), perform a sequence of **Arc Reversals (Rule 4)** to obtain a canonical influence diagram.
+- **LIMID transformation:** Transform the influence diagram into a LIMID by adding *memory arcs* so that each decision node has, as parents, all information variables that are remembered at the time of the decision.
 
-**While more than one node remains:**
+---
 
-1.  **Node Selection:** Choose a node $$N$$ that is not a value node and is "simple to eliminate":
-    *   Prioritize barren nodes.
-    *   Otherwise, pick any leaf node.
-    *   If no leaf node is available, select a node and successively reverse its outgoing arcs using the arc reversal rule (1) until it becomes a leaf.
+**Main loop – repeat until only one value node remains:**
 
-2.  **Node Elimination:**
-    *   If $$N$$ is a **chance node**, apply the chance-node removal rule (3).
-    *   If $$N$$ is a **decision node**, apply the decision-node removal rule (4).
+1. **Select a node $$N$$ to eliminate**
+   - If there is any *barren node* (no children), delete it immediately using **Barren-Node Deletion (Rule 1)**.
+   - Otherwise, choose any *leaf node* (a chance or decision node whose only children are value nodes).
+   - If no leaf exists, pick a non-value node and repeatedly apply **Arc Reversal (Rule 4)** to its outgoing arcs until it becomes a leaf.
 
-3.  **Merge Duplicates:** If any duplicated value nodes arise, merge them.
+2. **Eliminate $$N$$**
+   - If $$N$$ is a **chance node**, apply **Chance-Node Removal (Rule 2)**: marginalize over $$N$$ and update the affected value tables.
+   - If $$N$$ is a **decision node**, apply **Decision-Node Removal (Rule 3)**: maximize over the actions of $$N$$, record the optimal decision rule $$\delta^*$$, and update the value tables.
 
-When only a single value node remains, its scalar value represents the maximum expected utility. The collection of all recorded $$\delta^*$$ tables forms the optimal strategy profile.
+3. **Merge duplicate value nodes** that may have arisen during elimination.
 
-<h3 id="relationship-to-bayesian-network-elimination">Relationship to Bayesian-Network Elimination</h3>
+---
 
-The arc-reversal / node-reduction algorithm shares significant commonalities with variable elimination in Bayesian networks:
+When the loop terminates, only one value node remains. Its single numerical entry is the MEU.  
+The set $$\{\delta^*\}$$ collected along the way provides an optimal decision rule for every decision node.
 
-*   The **chance-node removal** and **arc reversal** operations are structurally identical to the variable elimination process used in Bayesian networks. In both cases, the goal is to marginalize out a variable from the joint distribution.
-*   The key distinction lies in the **decision-node removal**. While Bayesian network elimination would sum over the states of a variable, influence diagram evaluation replaces this summation with a **maximisation** step. This "sum-max" approach effectively implements the principle of dynamic programming or Bellman's principle, ensuring that the optimal decision is chosen at each stage.
-*   The computational complexity of the algorithm is exponential in the influence diagram's *induced width*, which refers to the size of the largest intermediate potential (table) generated during the elimination process. This is a common characteristic shared with many exact inference algorithms in graphical models.
+<h3 id="relationship-to-bayesian-network-elimination">Relationship to Bayesian Network Variable Elimination</h3>
 
-<h3 id="why-push-expected-utility-forward">Why "Push Expected Utility Forward"?</h3>
+Arc reversal/node reduction in influence diagrams is structurally similar to variable elimination in Bayesian networks. The main difference being the handling of utilities via **maximization** 
+over decision nodes (instead of **summation** over chance nodes). In both approaches, information is propagated through the graph by combining local factors (such as conditional probability tables or utility functions) and eliminating variables—either by summing over uncertainties for chance nodes or optimizing (maximizing) over decisions for decision nodes.
 
-After a variable is eliminated in the arc-reversal / node-reduction algorithm, any numerical quantity that previously depended on it is replaced by an *expected* (or maximised) value. This new value still maintains its dependence on the variable's predecessors.
+This similarity also extends to computational complexity: since both methods generate and manipulate similar intermediate factors, their efficiency is determined by the **induced width** (or **treewidth**) of the chosen elimination order.
 
-This approach is crucial for several reasons:
+<h3 id="related-work-evaluation">Related Work</h3>
 
-*   **Compactness:** It keeps the influence diagram representation concise. Instead of explicitly enumerating all possible outcome paths (as in a decision tree, which leads to combinatorial explosion), the algorithm propagates aggregated information. Only the predecessors that can still influence future decisions or the final utility remain explicit in the diagram.
-*   **Efficiency:** By summarizing the impact of eliminated variables into updated potentials, the algorithm avoids redundant calculations and manages the complexity more efficiently. Information is effectively propagated "forward" through the graph, from earlier nodes to later ones, without needing to revisit previously processed dependencies.
-*   **Information Flow:** This mechanism ensures that relevant expected-utility information is systematically carried forward through the diagram. This allows for the calculation of the overall maximum expected utility and the derivation of optimal policies by integrating the contributions of eliminated variables into the remaining structure.
+Several alternative strategies exist for evaluating influence diagrams beyond the arc-reversal / node-reduction procedure described above.
 
-This systematic propagation of expected utility is a cornerstone of the algorithm's ability to evaluate complex decision problems directly within the influence diagram framework, making it a powerful and intuitive tool for decision analysis.
+A more compact exact method is **junction-tree propagation** (also inspired from the Bayesian network equivalent). In this approach, the diagram is moralized, triangulated, and compiled into a tree of cliques. Local probability-utility factors are then exchanged between cliques via message passing (using Shafer–Shenoy or HUGIN style algorithms) until convergence. Junction-tree algorithms are often more memory-efficient than flat variable elimination and form the basis of many commercial tools. For example, PyAgrum provides `gum.ShaferShenoyLIMIDInference`, an extension of Shafer–Shenoy propagation for LIMIDs that incorporates maximization messages for decision nodes (Jensen et al., 1994; Madsen & Nilsson, 2001).
+
+<div style="background-color:rgb(250, 224, 224); padding: 10px; border-radius: 5px;">
+
+Creo que esto deberia ponerlo en la parte de Software
+
+</div>
+
+
+However, even junction-tree propagation can become infeasible in practice: the required clique tables may become prohibitively large for densely connected models, and exact arc-reversal is challenging when the diagram includes continuous variables. In such cases, analysts often turn to **approximate methods**. The most common is Monte Carlo sampling, which estimates expected utility by simulating random scenarios (Shachter & Kenley, 1989). Subsequent research has shown that this approach can be extended to non-Gaussian or hybrid diagrams (Bielza et al., 1999; Cobb & Shenoy, 2005). 
+
+Finally, another avenue is variational inference, although I haven't yet found published work applying it to influence diagrams. In principle one could adapt techniques such as variational message passing (Winn & Bishop, 2005) to do so.
+
+<h2 id="evaluating-oil-influence-diagram">Evaluating the Oil Influence Diagram</h2>
+
+We will use the arc-reversal / node-reduction algorithm to solve the oil decision problem. Observe that the influence diagram is already a LIMID since we added the arc T $$\rightarrow$$ B and it is in canonical form.
+
+We observe that there are no barren nodes, nor any leaf nodes. In such a case, we need to choose one of the chance nodes and apply arc reversal until it becomes a leaf.
+
+For the first step, we choose node Q, and therefore, we must reverse the arc Q $$\rightarrow$$ R. To reverse it, we eliminate Q $$\rightarrow$$ R, add R $$\rightarrow$$ Q, and add arcs from the parents of R to Q, if they were not already parents of Q. This means we also add the arc T $$\rightarrow$$ R.
+
+<h2 id="influence-diagram-libraries">Influence Diagram Libraries</h2>
+
+Comentar que no tenemos que hacer esto a mano, que hay librerias, y comentar que Pyagrum tiene una implementacion de Shafer-Shenoy que basicamente es junction tree algorithm.
 
 <h2 id="sensitivity_analysis">Sensitivity Analysis</h2>
 
@@ -1102,6 +1122,8 @@ Comentar donde seguir aprendiendo mas sobre este tema y aspectos interesantes ac
 
 es un tema poco explorado, no hemos tocado causalidad (ahi hay mas chicha), relacion con LLMs, variables probabilisticas continuas (poner referencia), etc. 
 
+En el siguiente articulo comentaremos un poco sobre Pyagrum, sensitivity analysis y multiples variables de utilidad (plano de decision, multiples decisiones posibles).
+
 Comentar brevemente las fortalezas y limitaciones de los IDs
 
 
@@ -1117,3 +1139,8 @@ Lauritzen, S. L., & Nilsson, D. (2001). Representing and solving decision proble
 
 SHAFER, G., AND P. P. SHENOY. 1990. Probability Propagation. Ann. Math. Artif. Intell. 2, 327-352.
 * https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content
+
+Shachter, R. D. & Kenley, C. R. (1989). <i>Gaussian influence diagrams</i>. <i>Management Science</i>, 35(5), 527–550.<br>
+Bielza, C., Müller, P. & Ríos-Insua, D. (1999). <i>Decision analysis by augmented probability simulation</i>. <i>Management Science</i>, 45(7), 995–1007.<br>
+Cobb, B. R. & Shenoy, P. P. (2005). <i>Decision making with hybrid influence diagrams using mixtures of truncated exponentials</i>. In <i>Proc. UAI</i>, 85–93.<br>
+Winn, J. & Bishop, C. M. (2005). <i>Variational message passing</i>. <i>Journal of Machine Learning Research</i>, 6, 661–694.</small>
