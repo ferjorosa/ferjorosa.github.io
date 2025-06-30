@@ -588,7 +588,7 @@ The following image displays the influence diagram structure for the oil problem
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" height="175">
+      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -609,7 +609,7 @@ The subsequent image presents the corresponding LIMID, enhanced with a green mem
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" height="175">
+      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -933,7 +933,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
 
     <br>
 
-    Marginalize X to compute the new CPT for $$Y$$:
+    Marginalize $$X$$ to compute the new CPT for $$Y$$:
 
     $$
     P(Y \mid Z) = \sum_{x} P(Y \mid x) P(x \mid Z).
@@ -1046,7 +1046,7 @@ The algorithm incrementally eliminates nodes by repeatedly applying the four loc
 
 ---
 
-**Main loop – repeat until only one value node remains:**
+**Main loop - repeat until only one value node remains:**
 
 1. **Select a node $$N$$ to eliminate**
    - If there is any *barren node* (no children), delete it immediately using **Barren-Node Deletion (Rule 1)**.
@@ -1090,12 +1090,209 @@ Finally, another avenue is variational inference, although I haven't yet found p
 
 <h2 id="evaluating-oil-influence-diagram">Evaluating the Oil Influence Diagram</h2>
 
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <i><b>Figure 1b.</b> LIMID for the oil problem with a memory arc shown in green.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
 We will use the arc-reversal / node-reduction algorithm to solve the oil decision problem. Observe that the influence diagram is already a LIMID since we added the arc T $$\rightarrow$$ B and it is in canonical form.
 
 We observe that there are no barren nodes, nor any leaf nodes. In such a case, we need to choose one of the chance nodes and apply arc reversal until it becomes a leaf.
 
 For the first step, we choose node Q, and therefore, we must reverse the arc Q $$\rightarrow$$ R. To reverse it, we eliminate Q $$\rightarrow$$ R, add R $$\rightarrow$$ Q, and add arcs from the parents of R to Q, if they were not already parents of Q. This means we also add the arc T $$\rightarrow$$ R.
 
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_reverse_q.png" alt="TODO" width="320">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <i><b>Figure 1b.</b> TODO</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+In order to obtain the P(R \mid T) distribution, we need to first marginalize Q in P(R \mid Q):
+
+
+$$
+\begin{aligned}
+P(R = \text{pass} \mid Q) &= P(\text{pass}  \mid \text{high})P(\text{high}) + P(\text{pass}  \mid \text{medium})P(\text{medium}) + P(\text{pass}  \mid \text{low})P(\text{low}) \\
+                &= 0.95 \times 0.35 + 0.7 \times 0.45 + 0.15 \times 0.2 \\
+                &= 0.3325 + 0.315 + 0.03 \\
+                &= 0.6775 \\
+P(R = \text{fail} \mid Q) &= P(\text{fail}  \mid \text{high})P(\text{high}) + P(\text{fail}  \mid \text{medium})P(\text{medium}) + P(\text{fail}  \mid \text{low})P(\text{low}) \\
+                &= 0.05 \times 0.35 + 0.3 \times 0.45 + 0.85 \times 0.2 \\
+                &= 0.0175 + 0.135 + 0.17 \\
+                &= 0.3225 \\
+\end{aligned}
+$$
+
+Now, given that $R$ only applies when we make the test, we know that P(R \mid Q, T = \text{perform}) is basically P(R \mid Q) and that P(R \mid Q, T = \text{do_not_perform}) is all 0s except for "no results". Therefore:
+
+<table>
+  <tr>
+    <th><span style="color: purple;">P(R \mid T)</span></th>
+    <th><span style="color: purple;">perform test</span></th>
+    <th><span style="color: purple;">do not perform test</span></th>      
+  </tr>
+  <tr>
+    <td><span style="color: purple;">pass</span></td>
+    <td>0.6775</td>
+    <td>0</td>   
+  </tr>
+  <tr>
+    <td><span style="color: purple;">fail</span></td>
+    <td>0.3225</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td><span style="color: purple;">no results</span></td>
+    <td>0</td>
+    <td>1</td>
+  </tr>
+</table>
+
+Now for P(Q \mid R), we need to apply bayes theorem:
+
+$$
+\begin{aligned}
+P(Q = \text{high} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{high})P(Q = \text{high})}{P(R = \text{pass})} \\
+&= \frac{0.95 \times 0.35}{0.6775} = \frac{0.3325}{0.6775} \approx 0.4908 \\
+P(Q = \text{medium} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{medium})P(Q = \text{medium})}{P(R = \text{pass})} \\
+&= \frac{0.7 \times 0.45}{0.6775} = \frac{0.315}{0.6775} \approx 0.4649 \\
+P(Q = \text{low} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{low})P(Q = \text{low})}{P(R = \text{pass})} \\
+&= \frac{0.15 \times 0.2}{0.6775} = \frac{0.03}{0.6775} \approx 0.0443 \\
+P(Q = \text{high} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{high})P(Q = \text{high})}{P(R = \text{fail})} \\
+&= \frac{0.05 \times 0.35}{0.3225} = \frac{0.0175}{0.3225} \approx 0.0543 \\
+P(Q = \text{medium} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{medium})P(Q = \text{medium})}{P(R = \text{fail})} \\
+&= \frac{0.3 \times 0.45}{0.3225} = \frac{0.135}{0.3225} \approx 0.4186 \\
+P(Q = \text{low} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{low})P(Q = \text{low})}{P(R = \text{fail})} \\
+&= \frac{0.85 \times 0.2}{0.3225} = \frac{0.17}{0.3225} \approx 0.5271
+\end{aligned}
+$$
+
+When T = do not perform then R does not make sense, so P(Q \mid R, T = do not perform) is basically P(R). Therefore:
+
+<table>
+  <tr>
+    <th rowspan="2" style="text-align: center;">P(<span style="color: purple">Q</span> | <span style="color: purple">R</span>, <span style="color: red">T</span>)</th>
+    <th colspan="3" style="text-align: center;"><span style="color: red;">Perform test</span></th>
+    <th colspan="3" style="text-align: center;"><span style="color: red;">Do not perform test</span></th>
+  </tr>
+  <tr>
+    <th style="text-align: center;"><span style="color: purple;">pass</span></th>
+    <th style="text-align: center;"><span style="color: purple;">fail</span></th>
+    <th style="text-align: center;"><span style="color: purple;">no results</span></th>
+    <th style="text-align: center;"><span style="color: purple;">pass</span></th>
+    <th style="text-align: center;"><span style="color: purple;">fail</span></th>
+    <th style="text-align: center;"><span style="color: purple;">no results</span></th>
+  </tr>
+  <tr>
+    <td><span style="color: purple;">high</span></td>
+    <td>0.4908</td>
+    <td>0.0543</td>
+    <td>x</td>
+    <td>x</td>
+    <td>x</td>
+    <td>0.35</td>
+  </tr>
+  <tr>
+    <td><span style="color: purple;">medium</span></td>
+    <td>0.4649</td>
+    <td>0.4186</td>
+    <td>x</td>
+    <td>x</td>
+    <td>x</td>
+    <td>0.45</td>
+  </tr>
+  <tr>
+    <td><span style="color: purple;">low</span></td>
+    <td>0.0443</td>
+    <td>0.5271</td>
+    <td>x</td>
+    <td>x</td>
+    <td>x</td>
+    <td>0.2</td>
+  </tr>
+</table>
+
+By making the problem symmetric, we have introduced many zero probabilities, which increases the chance of encountering 0/0 situations. We must remember that a conditional probability P(a \ mid b) is only defined for those b with P(b) > 0, so we should not expect to be able to compute all conditionals when reversing arcs. In any case, as will be seen below, these "x" values will not have any influence on the problem.
+
+Once we have inverted the arc Q $$\rightarrow$$ R, Q becomes a leaf node and thus we can remove it. Figure X shows the resulting diagram.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_q.png" alt="TODO" width="320">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <i><b>Figure 1b.</b> TODO.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+By removing Q, we need to marginalize it and update the utility table of U
+
+$$
+u'_U(T, B, R) = \sum_q u_U(T, B, Q)P(Q = q \mid T, R)
+$$
+
+
+$$
+\begin{aligned}
+u'(T = \text{perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\
+&= 0 \\[1em]
+% -------------------
+u'(T = \text{perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\[1em]
+% -------------------
+u'(T = \text{perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\[1em]
+% -------------------
+u'(T = \text{perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\[1em]
+% -------------------
+u'(T = \text{no_perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\[1em]
+% -------------------
+u'(T = \text{no_perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\[1em]
+% -------------------
+u'(T = \text{no_perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\[1em]
+% -------------------
+u'(T = \text{no_perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\
+\end{aligned}
+$$
 <h2 id="influence-diagram-libraries">Influence Diagram Libraries</h2>
 
 Comentar que no tenemos que hacer esto a mano, que hay librerias, y comentar que Pyagrum tiene una implementacion de Shafer-Shenoy que basicamente es junction tree algorithm.
