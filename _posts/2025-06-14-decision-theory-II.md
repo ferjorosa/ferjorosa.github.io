@@ -63,7 +63,7 @@ This **combinatorial explosion** not only affects computational tractability but
 
 In addition to the issue of combinatorial explosion, decision trees have another important limitation: they assume a strict, linear chain of dependence. In a decision tree, every variable is implicitly conditioned on *all* previous events along its particular path. This rigid structure prevents us from explicitly representing one of the most important concepts in probabilistic modeling: <b><a href="https://en.wikipedia.org/wiki/Conditional_independence"><u>conditional independence</u></a></b>.
 
-To illustrate this, consider a generic problem with four <span style="color:purple;"><b>random variables</b></span>: $$A$$ and $$B$$ (each with two possible states, $$a_1, a_2$$ and $$b_1, b_2$$, respectively), and $$C$$ and $$D$$ (each with three possible states, $$c_1, c_2, c_3$$ and $$d_1, d_2, d_3$$). In a traditional decision tree, where conditional independencies cannot be explicitly represented, you must specify the entire joint probability distribution for all variables. This means assigning a probability to every possible combination of outcomes, as shown in the joint probability table below:
+To illustrate this, consider a generic problem with four <span style="color:purple;"><b>random variables</b></span>: $$A$$ and $$B$$ (each with two possible states, $$a_1, a_2$$ and $$b_1, b_2$$, respectively), and $$C$$ and $$D$$ (each with three possible states, $$c_1, c_2, c_3$$ and $$d_1, d_2, d_3$$. In a traditional decision tree, where conditional independencies cannot be explicitly represented, you must specify the entire joint probability distribution for all variables. This means assigning a probability to every possible combination of outcomes, as shown in the joint probability table below:
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
@@ -593,7 +593,7 @@ The following image displays the influence diagram structure for the oil problem
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <i><b>Figure 1a.</b> Traditional influence diagram for the oil problem. Informational arcs arcs</i>
+      <i><b>Figure 1a.</b> Traditional influence diagram for the oil problem. Informational arcs</i>
     </td>
   </tr>
 </table>
@@ -787,7 +787,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     </center> 
 
 2. **Chance-Node Removal:**
-    Once a chance node $$C$$ becomes a leaf (i.e., **it has no children except outcome nodes**), it can be eliminated via marginalization (taking an expectation). For every outcome node $$O$$ that has $$C$$ as a parent, a new utility table, $$u'_O$$, is computed. This new table will depend on the original parents of $$O$$ (excluding $$C$$) and all the parents of $$C$$:
+    Once a chance node $$C$$ becomes a leaf (i.e., **it has no children except outcome nodes**), it can be eliminated via marginalization (taking an expectation). For every outcome node $$O$$ that has $$C$$ as a parent, a new utility table, $$u'_O$$, is computed. This new table will depend on the original parents of $$O$$ (excluding $$C$$) and all the parents of $$C$$.
 
     $$
     u'_O((\mathbf{\text{Pa}}_{O} \setminus \{C\}) \cup \mathbf{\text{Pa}}_{C}) = \sum_c u_O(\mathbf{\text{Pa}}_{O}) P(C = c \mid \mathbf{\text{Pa}}_{C})
@@ -1075,7 +1075,7 @@ This similarity also extends to computational complexity: since both methods gen
 
 Several alternative strategies exist for evaluating influence diagrams beyond the arc-reversal / node-reduction procedure described above.
 
-A more compact exact method is **junction-tree propagation** (also inspired from the Bayesian network equivalent). In this approach, the diagram is moralized, triangulated, and compiled into a tree of cliques. Local probability-utility factors are then exchanged between cliques via message passing (using Shafer–Shenoy or HUGIN style algorithms) until convergence. Junction-tree algorithms are often more memory-efficient than flat variable elimination and form the basis of many commercial tools. For example, PyAgrum provides `gum.ShaferShenoyLIMIDInference`, an extension of Shafer–Shenoy propagation for LIMIDs that incorporates maximization messages for decision nodes (Jensen et al., 1994; Madsen & Nilsson, 2001).
+A more compact exact method is **junction-tree propagation** (also inspired from the Bayesian network equivalent). In this approach, the diagram is moralized, triangulated, and compiled into a tree of cliques. Local probability-utility factors are then exchanged between cliques via message passing (using Shafer–Shenoy or HUGIN style algorithms) until convergence. Junction-tree algorithms are often more memory-efficient than flat variable elimination and form the basis of many commercial tools such as PyAgrum (Jensen et al., 1994; Madsen & Nilsson, 2001).
 
 <div style="background-color:rgb(250, 224, 224); padding: 10px; border-radius: 5px;">
 
@@ -1089,21 +1089,6 @@ However, even junction-tree propagation can become infeasible in practice: the r
 Finally, another avenue is variational inference, although I haven't yet found published work applying it to influence diagrams. In principle one could adapt techniques such as variational message passing (Winn & Bishop, 2005) to do so.
 
 <h2 id="evaluating-oil-influence-diagram">Evaluating the Oil Influence Diagram</h2>
-
-<center>
-<table>
-  <tr>
-    <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <i><b>Figure 1b.</b> LIMID for the oil problem with a memory arc shown in green.</i>
-    </td>
-  </tr>
-</table>
-</center>
 
 We will use the arc-reversal / node-reduction algorithm to solve the oil decision problem. Observe that the influence diagram is already a LIMID since we added the arc T $$\rightarrow$$ B and it is in canonical form.
 
@@ -1253,7 +1238,7 @@ Once we have inverted the arc Q $$\rightarrow$$ R, Q becomes a leaf node and thu
 By removing Q, we need to marginalize it and update the utility table of U
 
 $$
-u'_U(T, B, R) = \sum_q u_U(T, B, Q)P(Q = q \mid T, R)
+u'_U(T, R, B) = \sum_q u_U(T, B, Q)P(Q = q \mid T, R)
 $$
 
 
@@ -1262,54 +1247,330 @@ $$
 u'(T = \text{perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
 &\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
 &\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\
-&= 0 \\[1em]
+&= 1220 \times 0.4908 + 600 \times 0.4649 + (-30) \times 0.0443 \\
+&= 598.776 + 278.94 - 1.329 \\
+&= 876.387 \\[1em]
 % -------------------
 u'(T = \text{perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
 &\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\[1em]
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\
+&= 320 \times 0.4908 + 320 \times 0.4649 + 320 \times 0.0443 \\
+&= 157.056 + 148.768 + 14.176 \\
+&= 320 \\[1em]
 % -------------------
 u'(T = \text{perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
 &\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\[1em]
+&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\
+&= 1220 \times 0.0543 + 600 \times 0.4186 + (-30) \times 0.5271 \\
+&= 66.246 + 251.16 - 15.813 \\
+&= 301.593 \\[1em]
 % -------------------
 u'(T = \text{perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
 &\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\[1em]
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\
+&= 320 \times 0.0543 + 320 \times 0.4186 + 320 \times 0.5271 \\
+&= 17.376 + 133.952 + 168.672 \\
+&= 320 \\[1em]
 % -------------------
+% The following equations for T = no_perform and R = pass/fail are shown with 'x' as a placeholder multiplier, as requested by the user, even though 'x' in the provided table indicates an inapplicable or 'no results' scenario.
+% For numerical calculation, 'x' is treated as 1 to reflect the original values.
 u'(T = \text{no_perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
 &\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\[1em]
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\
+&= 1250 \times x + 630 \times x + 0 \times x \\
+&= 1250x + 630x + 0x \\
+&= 1880x \\[1em]
 % -------------------
 u'(T = \text{no_perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
 &\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\[1em]
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\
+&= 350 \times x + 350 \times x + 350 \times x \\
+&= 350x + 350x + 350x \\
+&= 1050x \\[1em]
 % -------------------
 u'(T = \text{no_perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
 &\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\[1em]
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\
+&= 1250 \times x + 630 \times x + 0 \times x \\
+&= 1250x + 630x + 0x \\
+&= 1880x \\[1em]
 % -------------------
 u'(T = \text{no_perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
 &\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
 &\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\
+&= 350 \times x + 350 \times x + 350 \times x \\
+&= 350x + 350x + 350x \\
+&= 1050x \\[1em]
+% -------------------
+% The following equations for T = perform and R = no_results are shown with 'x' as a placeholder multiplier, as requested by the user, even though 'x' in the provided table indicates an inapplicable or 'no results' scenario.
+% For numerical calculation, 'x' is treated as 1 to reflect the original values.
+u'(T = \text{perform}, R = \text{no_results}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{no_results}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{no_results}) \\
+&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{no_results}) \\
+&= 1220 \times x + 600 \times x + (-30) \times x \\
+&= 1220x + 600x - 30x \\
+&= 1790x \\[1em]
+% -------------------
+u'(T = \text{perform}, R = \text{no_results}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{no_results}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{no_results}) \\
+&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{no_results}) \\
+&= 320 \times x + 320 \times x + 320 \times x \\
+&= 320x + 320x + 320x \\
+&= 960x \\[1em]
+% -------------------
+% When T = no_perform, the only relevant result R is 'no results', as indicated by the P(Q | T, R) table.
+u'(T = \text{no_perform}, R = \text{no_results}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{no_results}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{no_results}) \\
+&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{no_results}) \\
+&= 1250 \times 0.35 + 630 \times 0.45 + 0 \times 0.2 \\
+&= 437.5 + 283.5 + 0 \\
+&= 721 \\[1em]
+% -------------------
+u'(T = \text{no_perform}, R = \text{no_results}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{no_results}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{no_results}) \\
+&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{no_results}) \\
+&= 350 \times 0.35 + 350 \times 0.45 + 350 \times 0.2 \\
+&= 122.5 + 157.5 + 70 \\
+&= 350 \\
 \end{aligned}
 $$
+
+> Note: In reality, we would not need to estimate the not applicable cases, we could put them as "None" and ignore them, even for next cases.
+
+Table X represents the updated version of the utility table once we have removed Q:
+
+<table>
+  <tr>
+    <th style="text-align: center;"><span style="color: red;">T</span></th>
+    <th style="text-align: center;"><span style="color: purple;">R</span></th>
+    <th style="text-align: center;"><span style="color: red;">B</span></th>
+    <th style="text-align: center;"><span style="color: blue;">U'</span></th>
+  </tr>
+  <tr>
+    <td rowspan="6"><span style="color: red;">Perform test</span></td>
+    <td rowspan="2"><span style="color: purple;">pass</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">876.387</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">320</span></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><span style="color: purple;">fail</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">301.593</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">320</span></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><span style="color: purple;">no results</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1790x</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">960x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="6"><span style="color: red;">Do not perform test</span></td>
+    <td rowspan="2"><span style="color: purple;">pass</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1880x</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">1050x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><span style="color: purple;">fail</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1880x</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">1050x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><span style="color: purple;">no results</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">721</span></td>
+  </tr>
+  <tr>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">350</span></td>
+  </tr>
+</table>
+
+We can now remove the decision node B since it is a leaf node. Below we can see the resulting influence diagram:
+
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_b.png" alt="TODO" width="300">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" align="center">
+      <i><b>Figure 1b.</b> TODO.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+By removing B, we need to identify the optimal decision for B in every possible situation. This results in the following utility table:
+
+<table>
+  <tr>
+    <th style="text-align: center;"><span style="color: red;">T</span></th>
+    <th style="text-align: center;"><span style="color: purple;">R</span></th>
+    <th style="text-align: center;"><span style="color: red;">$$\delta^*(B)$$</span></th>
+    <th style="text-align: center;"><span style="color: blue;">U'</span></th>
+  </tr>
+  <tr>
+    <td rowspan="3"><span style="color: red;">Perform test</span></td>
+    <td rowspan="1"><span style="color: purple;">pass</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">876.387</span></td>
+  </tr>
+  <tr>
+    <td rowspan="1"><span style="color: purple;">fail</span></td>
+    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: blue;">320</span></td>
+  </tr>
+  <tr>
+    <td rowspan="1"><span style="color: purple;">no results</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1790x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="3"><span style="color: red;">Do not perform test</span></td>
+    <td rowspan="1"><span style="color: purple;">pass</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1880x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="1"><span style="color: purple;">fail</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">1880x</span></td>
+  </tr>
+  <tr>
+    <td rowspan="1"><span style="color: purple;">no results</span></td>
+    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: blue;">721</span></td>
+  </tr>
+</table>
+
+After removing B, R becomes a leaf node and we can remove via marginalization:
+
+$$
+\begin{aligned}
+u''(T = \text{perform}) &= U'(T = \text{perform}, R = \text{pass}, B = \text{buy}) P(R = \text{pass} \mid T = \text{perform}) \\
+&\quad + U'(T = \text{perform}, R = \text{fail}, B = \text{no_buy}) P(R = \text{fail} \mid T = \text{perform}) \\
+&\quad + U'(T = \text{perform}, R = \text{no_results}, B = \text{buy}) P(R = \text{no_results} \mid T = \text{perform}) \\
+&= 876.387 \times 0.6775 + 320 \times 0.3225 + 1790x \times 0 \\
+&= 593.7388725 + 103.2 + 0 \\
+&= 696.9388725 \\[1em]
+% -------------------
+u''(T = \text{no_perform}) &= U'(T = \text{no_perform}, R = \text{pass}, B = \text{buy}) P(R = \text{pass} \mid T = \text{no_perform}) \\
+&\quad + U'(T = \text{no_perform}, R = \text{fail}, B = \text{buy}) P(R = \text{fail} \mid T = \text{no_perform}) \\
+&\quad + U'(T = \text{no_perform}, R = \text{no_results}, B = \text{buy}) P(R = \text{no_results} \mid T = \text{no_perform}) \\
+&= 1880x \times 0 + 1880x \times 0 + 721 \times 1 \\
+&= 0 + 0 + 721 \\
+&= 721 \\
+\end{aligned}
+$$
+
+Table X represents the updated utility table once we have removed R:
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:center"><span style="color: red;">T</span></th>
+      <th style="text-align:center"><span style="color: blue;">U''</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span style="color: red;">Perform test</span></td>
+      <td><span style="color: blue;">696.9388725</span></td>
+    </tr>
+    <tr>
+      <td><span style="color: red;">Do not perform test</span></td>
+      <td><span style="color: blue;">721</span></td>
+    </tr>
+  </tbody>
+</table>
+
+Now, the only remaining node is T, which is a decision node and we can remove it by following step 4:
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_r.png" alt="TODO" width="200">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" align="center">
+      <i><b>Figure 1b.</b> TODO.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+Below is the table with the result of choosing the optimal decision in T. 
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:center"><span style="color: red;">$$\delta^*(T)$$</span></th>
+      <th style="text-align:center"><span style="color: blue;">U''</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span style="color: red;">Do not perform test</span></td>
+      <td><span style="color: blue;">721</span></td>
+    </tr>
+  </tbody>
+</table>
+
+Also, Figure X shows the final version of the influence diagram once we have removed T.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_t.png" alt="TODO" width="50">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" align="center">
+      <i><b>Figure 1b.</b> TODO.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+Como se puede observar, obtenemos el mismo resultado que con el arbol de decision, es decir, la compañia no deberia realizar el test y deberia comprar el oil field. 
+
 <h2 id="influence-diagram-libraries">Influence Diagram Libraries</h2>
 
-Comentar que no tenemos que hacer esto a mano, que hay librerias, y comentar que Pyagrum tiene una implementacion de Shafer-Shenoy que basicamente es junction tree algorithm.
+In practice, we do not need to manually perform each step of the arc-reversal or node-reduction algorithm to evaluate an influence diagram. Several open-source libraries automate this entire process and provide sophisticated inference algorithms that handle the computational complexity for us.
 
-<h2 id="sensitivity_analysis">Sensitivity Analysis</h2>
+<a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> is currently the most widely supported open-source library for influence diagrams. Written in C++ with a Python interface, it implements the Shafer-Shenoy algorithm for LIMIDs. PyAgrum builds a junction tree representation of the influence diagram and uses message passing, alternating between summation (for chance nodes) and maximization (for decision nodes), to efficiently evaluate the diagram.
 
+Other notable libraries include:
 
-Actualizar los valores de utilidad tanto en este blogpost, como en el viejo, como en el código.
+* <a href="https://support.bayesfusion.com/docs/"><code>GeNIe/SMILE</code></a>: Implemented in C++, GeNIe is a useful, though somewhat dated, tool for working with Bayesian networks and influence diagrams. SMILE is the underlying engine. Both are free for academic use but are not open-source.
 
-<!-- 
-<script
-	type="module"
-	src="https://gradio.s3-us-west-2.amazonaws.com/5.31.0/gradio.js"
-></script> 
+* <a href="https://github.com/causalincentives/pycid"><code>PyCID</code></a>: Written in Python, PyCID is a specialized open-source library designed for working with causal influence diagrams.
 
-<gradio-app src="https://ferjorosa-oil-field-purchase-decision.hf.space"></gradio-app>
--->
 
 <h2>Conclusion</h2>
 
