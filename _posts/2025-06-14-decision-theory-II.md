@@ -662,8 +662,8 @@ Conditional probabilities of observing each possible test result (<b><span style
 <table>
   <tr>
     <th rowspan="2" style="text-align: center;">P(<span style="color: purple">R</span> | <span style="color: purple">Q</span>, <span style="color: red">T</span>)</th>
-    <th colspan="3" style="text-align: center;"><span style="color: red;">Perform test</span></th>
-    <th colspan="3" style="text-align: center;"><span style="color: red;">Do not perform test</span></th>
+    <th colspan="3" style="text-align: center;"><span style="color: red;">perform</span></th>
+    <th colspan="3" style="text-align: center;"><span style="color: red;">no perform</span></th>
   </tr>
   <tr>
     <th style="text-align: center;"><span style="color: purple;">high</span></th>
@@ -712,8 +712,8 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
     <th style="text-align: center;"><span style="color: blue;">U</span></th>
   </tr>
   <tr>
-    <td rowspan="6"><span style="color: red;">Perform test</span></td>
-    <td rowspan="3"><span style="color: red;">Buy</span></td>
+    <td rowspan="6"><span style="color: red;">perform</span></td>
+    <td rowspan="3"><span style="color: red;">buy</span></td>
     <td><span style="color: purple;">high</span></td>
     <td><span style="color: blue;">1220</span></td>
   </tr>
@@ -726,7 +726,7 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
     <td><span style="color: blue;">-30</span></td>
   </tr>
   <tr>
-    <td rowspan="3"><span style="color: red;">Do not buy</span></td>
+    <td rowspan="3"><span style="color: red;">no buy</span></td>
     <td><span style="color: purple;">high</span></td>
     <td><span style="color: blue;">320</span></td>
   </tr>
@@ -739,8 +739,8 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
     <td><span style="color: blue;">320</span></td>
   </tr>
   <tr>
-    <td rowspan="6"><span style="color: red;">Do not perform test</span></td>
-    <td rowspan="3"><span style="color: red;">Buy</span></td>
+    <td rowspan="6"><span style="color: red;">no perform</span></td>
+    <td rowspan="3"><span style="color: red;">buy</span></td>
     <td><span style="color: purple;">high</span></td>
     <td><span style="color: blue;">1250</span></td>
   </tr>
@@ -753,7 +753,7 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
     <td><span style="color: blue;">0</span></td>
   </tr>
   <tr>
-    <td rowspan="3"><span style="color: red;">Do not buy</span></td>
+    <td rowspan="3"><span style="color: red;">no buy</span></td>
     <td><span style="color: purple;">high</span></td>
     <td><span style="color: blue;">350</span></td>
   </tr>
@@ -838,9 +838,9 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     \delta^*(i) = \text{argmax}_d \ \mathbb{E}[u(d, i)]
     $$
 
-    The function $$\delta^*(i)$$ is recorded as the optimal decision rule for node $$D$$ in information state $$i$$. After removing $$D$$, each outcome node $$O$$ that was a child of $$D$$ has its utility table updated to reflect the maximum expected utility achievable by making the optimal decision at $$D$$, given the information state $$i$$.
+    The function $$\delta^*(i)$$ is recorded as the optimal decision rule for node $$D$$ in information state $$i$$. After removing $$D$$, each outcome node $$O$$ that was a child of $$D$$ has its utility table updated to reflect the maximum expected utility (MEU) achievable by making the optimal decision at $$D$$, given the information state $$i$$.
 
-    This process "locks in" the optimal strategy for $$D$$ and propagates the maximum expected utility forward through the diagram, similar to how chance nodes are eliminated by marginalization.
+    This process "locks in" the optimal strategy for $$D$$ and propagates the MEU forward through the diagram, similar to how chance nodes are eliminated by marginalization.
 
     Figure 8 demonstrates the process of eliminating a decision node, specifically $$D_2$$. In the first diagram, the decision node is present; in the second, it has been removed, and the utility table has been updated to incorporate the optimal decision rule $$\delta^*(D_2)$$ for each information state (i.e., each combination of parent values). Only the maximum attainable utilities for each state are preserved.
 
@@ -1072,18 +1072,12 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
       </tbody>
     </table>
 
-<h3 id="node-reduction-algorithm">The Node-Reduction Algorithm</h3>
+<h3 id="node-reduction-algorithm">The Arc-Reversal / Node-Reduction Algorithm</h3>
 
-<div style="background-color:rgb(250, 224, 224); padding: 10px; border-radius: 5px;">
-
-Este no es el nombre del algoritmo arriba
-
-</div>
-
-The algorithm incrementally eliminates nodes by repeatedly applying the four local graph operations described above, until only a single value node remains. The number stored in this final value node is the **maximum expected utility (MEU)**, and the collection of recorded decision rules forms an **optimal policy** for the original decision problem.
+The algorithm incrementally eliminates nodes by repeatedly applying the four local graph operations described above, until only a single value node remains. The number stored in this final value node is the **MEU**, and the collection of recorded decision rules forms an **optimal policy** for the original decision problem.
 
 **Input:** A well-formed influence diagram (or LIMID).  
-**Output:** MEU and an optimal policy for every decision node.
+**Output:** The MEU and an optimal policy for each decision node.
 
 **Preparatory steps:** 
 - **Canonical form:** If the diagram does not already satisfy the standard conventions (total order of decisions, and no arcs from decisions to chance nodes), perform a sequence of **Arc Reversals (Rule 4)** to obtain a canonical influence diagram.
@@ -1094,144 +1088,169 @@ The algorithm incrementally eliminates nodes by repeatedly applying the four loc
 **Main loop - repeat until only one value node remains:**
 
 1. **Select a node $$N$$ to eliminate**
-   - If there is any *barren node* (no children), delete it immediately using **Barren-Node Deletion (Rule 1)**.
-   - Otherwise, choose any *leaf node* (a chance or decision node whose only children are value nodes).
-   - If no leaf exists, pick a non-value node and repeatedly apply **Arc Reversal (Rule 4)** to its outgoing arcs until it becomes a leaf.
+   - If there is any *barren node* (a node with no children), delete it immediately using **Barren-Node Deletion (Rule 1)**.
+   - Otherwise, select any *leaf node* (a chance or decision node whose only children are value nodes).
+   - If no leaf exists, choose a non-value node and repeatedly apply **Arc Reversal (Rule 4)** to its outgoing arcs until it becomes a leaf.
 
 2. **Eliminate $$N$$**
-   - If $$N$$ is a **chance node**, apply **Chance-Node Removal (Rule 2)**: marginalize over $$N$$ and update the affected value tables.
-   - If $$N$$ is a **decision node**, apply **Decision-Node Removal (Rule 3)**: maximize over the actions of $$N$$, record the optimal decision rule $$\delta^*$$, and update the value tables.
+   - If $$N$$ is a **chance node**, apply **Chance-Node Removal (Rule 2)**: marginalize over $$N$$ and update the relevant value tables.
+   - If $$N$$ is a **decision node**, apply **Decision-Node Removal (Rule 3)**: maximize over the possible actions of $$N$$, record the optimal decision rule $$\delta^*$$, and update the value tables.
 
-3. **Merge duplicate value nodes** that may have arisen during elimination.
+3. **Merge any duplicate value nodes** that may have arisen during elimination.
 
 ---
 
-When the loop terminates, only one value node remains. Its single numerical entry is the MEU.  
-The set $$\{\delta^*\}$$ collected along the way provides an optimal decision rule for every decision node.
+When the loop ends, only one value node remains. Its single numerical entry is the MEU. The set $$\{\delta^*\}$$ collected during the process provides an optimal decision rule for each decision node.
 
 <h3 id="relationship-to-bayesian-network-elimination">Relationship to Bayesian Network Variable Elimination</h3>
 
-Arc reversal/node reduction in influence diagrams is structurally similar to variable elimination in Bayesian networks. The main difference is the handling of utilities via **maximization** over decision nodes (instead of **summation** over chance nodes). In both approaches, information is propagated through the graph by combining local factors (such as CPTs or utility functions) and eliminating variables, either by summing over uncertainties for chance nodes or optimizing (maximizing) over decisions for decision nodes.
+Arc reversal/node reduction in influence diagrams is structurally similar to <a href="https://artint.info/3e/html/ArtInt3e.Ch4.S5.html"><u>variable elimination</u></a> in Bayesian networks. The main difference is the handling of utilities via **maximization** over decision nodes (instead of **summation** over chance nodes). In both approaches, information is propagated through the graph by combining local factors (such as CPTs or utility functions) and eliminating variables, either by summing over uncertainties for chance nodes or optimizing (maximizing) over decisions for decision nodes.
 
-This similarity also extends to computational complexity: since both methods generate and manipulate similar intermediate factors, their efficiency is determined by the **induced width** (or **treewidth**) of the chosen elimination order.
+This similarity also extends to computational complexity: since both methods generate and manipulate similar intermediate factors, their efficiency is determined by the treewidth of the chosen elimination order.
 
 <h3 id="related-work-evaluation">Related Work</h3>
 
-Several alternative strategies exist for evaluating influence diagrams beyond the arc-reversal / node-reduction procedure described above.
+There are several alternative strategies for evaluating influence diagrams beyond the arc-reversal and node-reduction procedures described above.
 
-A more compact exact method is **junction-tree propagation** (also inspired by the Bayesian network equivalent). In this approach, the diagram is moralized, triangulated, and compiled into a tree of cliques. Local probability-utility factors are then exchanged between cliques via message passing (using Shafer–Shenoy or HUGIN style algorithms) until convergence. Junction-tree algorithms are often more memory-efficient than flat variable elimination and form the basis of many commercial tools such as PyAgrum (Jensen et al., 1994; Madsen & Nilsson, 2001).
+A more compact exact method is **junction-tree propagation**, which is also inspired by techniques from Bayesian networks. In this approach, the influence diagram is first moralized and triangulated, then compiled into a tree of cliques. Local probability and utility factors are passed between cliques using message-passing algorithms such as Shafer-Shenoy or HUGIN until convergence is reached. Junction-tree algorithms are often more memory-efficient than straightforward variable elimination and form the foundation of many commercial and open-source tools, including PyAgrum (<a href="https://arxiv.org/pdf/1302.6824"><u>Jensen et al., 1994</u></a>; <a href="https://arxiv.org/pdf/1301.6716"><u>Madsen & Jensen, 1999</u></a>; <a href="https://www.stats.ox.ac.uk/~steffen/papers/limids.pdf"><u>Lauritzen & Nilsson, 2001</u></a>).
 
-<div style="background-color:rgb(250, 224, 224); padding: 10px; border-radius: 5px;">
+However, even junction-tree propagation can become impractical for very complex or densely connected models, as the required clique tables may grow prohibitively large. Additionally, exact arc-reversal is difficult when the diagram contains continuous variables. In these situations, we need to rely on **approximate methods**. The most common of these is Monte Carlo sampling, which estimates expected utility by simulating random scenarios (<a href="https://www.jstor.org/stable/2632102"><u>Shachter & Kenley, 1989</u></a>; <a href="https://proceedings.mlr.press/r0/jenzarli95a/jenzarli95a.pdf"><u>Jenzarli, 1995</u></a>). Later research has shown that Monte Carlo methods can be extended to handle non-Gaussian or hybrid influence diagrams (<a href="https://cig.fi.upm.es/wp-content/uploads/2024/01/Decision-Analysis-by-Augmented-Probability-Simulation.pdf"><u>Bielza et al., 1999</u></a>; <a href="https://doi.org/10.1016/j.ejor.2007.01.036"><u>Cobb & Shenoy, 2008</u></a>).
 
-Creo que esto deberia ponerlo en la parte de Software
-
-</div>
-
-However, even junction-tree propagation can become infeasible in practice: the required clique tables may become prohibitively large for densely connected models, and exact arc-reversal is challenging when the diagram includes continuous variables. In such cases, analysts often turn to **approximate methods**. The most common is Monte Carlo sampling, which estimates expected utility by simulating random scenarios (Shachter & Kenley, 1989). Subsequent research has shown that this approach can be extended to non-Gaussian or hybrid diagrams (Bielza et al., 1999; Cobb & Shenoy, 2005). 
-
-Finally, another avenue is variational inference, although I haven't yet found published work applying it to influence diagrams. In principle, one could adapt techniques such as variational message passing (Winn & Bishop, 2005) to do so.
+Finally, another avenue is **variational inference**, although I haven't yet found published work applying it to influence diagrams. In principle, one could adapt techniques such as variational message passing (<a href="https://jmlr.org/papers/volume6/winn05a/winn05a.pdf"><u>Winn & Bishop, 2005</u></a>) to do so.
 
 <h2 id="evaluating-oil-influence-diagram">Evaluating the Oil Influence Diagram</h2>
 
-We will use the arc-reversal / node-reduction algorithm to solve the oil decision problem. Note that the influence diagram is already a LIMID since we added the arc T $$\rightarrow$$ B and it is in canonical form.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+<b>IMPORTANT:</b> To keep the section clear and focused, detailed computations are placed inside expandable sections below. Click to reveal them as needed.
+</div>
+<div style="height: 1.1em;"></div>
 
-We observe that there are no barren nodes, nor any leaf nodes. In such cases, we need to choose one of the chance nodes and apply arc reversal until it becomes a leaf.
+We will use the arc-reversal / node-reduction algorithm to solve the oil field decision problem. Note that the influence diagram is already a LIMID, since we added the arc $$\textcolor{red}{T} \rightarrow \textcolor{red}{B}$$, and it is in canonical form.
 
-For the first step, we choose node Q, and therefore, we must reverse the arc Q $$\rightarrow$$ R. To reverse it, we eliminate Q $$\rightarrow$$ R, add R $$\rightarrow$$ Q, and add arcs from the parents of R to Q, if they were not already parents of Q. This means we also add the arc T $$\rightarrow$$ R.
+In Figure 5, we observe that there are neither barren nodes nor leaf nodes. Therefore, we must select one of the chance nodes and apply arc reversal until it becomes a leaf.
+
+For the first step, we select node $$\textcolor{purple}{Q}$$ (oil field quality). Therefore, we need to reverse the arc $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R}$$. To do this, we remove the arc $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R}$$, add the arc $$\textcolor{purple}{R} \rightarrow \textcolor{purple}{Q}$$, and add arcs from the parents of $$\textcolor{purple}{R}$$ to $$\textcolor{purple}{Q}$$ if they are not already parents of $$\textcolor{purple}{Q}$$. This also means adding the arc $$\textcolor{red}{T} \rightarrow \textcolor{purple}{R}$$.
+
+Figure 10 shows the result of reversing $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R}$$:
 
 <center>
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_reverse_q.png" alt="TODO" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_reverse_q.png" alt="Influence diagram after reversing arc Q &rarr; R" width="320">
     </td>
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <i><b>Figure 1b.</b> TODO</i>
+      <i><b>Figure 10.</b> Influence diagram after reversing arc Q &rarr; R.</i>
     </td>
   </tr>
 </table>
 </center>
 
-In order to obtain the P(R \mid T) distribution, we need to first marginalize Q in P(R \mid Q):
+To obtain the distribution $$P(\textcolor{purple}{R} \mid \textcolor{red}{T})$$, we first marginalize over $$\textcolor{purple}{Q}$$ in $$P(\textcolor{purple}{R} \mid \textcolor{purple}{Q})$$:
 
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posteriors for <span style="color:purple;">pass</span> and <span style="color:purple;">fail</span> results</summary>
 
 $$
 \begin{aligned}
-P(R = \text{pass} \mid Q) &= P(\text{pass}  \mid \text{high})P(\text{high}) + P(\text{pass}  \mid \text{medium})P(\text{medium}) + P(\text{pass}  \mid \text{low})P(\text{low}) \\
+P(\textcolor{purple}{\text{pass}} \mid \textcolor{purple}{Q}) &= P(\textcolor{purple}{\text{pass}}  \mid \textcolor{purple}{\text{high}})P(\textcolor{purple}{\text{high}}) + P(\textcolor{purple}{\text{pass}}  \mid \textcolor{purple}{\text{medium}})P(\textcolor{purple}{\text{medium}}) + P(\textcolor{purple}{\text{pass}}  \mid \textcolor{purple}{\text{low}})P(\textcolor{purple}{\text{low}}) \\
                 &= 0.95 \cdot 0.35 + 0.7 \cdot 0.45 + 0.15 \cdot 0.2 \\
                 &= 0.3325 + 0.315 + 0.03 \\
-                &= 0.6775 \\
-P(R = \text{fail} \mid Q) &= P(\text{fail}  \mid \text{high})P(\text{high}) + P(\text{fail}  \mid \text{medium})P(\text{medium}) + P(\text{fail}  \mid \text{low})P(\text{low}) \\
+                &= 0.6775 \\[1em]
+P(\textcolor{purple}{\text{fail}} \mid \textcolor{purple}{Q}) &= P(\textcolor{purple}{\text{fail}}  \mid \textcolor{purple}{\text{high}})P(\textcolor{purple}{\text{high}}) + P(\textcolor{purple}{\text{fail}}  \mid \textcolor{purple}{\text{medium}})P(\textcolor{purple}{\text{medium}}) + P(\textcolor{purple}{\text{fail}}  \mid \textcolor{purple}{\text{low}})P(\textcolor{purple}{\text{low}}) \\
                 &= 0.05 \cdot 0.35 + 0.3 \cdot 0.45 + 0.85 \cdot 0.2 \\
                 &= 0.0175 + 0.135 + 0.17 \\
                 &= 0.3225 \\
 \end{aligned}
 $$
 
-Now, given that $R$ only applies when we make the test, we know that P(R \mid Q, T = \text{perform}) is basically P(R \mid Q) and that P(R \mid Q, T = \text{do_not_perform}) is all 0s except for "no results". Therefore:
+</details>
+
+Now, given that <span style="color: purple;">R</span> only applies when we make the test, we know that 
+$$P\left(\textcolor{purple}{R} \mid \textcolor{purple}{Q},\, \textcolor{red}{T} = \textcolor{red}{\text{perform}}\right)$$ 
+is simply 
+$$P\left(\textcolor{purple}{R} \mid \textcolor{purple}{Q}\right)$$, 
+and that 
+$$P\left(\textcolor{purple}{R} \mid \textcolor{purple}{Q},\, \textcolor{red}{T} = \textcolor{red}{\text{no perform}}\right)$$ 
+is all zeros except for the <span style="color: purple;">no results</span> case. Therefore:
 
 <table>
   <tr>
-    <th><span style="color: purple;">P(R \mid T)</span></th>
-    <th><span style="color: purple;">perform test</span></th>
-    <th><span style="color: purple;">do not perform test</span></th>      
+    <th>$$P(\textcolor{purple}{R} \mid \textcolor{red}{T})$$</th>
+    <th style="text-align:center;"><span style="color:red;">perform</span></th>
+    <th style="text-align:center;"><span style="color:red;">no perform</span></th>      
   </tr>
   <tr>
-    <td><span style="color: purple;">pass</span></td>
+    <td><span style="color:purple;">pass</span></td>
     <td>0.6775</td>
     <td>0</td>   
   </tr>
   <tr>
-    <td><span style="color: purple;">fail</span></td>
+    <td><span style="color:purple;">fail</span></td>
     <td>0.3225</td>
     <td>0</td>
   </tr>
   <tr>
-    <td><span style="color: purple;">no results</span></td>
+    <td><span style="color:purple;">no results</span></td>
     <td>0</td>
     <td>1</td>
   </tr>
 </table>
 
-Now for P(Q \mid R), we need to apply bayes theorem:
+Now for $$P(\textcolor{purple}{Q} \mid \textcolor{purple}{R})$$, we need to apply Bayes' theorem:
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:purple;">pass</span> result</summary>
 
 $$
 \begin{aligned}
-P(Q = \text{high} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{high})P(Q = \text{high})}{P(R = \text{pass})} \\
-&= \frac{0.95 \cdot 0.35}{0.6775} = \frac{0.3325}{0.6775} \approx 0.4908 \\
-P(Q = \text{medium} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{medium})P(Q = \text{medium})}{P(R = \text{pass})} \\
-&= \frac{0.7 \cdot 0.45}{0.6775} = \frac{0.315}{0.6775} \approx 0.4649 \\
-P(Q = \text{low} \mid R = \text{pass}) &= \frac{P(R = \text{pass} \mid Q = \text{low})P(Q = \text{low})}{P(R = \text{pass})} \\
-&= \frac{0.15 \cdot 0.2}{0.6775} = \frac{0.03}{0.6775} \approx 0.0443 \\
-P(Q = \text{high} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{high})P(Q = \text{high})}{P(R = \text{fail})} \\
-&= \frac{0.05 \cdot 0.35}{0.3225} = \frac{0.0175}{0.3225} \approx 0.0543 \\
-P(Q = \text{medium} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{medium})P(Q = \text{medium})}{P(R = \text{fail})} \\
-&= \frac{0.3 \cdot 0.45}{0.3225} = \frac{0.135}{0.3225} \approx 0.4186 \\
-P(Q = \text{low} \mid R = \text{fail}) &= \frac{P(R = \text{fail} \mid Q = \text{low})P(Q = \text{low})}{P(R = \text{fail})} \\
+P(\textcolor{purple}{\text{high}} \mid \textcolor{purple}{\text{pass}}) &= \frac{P(\textcolor{purple}{\text{pass}} \mid \textcolor{purple}{\text{high}})P(\textcolor{purple}{\text{high}})}{P(\textcolor{purple}{\text{pass}})} \\
+&= \frac{0.95 \cdot 0.35}{0.6775} = \frac{0.3325}{0.6775} \approx 0.4908 \\[1em]
+P(\textcolor{purple}{\text{medium}} \mid \textcolor{purple}{\text{pass}}) &= \frac{P(\textcolor{purple}{\text{pass}} \mid \textcolor{purple}{\text{medium}})P(\textcolor{purple}{\text{medium}})}{P(\textcolor{purple}{\text{pass}})} \\
+&= \frac{0.7 \cdot 0.45}{0.6775} = \frac{0.315}{0.6775} \approx 0.4649 \\[1em]
+P(\textcolor{purple}{\text{low}} \mid \textcolor{purple}{\text{pass}}) &= \frac{P(\textcolor{purple}{\text{pass}} \mid \textcolor{purple}{\text{low}})P(\textcolor{purple}{\text{low}})}{P(\textcolor{purple}{\text{pass}})} \\
+&= \frac{0.15 \cdot 0.2}{0.6775} = \frac{0.03}{0.6775} \approx 0.0443
+\end{aligned}
+$$
+
+</details>
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:purple;">fail</span> result</summary>
+
+$$
+\begin{aligned}
+P(\textcolor{purple}{\text{high}} \mid \textcolor{purple}{\text{fail}}) &= \frac{P(\textcolor{purple}{\text{fail}} \mid \textcolor{purple}{\text{high}})P(\textcolor{purple}{\text{high}})}{P(\textcolor{purple}{\text{fail}})} \\
+&= \frac{0.05 \cdot 0.35}{0.3225} = \frac{0.0175}{0.3225} \approx 0.0543 \\[1em]
+P(\textcolor{purple}{\text{medium}} \mid \textcolor{purple}{\text{fail}}) &= \frac{P(\textcolor{purple}{\text{fail}} \mid \textcolor{purple}{\text{medium}})P(\textcolor{purple}{\text{medium}})}{P(\textcolor{purple}{\text{fail}})} \\
+&= \frac{0.3 \cdot 0.45}{0.3225} = \frac{0.135}{0.3225} \approx 0.4186 \\[1em]
+P(\textcolor{purple}{\text{low}} \mid \textcolor{purple}{\text{fail}}) &= \frac{P(\textcolor{purple}{\text{fail}} \mid \textcolor{purple}{\text{low}})P(\textcolor{purple}{\text{low}})}{P(\textcolor{purple}{\text{fail}})} \\
 &= \frac{0.85 \cdot 0.2}{0.3225} = \frac{0.17}{0.3225} \approx 0.5271
 \end{aligned}
 $$
 
-When T = do not perform then R does not make sense, so P(Q \mid R, T = do not perform) is basically P(R). Therefore:
+</details>
+
+When $$\textcolor{red}{T} = \textcolor{red}{\text{no perform}}$$, then $$\textcolor{purple}{R}$$ does not make sense, so $$P\left(\textcolor{purple}{Q} \mid \textcolor{purple}{R},\, \textcolor{red}{T} = \textcolor{red}{\text{no perform}}\right)$$ is simply $$P\left(\textcolor{purple}{Q}\right)$$. Therefore:
 
 <table>
   <tr>
-    <th rowspan="2" style="text-align: center;">P(<span style="color: purple">Q</span> | <span style="color: purple">R</span>, <span style="color: red">T</span>)</th>
-    <th colspan="3" style="text-align: center;"><span style="color: red;">Perform test</span></th>
-    <th colspan="3" style="text-align: center;"><span style="color: red;">Do not perform test</span></th>
+    <th rowspan="2" style="text-align: center;">$$P(\textcolor{purple}{Q} \mid \textcolor{purple}{R},\, \textcolor{red}{T})$$</th>
+    <th colspan="3" style="text-align: center;"><span style="color:red;">perform</span></th>
+    <th colspan="3" style="text-align: center;"><span style="color:red;">no perform</span></th>
   </tr>
   <tr>
-    <th style="text-align: center;"><span style="color: purple;">pass</span></th>
-    <th style="text-align: center;"><span style="color: purple;">fail</span></th>
-    <th style="text-align: center;"><span style="color: purple;">no results</span></th>
-    <th style="text-align: center;"><span style="color: purple;">pass</span></th>
-    <th style="text-align: center;"><span style="color: purple;">fail</span></th>
-    <th style="text-align: center;"><span style="color: purple;">no results</span></th>
+    <th style="text-align: center;"><span style="color:purple;">pass</span></th>
+    <th style="text-align: center;"><span style="color:purple;">fail</span></th>
+    <th style="text-align: center;"><span style="color:purple;">no results</span></th>
+    <th style="text-align: center;"><span style="color:purple;">pass</span></th>
+    <th style="text-align: center;"><span style="color:purple;">fail</span></th>
+    <th style="text-align: center;"><span style="color:purple;">no results</span></th>
   </tr>
   <tr>
-    <td><span style="color: purple;">high</span></td>
+    <td><span style="color:purple;">high</span></td>
     <td>0.4908</td>
     <td>0.0543</td>
     <td>x</td>
@@ -1240,7 +1259,7 @@ When T = do not perform then R does not make sense, so P(Q \mid R, T = do not pe
     <td>0.35</td>
   </tr>
   <tr>
-    <td><span style="color: purple;">medium</span></td>
+    <td><span style="color:purple;">medium</span></td>
     <td>0.4649</td>
     <td>0.4186</td>
     <td>x</td>
@@ -1249,7 +1268,7 @@ When T = do not perform then R does not make sense, so P(Q \mid R, T = do not pe
     <td>0.45</td>
   </tr>
   <tr>
-    <td><span style="color: purple;">low</span></td>
+    <td><span style="color:purple;">low</span></td>
     <td>0.0443</td>
     <td>0.5271</td>
     <td>x</td>
@@ -1259,348 +1278,382 @@ When T = do not perform then R does not make sense, so P(Q \mid R, T = do not pe
   </tr>
 </table>
 
-By making the problem symmetric, we have introduced many zero probabilities, which increases the chance of encountering 0/0 situations. We must remember that a conditional probability P(a \ mid b) is only defined for those b with P(b) > 0, so we should not expect to be able to compute all conditionals when reversing arcs. In any case, as will be seen below, these "x" values will not have any influence on the problem.
+By making the problem symmetric, we have introduced many zero probabilities, which increases the likelihood of encountering undefined expressions such as $$0/0$$. Recall that a conditional probability $$P(\textcolor{purple}{a} \mid \textcolor{purple}{b})$$ is only defined when $$P(\textcolor{purple}{b}) > 0$$, so we should not expect to be able to compute every conditional probability when reversing arcs. However, as will be shown below, these "x" values will not affect the outcome of the problem.
 
-Once we have inverted the arc Q $$\rightarrow$$ R, Q becomes a leaf node and thus we can remove it. Figure X shows the resulting diagram.
+After reversing the arc $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R}$$, the node $$\textcolor{purple}{Q}$$ becomes a leaf and can be eliminated. Figure 11 illustrates the resulting diagram.
 
 <center>
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_q.png" alt="TODO" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_q.png" alt="Influence diagram after removing node Q" width="320">
     </td>
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <i><b>Figure 1b.</b> TODO.</i>
+      <i><b>Figure 11.</b> Influence diagram after removing node Q.</i>
     </td>
   </tr>
 </table>
 </center>
 
-By removing Q, we need to marginalize it and update the utility table of U
+By removing $$\textcolor{purple}{Q}$$, we need to marginalize it and update the utility table of $$\textcolor{blue}{U}$$
 
 $$
-u'_U(T, R, B) = \sum_q u_U(T, B, Q)P(Q = q \mid T, R)
+u'_\textcolor{blue}{U}(\textcolor{red}{T}, \textcolor{purple}{R}, \textcolor{red}{B}) = \sum_{\textcolor{purple}{q}} u_\textcolor{blue}{U}(\textcolor{red}{T}, \textcolor{red}{B}, \textcolor{purple}{Q})P(\textcolor{purple}{q} \mid \textcolor{red}{T}, \textcolor{purple}{R})
 $$
 
-
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">perform test</span> result</summary>
 $$
 \begin{aligned}
-u'(T = \text{perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
 &= 1220 \cdot 0.4908 + 600 \cdot 0.4649 + (-30) \cdot 0.0443 \\
 &= 598.776 + 278.94 - 1.329 \\
 &= 876.387 \\[1em]
 % -------------------
-u'(T = \text{perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{pass}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{pass}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{pass}) \\
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{no buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
 &= 320 \cdot 0.4908 + 320 \cdot 0.4649 + 320 \cdot 0.0443 \\
 &= 157.056 + 148.768 + 14.176 \\
-&= 320 \\[1em]
-% -------------------
-u'(T = \text{perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\
+&= 320
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{fail}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
 &= 1220 \cdot 0.0543 + 600 \cdot 0.4186 + (-30) \cdot 0.5271 \\
 &= 66.246 + 251.16 - 15.813 \\
-&= 301.593 \\[1em]
-% -------------------
-u'(T = \text{perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{fail}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{fail}) \\
+&= 301.593\\[1em]
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{fail}},\ \textcolor{red}{\text{no buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{fail}}) \\
 &= 320 \cdot 0.0543 + 320 \cdot 0.4186 + 320 \cdot 0.5271 \\
 &= 17.376 + 133.952 + 168.672 \\
-&= 320 \\[1em]
-% -------------------
-% The following equations for T = no_perform and R = pass/fail are shown with 'x' as a placeholder multiplier, as requested by the user, even though 'x' in the provided table indicates an inapplicable or 'no results' scenario.
-% For numerical calculation, 'x' is treated as 1 to reflect the original values.
-u'(T = \text{no_perform}, R = \text{pass}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\
-&= 1250 \cdot x + 630 \cdot x + 0 \cdot x \\
-&= 1250x + 630x + 0x \\
-&= 1880x \\[1em]
-% -------------------
-u'(T = \text{no_perform}, R = \text{pass}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{pass}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{pass}) \\
-&= 350 \cdot x + 350 \cdot x + 350 \cdot x \\
-&= 350x + 350x + 350x \\
-&= 1050x \\[1em]
-% -------------------
-u'(T = \text{no_perform}, R = \text{fail}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\
-&= 1250 \cdot x + 630 \cdot x + 0 \cdot x \\
-&= 1250x + 630x + 0x \\
-&= 1880x \\[1em]
-% -------------------
-u'(T = \text{no_perform}, R = \text{fail}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{fail}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{fail}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{fail}) \\
-&= 350 \cdot x + 350 \cdot x + 350 \cdot x \\
-&= 350x + 350x + 350x \\
-&= 1050x \\[1em]
-% -------------------
-% The following equations for T = perform and R = no_results are shown with 'x' as a placeholder multiplier, as requested by the user, even though 'x' in the provided table indicates an inapplicable or 'no results' scenario.
-% For numerical calculation, 'x' is treated as 1 to reflect the original values.
-u'(T = \text{perform}, R = \text{no_results}, B = \text{buy}) &= u_U(\text{perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{no_results}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{no_results}) \\
-&\quad + u_U(\text{perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{no_results}) \\
+&= 320
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{no results}},\ \textcolor{red}{\text{buy}}) &= u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
 &= 1220 \cdot x + 600 \cdot x + (-30) \cdot x \\
 &= 1220x + 600x - 30x \\
 &= 1790x \\[1em]
 % -------------------
-u'(T = \text{perform}, R = \text{no_results}, B = \text{no_buy}) &= u_U(\text{perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{perform}, \text{no_results}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{perform}, \text{no_results}) \\
-&\quad + u_U(\text{perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{perform}, \text{no_results}) \\
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{no results}},\ \textcolor{red}{\text{no buy}}) &= u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{no results}}) \\
 &= 320 \cdot x + 320 \cdot x + 320 \cdot x \\
 &= 320x + 320x + 320x \\
-&= 960x \\[1em]
-% -------------------
-% When T = no_perform, the only relevant result R is 'no results', as indicated by the P(Q | T, R) table.
-u'(T = \text{no_perform}, R = \text{no_results}, B = \text{buy}) &= u_U(\text{no_perform}, \text{buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{no_results}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{no_results}) \\
-&\quad + u_U(\text{no_perform}, \text{buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{no_results}) \\
-&= 1250 \cdot 0.35 + 630 \cdot 0.45 + 0 \cdot 0.2 \\
-&= 437.5 + 283.5 + 0 \\
-&= 721 \\[1em]
-% -------------------
-u'(T = \text{no_perform}, R = \text{no_results}, B = \text{no_buy}) &= u_U(\text{no_perform}, \text{no_buy}, \text{high}) P(\text{high} \mid \text{no_perform}, \text{no_results}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{medium}) P(\text{medium} \mid \text{no_perform}, \text{no_results}) \\
-&\quad + u_U(\text{no_perform}, \text{no_buy}, \text{low}) P(\text{low} \mid \text{no_perform}, \text{no_results}) \\
-&= 350 \cdot 0.35 + 350 \cdot 0.45 + 350 \cdot 0.2 \\
-&= 122.5 + 157.5 + 70 \\
-&= 350 \\
+&= 960x
+\end{aligned}
+$$
+</details>
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">do no perform</span> result</summary>
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&= 1250 \cdot x + 630 \cdot x + 0 \cdot x \\
+&= 1250x + 630x + 0x \\
+&= 1880x
 \end{aligned}
 $$
 
-> Note: In reality, we would not need to estimate the not applicable cases, we could put them as "None" and ignore them, even for next cases.
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{no buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
+&= 350 \cdot x + 350 \cdot x + 350 \cdot x \\
+&= 350x + 350x + 350x \\
+&= 1050x
+\end{aligned}
+$$
 
-Table X represents the updated version of the utility table once we have removed Q:
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{fail}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&= 1250 \cdot x + 630 \cdot x + 0 \cdot x \\
+&= 1250x + 630x + 0x \\
+&= 1880x
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{fail}},\ \textcolor{red}{\text{no buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{fail}}) \\
+&= 350 \cdot x + 350 \cdot x + 350 \cdot x \\
+&= 350x + 350x + 350x \\
+&= 1050x
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{no results}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&= 1250 \cdot 0.35 + 630 \cdot 0.45 + 0 \cdot 0.2 \\
+&= 437.5 + 283.5 + 0 \\
+&= 721
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{no results}},\ \textcolor{red}{\text{no buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{medium}}) P(\textcolor{purple}{\text{medium}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&\quad + u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{no buy}}, \textcolor{purple}{\text{low}}) P(\textcolor{purple}{\text{low}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{no results}}) \\
+&= 350 \cdot 0.35 + 350 \cdot 0.45 + 350 \cdot 0.2 \\
+&= 122.5 + 157.5 + 70 \\
+&= 350
+\end{aligned}
+$$
+</details>
+
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+In practice, it is not necessary to estimate the cases that are not applicable (i.e., the ones marked multiplied by "x"); we can simply assign them as "None" and disregard them in subsequent calculations.
+</div>
+<div style="height: 1.1em;"></div>
+
+The following table shows the updated utility table $$u'_\textcolor{blue}{U}$$ table after removing $$\textcolor{purple}{Q}$$:
 
 <table>
   <tr>
-    <th style="text-align: center;"><span style="color: red;">T</span></th>
-    <th style="text-align: center;"><span style="color: purple;">R</span></th>
-    <th style="text-align: center;"><span style="color: red;">B</span></th>
-    <th style="text-align: center;"><span style="color: blue;">U'</span></th>
+    <th style="text-align: center;">$$\textcolor{red}{T}$$</th>
+    <th style="text-align: center;">$$\textcolor{purple}{R}$$</th>
+    <th style="text-align: center;">$$\textcolor{red}{B}$$</th>
+    <th style="text-align: center;">$$\textcolor{blue}{U}$$</th>
   </tr>
   <tr>
-    <td rowspan="6"><span style="color: red;">Perform test</span></td>
+    <td rowspan="6"><span style="color: red;">perform</span></td>
     <td rowspan="2"><span style="color: purple;">pass</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">876.387</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">320</span></td>
   </tr>
   <tr>
     <td rowspan="2"><span style="color: purple;">fail</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">301.593</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">320</span></td>
   </tr>
   <tr>
     <td rowspan="2"><span style="color: purple;">no results</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1790x</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">960x</span></td>
   </tr>
   <tr>
-    <td rowspan="6"><span style="color: red;">Do not perform test</span></td>
+    <td rowspan="6"><span style="color: red;">no perform</span></td>
     <td rowspan="2"><span style="color: purple;">pass</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1880x</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">1050x</span></td>
   </tr>
   <tr>
     <td rowspan="2"><span style="color: purple;">fail</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1880x</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">1050x</span></td>
   </tr>
   <tr>
     <td rowspan="2"><span style="color: purple;">no results</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">721</span></td>
   </tr>
   <tr>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">350</span></td>
   </tr>
 </table>
 
-We can now remove the decision node B since it is a leaf node. Below we can see the resulting influence diagram:
-
+We can now remove the decision node $$\textcolor{red}{B}$$, as it is a leaf node. The resulting influence diagram is shown below:
 
 <center>
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_b.png" alt="TODO" width="300">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_b.png" alt="Influence diagram after removing decision node B" width="300">
     </td>
   </tr>
   <tr>
     <td colspan="1" align="center">
-      <i><b>Figure 1b.</b> TODO.</i>
+      <i><b>Figure 12.</b> Influence diagram after removing decision node B.</i>
     </td>
   </tr>
 </table>
 </center>
 
-By removing B, we need to identify the optimal decision for B in every possible situation. This results in the following utility table:
+By removing $$\textcolor{red}{B}$$, we must determine the optimal choice for $$\textcolor{red}{B}$$ in every possible scenario. This yields the following utility table, $$u''_\textcolor{blue}{U}$$:
 
 <table>
   <tr>
-    <th style="text-align: center;"><span style="color: red;">T</span></th>
-    <th style="text-align: center;"><span style="color: purple;">R</span></th>
-    <th style="text-align: center;"><span style="color: red;">$$\delta^*(B)$$</span></th>
-    <th style="text-align: center;"><span style="color: blue;">U'</span></th>
+    <th style="text-align: center;">$$\textcolor{red}{T}$$</th>
+    <th style="text-align: center;">$$\textcolor{purple}{R}$$</th>
+    <th style="text-align: center;">$$\textcolor{red}{\delta^*(B)}$$</th>
+    <th style="text-align: center;">$$\textcolor{blue}{U}$$</th>
   </tr>
   <tr>
-    <td rowspan="3"><span style="color: red;">Perform test</span></td>
+    <td rowspan="3"><span style="color: red;">perform</span></td>
     <td rowspan="1"><span style="color: purple;">pass</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">876.387</span></td>
   </tr>
   <tr>
     <td rowspan="1"><span style="color: purple;">fail</span></td>
-    <td><span style="color: red;">Do not buy</span></td>
+    <td><span style="color: red;">no buy</span></td>
     <td><span style="color: blue;">320</span></td>
   </tr>
   <tr>
     <td rowspan="1"><span style="color: purple;">no results</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1790x</span></td>
   </tr>
   <tr>
-    <td rowspan="3"><span style="color: red;">Do not perform test</span></td>
+    <td rowspan="3"><span style="color: red;">no perform</span></td>
     <td rowspan="1"><span style="color: purple;">pass</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1880x</span></td>
   </tr>
   <tr>
     <td rowspan="1"><span style="color: purple;">fail</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">1880x</span></td>
   </tr>
   <tr>
     <td rowspan="1"><span style="color: purple;">no results</span></td>
-    <td><span style="color: red;">Buy</span></td>
+    <td><span style="color: red;">buy</span></td>
     <td><span style="color: blue;">721</span></td>
   </tr>
 </table>
 
-After removing B, R becomes a leaf node and we can remove via marginalization:
+After removing $$\textcolor{red}{B}$$, $$\textcolor{purple}{R}$$ becomes a leaf node, allowing us to eliminate it by marginalization.
+
+<center>
+<table>
+  <tr>
+    <td align="center">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_r.png" alt="Influence diagram after removing chance node R" width="200">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="1" align="center">
+      <i><b>Figure 13.</b> Influence diagram after removing chance node R.</i>
+    </td>
+  </tr>
+</table>
+</center>
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">perform</span> and <span style="color:red;">no perform</span> result</summary>
 
 $$
 \begin{aligned}
-u''(T = \text{perform}) &= U'(T = \text{perform}, R = \text{pass}, B = \text{buy}) P(R = \text{pass} \mid T = \text{perform}) \\
-&\quad + U'(T = \text{perform}, R = \text{fail}, B = \text{no_buy}) P(R = \text{fail} \mid T = \text{perform}) \\
-&\quad + U'(T = \text{perform}, R = \text{no_results}, B = \text{buy}) P(R = \text{no_results} \mid T = \text{perform}) \\
+u'''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}}) &= u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}},\,\textcolor{purple}{\text{pass}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{pass}} \mid \textcolor{red}{\text{perform}}) \\
+&\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}},\,\textcolor{purple}{\text{fail}},\,\textcolor{red}{\text{no buy}})\; P(\textcolor{purple}{\text{fail}} \mid \textcolor{red}{\text{perform}}) \\
+&\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}},\,\textcolor{purple}{\text{no results}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{no results}} \mid \textcolor{red}{\text{perform}}) \\
 &= 876.387 \cdot 0.6775 + 320 \cdot 0.3225 + 1790x \cdot 0 \\
 &= 593.7388725 + 103.2 + 0 \\
 &= 696.9388725 \\[1em]
 % -------------------
-u''(T = \text{no_perform}) &= U'(T = \text{no_perform}, R = \text{pass}, B = \text{buy}) P(R = \text{pass} \mid T = \text{no_perform}) \\
-&\quad + U'(T = \text{no_perform}, R = \text{fail}, B = \text{buy}) P(R = \text{fail} \mid T = \text{no_perform}) \\
-&\quad + U'(T = \text{no_perform}, R = \text{no_results}, B = \text{buy}) P(R = \text{no_results} \mid T = \text{no_perform}) \\
+u'''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}}) &= u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}},\,\textcolor{purple}{\text{pass}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{pass}} \mid \textcolor{red}{\text{no perform}}) \\
+&\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}},\,\textcolor{purple}{\text{fail}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{fail}} \mid \textcolor{red}{\text{no perform}}) \\
+&\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}},\,\textcolor{purple}{\text{no results}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{no results}} \mid \textcolor{red}{\text{no perform}}) \\
 &= 1880x \cdot 0 + 1880x \cdot 0 + 721 \cdot 1 \\
 &= 0 + 0 + 721 \\
 &= 721 \\
 \end{aligned}
 $$
 
-Table X represents the updated utility table once we have removed R:
+</details>
+
+The table below shows the updated utility values $$u'''_{\textcolor{blue}{U}}$$ after removing $$\textcolor{purple}{R}$$:
 
 <table>
   <thead>
     <tr>
-      <th style="text-align:center"><span style="color: red;">T</span></th>
-      <th style="text-align:center"><span style="color: blue;">U''</span></th>
+      <th style="text-align: center;">$$\textcolor{red}{T}$$</th>
+      <th style="text-align: center;">$$\textcolor{blue}{U}$$</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span style="color: red;">Perform test</span></td>
+      <td><span style="color: red;">perform</span></td>
       <td><span style="color: blue;">696.9388725</span></td>
     </tr>
     <tr>
-      <td><span style="color: red;">Do not perform test</span></td>
+      <td><span style="color: red;">no perform</span></td>
       <td><span style="color: blue;">721</span></td>
     </tr>
   </tbody>
 </table>
 
-Now, the only remaining node is T, which is a decision node and we can remove it by following step 4:
-
-<center>
-<table>
-  <tr>
-    <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_r.png" alt="TODO" width="200">
-    </td>
-  </tr>
-  <tr>
-    <td colspan="1" align="center">
-      <i><b>Figure 1b.</b> TODO.</i>
-    </td>
-  </tr>
-</table>
-</center>
-
-Below is the table with the result of choosing the optimal decision in T. 
+At this stage, the only remaining node is the decision node $$\textcolor{red}{T}$$, which we can now eliminate by selecting the optimal action. The table below summarizes the optimal decision for $$\textcolor{red}{T}$$, and Figure 14 shows the final influence diagram after its removal:
 
 <table>
   <thead>
     <tr>
-      <th style="text-align:center"><span style="color: red;">$$\delta^*(T)$$</span></th>
-      <th style="text-align:center"><span style="color: blue;">U''</span></th>
+    <th style="text-align: center;">$$\textcolor{red}{\delta^*(T)}$$</th>
+      <th style="text-align: center;">$$\textcolor{blue}{U}$$</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span style="color: red;">Do not perform test</span></td>
+      <td><span style="color: red;">no perform</span></td>
       <td><span style="color: blue;">721</span></td>
     </tr>
   </tbody>
 </table>
 
-Also, Figure X shows the final version of the influence diagram once we have removed T.
-
 <center>
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_t.png" alt="TODO" width="50">
+      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_t.png" alt="Final influence diagram after removing decision node T" width="50">
     </td>
   </tr>
   <tr>
     <td colspan="1" align="center">
-      <i><b>Figure 1b.</b> TODO.</i>
+      <i><b>Figure 14.</b> Final influence diagram after removing decision node T.</i>
     </td>
   </tr>
 </table>
 </center>
 
-Como se puede observar, obtenemos el mismo resultado que con el arbol de decision, es decir, la compañia no deberia realizar el test y deberia comprar el oil field. 
+As we can see, this yields the same result as the decision tree in <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html"><u>Part I</u></a>: **the company should not perform the test and should buy the oil field**.
 
 <h2 id="influence-diagram-libraries">Influence Diagram Libraries</h2>
 
@@ -1636,14 +1689,24 @@ X. Howard, R. A., Matheson, J. E. (1984). <u>Influence diagrams</u>. The Princip
 
 Jensen, F., Jensen, F. V., & Dittmer, S. (1994). From influence diagrams to junction trees. In Proceedings of the 10th Conference on Uncertainty in Artificial Intelligence (UAI) (pp. 367-373).
 
+Madsen, A. L., & Jensen, F. (1999). Lazy evaluation of symmetric Bayesian decision problems . In Proceedings of the Fifteenth Conference on Uncertainty in Artificial Intelligence (UAI)  (pp. 382–390). Morgan Kaufmann.
+
 Lauritzen, S. L., & Nilsson, D. (2001). Representing and solving decision problems with limited information. Management Science, 47(9), 1235-1251.
 
 Shachter, R. D. (1986). Evaluating influence diagrams. Operations research, 34(6), 871-882.
 
-SHAFER, G., AND P. P. SHENOY. 1990. Probability Propagation. Ann. Math. Artif. Intell. 2, 327-352.
-* https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content
-
 Shachter, R. D. & Kenley, C. R. (1989). <i>Gaussian influence diagrams</i>. <i>Management Science</i>, 35(5), 527–550.<br>
 Bielza, C., Müller, P. & Ríos-Insua, D. (1999). <i>Decision analysis by augmented probability simulation</i>. <i>Management Science</i>, 45(7), 995–1007.<br>
-Cobb, B. R. & Shenoy, P. P. (2005). <i>Decision making with hybrid influence diagrams using mixtures of truncated exponentials</i>. In <i>Proc. UAI</i>, 85–93.<br>
+
+Jenzarli, A. (1995, January). Solving influence diagrams using Gibbs sampling. In Pre-proceedings of the Fifth International Workshop on Artificial Intelligence and Statistics (pp. 278-284). PMLR.
+
+Bielza, C., Müller, P., & Insua, D. R. (1999). Decision analysis by augmented probability simulation. Management Science , 45(7), 995–1007.
+
+
+Cobb, B. R., & Shenoy, P. P. (2008). Decision making with hybrid influence diagrams using mixtures of truncated exponentials. European Journal of Operational Research, 186(1), 261-275.
+
+
 Winn, J. & Bishop, C. M. (2005). <i>Variational message passing</i>. <i>Journal of Machine Learning Research</i>, 6, 661–694.</small>
+
+SHAFER, G., AND P. P. SHENOY. 1990. Probability Propagation. Ann. Math. Artif. Intell. 2, 327-352.
+* https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content
