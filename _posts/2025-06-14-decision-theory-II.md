@@ -1,11 +1,44 @@
 ---
 layout: post
 title: "Introduction to Decision Theory: Part II"
-date: 2025-06-14
+date: 2025-07-4
 categories: blog
-description: "Explores the strengths and limitations of decision trees, introduces influence diagrams as a scalable alternative, and surveys Python libraries (PyAgrum, PyCID) for practical decision-analysis."
+description: "Explores the strengths and limitations of decision trees, introduces influence diagrams as a scalable alternative, details their evaluation using the arc-reversal / node-reduction algorithm, and surveys Python libraries (PyAgrum, PyCID) for practical decision analysis."
 tags: [Decision Theory]
 ---
+
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Table of Contents</summary>
+
+<ul style="margin-top: 0.5em;">
+  <li style="margin-bottom: 0.5em;"><a href="#decision-trees-strengths-limitations">Strengths and Limitations of Decision Trees</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#combinatorial-explosion">Combinatorial Explosion</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#hidden-independence">Hidden Conditional Independencies</a></li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#decision_networks">Influence Diagrams</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#modelling_oil_problem">Modelling the Oil Field Decision Problem</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#modelling_oil_problem_qualitative">Modelling Qualitative Information</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#modelling_oil_problem_quantitative">Modelling Quantitative Information</a></li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#evaluating_influence_diagram">Influence Diagram Evaluation</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#local-graph-operations">Four Local Graph Operations</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#node-reduction-algorithm">The Arc-Reversal / Node-Reduction Algorithm</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#relationship-to-bayesian-network-elimination">Relationship to Bayesian Network Variable Elimination</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#related-work-evaluation">Related Work</a></li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#evaluating-oil-influence-diagram">Evaluating the Oil Influence Diagram</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#influence-diagram-libraries">Influence Diagram Libraries</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#conclusion">Conclusion</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#references">References</a></li>
+</ul>
+
+</details>
 
 <h2 id="decision-trees-strengths-limitations">Strengths and Limitations of Decision Trees</h2>
 
@@ -26,7 +59,7 @@ The number of decision paths is profoundly affected by the order and meaning of 
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="240">
+      <img src="/assets/2025-06-14-decision-theory-II/1_oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="240">
     </td>
   </tr>
   <tr>
@@ -43,7 +76,7 @@ Conversely, a problem with the same types of variables, but structured *symmetri
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="240">
+      <img src="/assets/2025-06-14-decision-theory-II/2_oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="240">
     </td>
   </tr>
   <tr>
@@ -61,11 +94,6 @@ This **combinatorial explosion** not only affects computational tractability but
 
 <h3 id="hidden-independence">Hidden Conditional Independencies</h3>
 
-<div style="background-color:rgb(250, 224, 224); padding: 10px; border-radius: 5px;">
-
-Creo que habria que utilizar la misma notacion matematica que abajo
-
-</div>
 
 In addition to the issue of combinatorial explosion, decision trees have another important limitation: they assume a strict, linear chain of dependence. In a decision tree, every variable is implicitly conditioned on **all** previous events along its particular path. This rigid structure prevents us from explicitly representing one of the most important concepts in probabilistic modeling: <b><a href="https://en.wikipedia.org/wiki/Conditional_independence"><u>conditional independence</u></a></b>.
 
@@ -368,7 +396,7 @@ The diagram corresponds to the directed acyclic graph of a <a href="https://en.w
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="300">
+      <img src="/assets/2025-06-14-decision-theory-II/3_bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="300">
     </td>
   </tr>
   <tr>
@@ -597,7 +625,7 @@ The following image displays the influence diagram structure for the decision pr
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/4_influence_diagram_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -618,7 +646,7 @@ The subsequent image presents the corresponding LIMID, enhanced with a green mem
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/decision_network_oil_limid.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/5_limid_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -787,7 +815,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/1_barren_node_elimination.png" alt="Barren node elimination example" height="400">
+          <img src="/assets/2025-06-14-decision-theory-II/6_barren_node_elimination.png" alt="Barren node elimination example" height="400">
         </td>
       </tr>
       <tr>
@@ -819,7 +847,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/2_chance_node_removal.png" alt="Chance node removal example" height="150">
+          <img src="/assets/2025-06-14-decision-theory-II/7_chance_node_removal.png" alt="Chance node removal example" height="150">
         </td>
       </tr>
       <tr>
@@ -849,7 +877,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/3_decision_node_removal.png" alt="Decision node removal example" width="600">
+          <img src="/assets/2025-06-14-decision-theory-II/8_decision_node_removal.png" alt="Decision node removal example" width="600">
         </td>
       </tr>
               <tr>
@@ -901,7 +929,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/4_arc_reversal.png" alt="Decision node removal example" width="600">
+          <img src="/assets/2025-06-14-decision-theory-II/9_arc_reversal.png" alt="Decision node removal example" width="600">
         </td>
       </tr>
               <tr>
@@ -1113,7 +1141,7 @@ This similarity also extends to computational complexity: since both methods gen
 
 There are several alternative strategies for evaluating influence diagrams beyond the arc-reversal and node-reduction procedures described above.
 
-A more compact exact method is **junction-tree propagation**, which is also inspired by techniques from Bayesian networks. In this approach, the influence diagram is first moralized and triangulated, then compiled into a tree of cliques. Local probability and utility factors are passed between cliques using message-passing algorithms such as Shafer-Shenoy or HUGIN until convergence is reached. Junction-tree algorithms are often more memory-efficient than straightforward variable elimination and form the foundation of many commercial and open-source tools, including PyAgrum (<a href="https://arxiv.org/pdf/1302.6824"><u>Jensen et al., 1994</u></a>; <a href="https://arxiv.org/pdf/1301.6716"><u>Madsen & Jensen, 1999</u></a>; <a href="https://www.stats.ox.ac.uk/~steffen/papers/limids.pdf"><u>Lauritzen & Nilsson, 2001</u></a>).
+A more compact exact method is **junction-tree propagation**, which is also inspired by techniques from Bayesian networks. In this approach, the influence diagram is first moralized and triangulated, then compiled into a tree of cliques. Local probability and utility factors are passed between cliques using message-passing algorithms such as Shafer-Shenoy (<a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Shafer & Shenoy, 1990</u></a>) or HUGIN until convergence is reached. Junction-tree algorithms are often more memory-efficient than straightforward variable elimination and form the foundation of many commercial and open-source tools, including PyAgrum (<a href="https://arxiv.org/pdf/1302.6824"><u>Jensen et al., 1994</u></a>; <a href="https://arxiv.org/pdf/1301.6716"><u>Madsen & Jensen, 1999</u></a>; <a href="https://www.stats.ox.ac.uk/~steffen/papers/limids.pdf"><u>Lauritzen & Nilsson, 2001</u></a>).
 
 However, even junction-tree propagation can become impractical for very complex or densely connected models, as the required clique tables may grow prohibitively large. Additionally, exact arc-reversal is difficult when the diagram contains continuous variables. In these situations, we need to rely on **approximate methods**. The most common of these is Monte Carlo sampling, which estimates expected utility by simulating random scenarios (<a href="https://www.jstor.org/stable/2632102"><u>Shachter & Kenley, 1989</u></a>; <a href="https://proceedings.mlr.press/r0/jenzarli95a/jenzarli95a.pdf"><u>Jenzarli, 1995</u></a>). Later research has shown that Monte Carlo methods can be extended to handle non-Gaussian or hybrid influence diagrams (<a href="https://cig.fi.upm.es/wp-content/uploads/2024/01/Decision-Analysis-by-Augmented-Probability-Simulation.pdf"><u>Bielza et al., 1999</u></a>; <a href="https://doi.org/10.1016/j.ejor.2007.01.036"><u>Cobb & Shenoy, 2008</u></a>).
 
@@ -1138,7 +1166,7 @@ Figure 10 shows the result of reversing $$\textcolor{purple}{Q} \rightarrow \tex
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_reverse_q.png" alt="Influence diagram after reversing arc Q &rarr; R" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/10_oil_reverse_q.png" alt="Influence diagram after reversing arc Q &rarr; R" width="320">
     </td>
   </tr>
   <tr>
@@ -1203,7 +1231,9 @@ is all zeros except for the <span style="color: purple;">no results</span> case.
 Now for $$P(\textcolor{purple}{Q} \mid \textcolor{purple}{R})$$, we need to apply Bayes' theorem:
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:purple;">pass</span> result</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">
+P(<span style="color:purple;">Q</span> | <span style="color:purple;">R</span> = <span style="color:purple;">pass</span>)
+</summary>
 
 $$
 \begin{aligned}
@@ -1219,7 +1249,7 @@ $$
 </details>
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:purple;">fail</span> result</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">Q</span> | <span style="color:purple;">R</span> = <span style="color:purple;">fail</span>)</summary>
 
 $$
 \begin{aligned}
@@ -1287,7 +1317,7 @@ After reversing the arc $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_q.png" alt="Influence diagram after removing node Q" width="320">
+      <img src="/assets/2025-06-14-decision-theory-II/11_oil_remove_q.png" alt="Influence diagram after removing node Q" width="320">
     </td>
   </tr>
   <tr>
@@ -1305,7 +1335,9 @@ u'_\textcolor{blue}{U}(\textcolor{red}{T}, \textcolor{purple}{R}, \textcolor{red
 $$
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">perform test</span> result</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">
+<span style="color:blue;">U'</span>(<span style="color:purple;">R</span>, <span style="color:red;">B</span>, <span style="color:red;">T</span> = <span style="color:red;">perform</span>)
+</summary>
 $$
 \begin{aligned}
 u'_\textcolor{blue}{U}(\textcolor{red}{\text{perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{perform}}, \textcolor{purple}{\text{pass}}) \\
@@ -1361,7 +1393,9 @@ $$
 </details>
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">do no perform</span> result</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">
+<span style="color:blue;">U'</span>(<span style="color:purple;">R</span>, <span style="color:red;">B</span>, <span style="color:red;">T</span> = <span style="color:red;">no perform</span>)
+</summary>
 $$
 \begin{aligned}
 u'_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}},\ \textcolor{purple}{\text{pass}},\ \textcolor{red}{\text{buy}}) &= u_\textcolor{blue}{U}(\textcolor{red}{\text{no perform}}, \textcolor{red}{\text{buy}}, \textcolor{purple}{\text{high}}) P(\textcolor{purple}{\text{high}} \mid \textcolor{red}{\text{no perform}}, \textcolor{purple}{\text{pass}}) \\
@@ -1507,7 +1541,7 @@ We can now remove the decision node $$\textcolor{red}{B}$$, as it is a leaf node
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_b.png" alt="Influence diagram after removing decision node B" width="300">
+      <img src="/assets/2025-06-14-decision-theory-II/12_oil_remove_b.png" alt="Influence diagram after removing decision node B" width="300">
     </td>
   </tr>
   <tr>
@@ -1567,7 +1601,7 @@ After removing $$\textcolor{red}{B}$$, $$\textcolor{purple}{R}$$ becomes a leaf 
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_r.png" alt="Influence diagram after removing chance node R" width="200">
+      <img src="/assets/2025-06-14-decision-theory-II/13_oil_remove_r.png" alt="Influence diagram after removing chance node R" width="180">
     </td>
   </tr>
   <tr>
@@ -1579,7 +1613,9 @@ After removing $$\textcolor{red}{B}$$, $$\textcolor{purple}{R}$$ becomes a leaf 
 </center>
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Posterior for <span style="color:red;">perform</span> and <span style="color:red;">no perform</span> result</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">
+<span style="color:blue;">U'''</span>(<span style="color:red;">T</span>)
+</summary>
 
 $$
 \begin{aligned}
@@ -1587,8 +1623,8 @@ u'''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}}) &= u''_{\textcolor{b
 &\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}},\,\textcolor{purple}{\text{fail}},\,\textcolor{red}{\text{no buy}})\; P(\textcolor{purple}{\text{fail}} \mid \textcolor{red}{\text{perform}}) \\
 &\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{perform}},\,\textcolor{purple}{\text{no results}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{no results}} \mid \textcolor{red}{\text{perform}}) \\
 &= 876.387 \cdot 0.6775 + 320 \cdot 0.3225 + 1790x \cdot 0 \\
-&= 593.7388725 + 103.2 + 0 \\
-&= 696.9388725 \\[1em]
+&= 593.738 + 103.2 + 0 \\
+&= 696.938 \\[1em]
 % -------------------
 u'''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}}) &= u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}},\,\textcolor{purple}{\text{pass}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{pass}} \mid \textcolor{red}{\text{no perform}}) \\
 &\quad + u''_{\textcolor{blue}{U}}(\textcolor{red}{\text{no perform}},\,\textcolor{purple}{\text{fail}},\,\textcolor{red}{\text{buy}})\; P(\textcolor{purple}{\text{fail}} \mid \textcolor{red}{\text{no perform}}) \\
@@ -1613,7 +1649,7 @@ The table below shows the updated utility values $$u'''_{\textcolor{blue}{U}}$$ 
   <tbody>
     <tr>
       <td><span style="color: red;">perform</span></td>
-      <td><span style="color: blue;">696.9388725</span></td>
+      <td><span style="color: blue;">696.938</span></td>
     </tr>
     <tr>
       <td><span style="color: red;">no perform</span></td>
@@ -1643,7 +1679,7 @@ At this stage, the only remaining node is the decision node $$\textcolor{red}{T}
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/oil_remove_t.png" alt="Final influence diagram after removing decision node T" width="50">
+      <img src="/assets/2025-06-14-decision-theory-II/14_oil_remove_t.png" alt="Final influence diagram after removing decision node T" width="60">
     </td>
   </tr>
   <tr>
@@ -1660,7 +1696,7 @@ As we can see, this yields the same result as the decision tree in <a href="http
 
 In practice, we do not need to manually perform each step of the arc-reversal or node-reduction algorithm to evaluate an influence diagram. Several open-source libraries automate this entire process and provide sophisticated inference algorithms that handle the computational complexity for us.
 
-<a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> is currently the most widely supported open-source library for influence diagrams. Written in C++ with a Python interface, it implements the Shafer-Shenoy algorithm for LIMIDs. PyAgrum builds a junction tree representation of the influence diagram and uses message passing, alternating between summation (for chance nodes) and maximization (for decision nodes), to efficiently evaluate the diagram.
+<a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> is currently the most widely supported open-source library for influence diagrams. Written in C++ with a Python interface, it implements the Shafer-Shenoy algorithm for LIMIDs (<a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Shafer & Shenoy, 1990</u></a>). PyAgrum builds a junction tree representation of the influence diagram and uses message passing, alternating between summation (for chance nodes) and maximization (for decision nodes), to efficiently evaluate the diagram.
 
 Other notable libraries include:
 
@@ -1671,43 +1707,51 @@ Other notable libraries include:
 
 <h2>Conclusion</h2>
 
-Este chapter se ha centrado principalmente en como modelizar un problema con un diagram de influencia y como evaluarlo paara calcular la decision optima
+This post has shown how influence diagrams can be used to model and solve decision problems under uncertainty. By applying the arc-reversal and node-reduction algorithms to the oil-field LIMID, we obtained a maximum expected utility of <b>721</b> and confirmed that the optimal strategy is to <b>skip the porosity test and buy the field</b>. As expected, this matches the recommendation from the equivalent decision tree discussed in <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html"><u>Part I</u></a>.
 
-Comentar donde seguir aprendiendo mas sobre este tema y aspectos interesantes actuales como que:
+Influence diagrams excel at capturing conditional independencies, which helps control the combinatorial explosion that often plagues decision trees. However, their main limitation is that they are best suited for symmetric problems. Highly asymmetric scenarios may require introducing artificial states or degenerate probabilities, which can increase both the size and computational complexity of the model.
 
-es un tema poco explorado, no hemos tocado causalidad (ahi hay mas chicha), relacion con LLMs, variables probabilisticas continuas (poner referencia), etc. 
+**In the next post**, we'll demonstrate how to build and evaluate LIMIDs using open-source tools like <a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a>, perform sensitivity analysis and value-of-information calculations, and explore advanced features such as multiple utility nodes and decision planes. Finally, we'll show how to integrate Gradio with PyAgrum to create interactive, web-based decision problem demos, making it easy to experiment with and communicate complex decision models.
 
-En el siguiente articulo comentaremos un poco sobre Pyagrum, sensitivity analysis y multiples variables de utilidad (plano de decision, multiples decisiones posibles).
-
-Comentar brevemente las fortalezas y limitaciones de los IDs
+<!-- Future exploration could delve deeper into topics such as causality, the relationship with Large 
+Language Models (LLMs), and handling continuous probabilistic variables. -->
 
 
 <h2 id="references">References</h2>
 
+
 1. Shenoy, P. P. (2009). <a href="https://pshenoy.ku.edu/Papers/EOLSS09.pdf"><u>Decision trees and influence diagrams</u></a>. Encyclopedia of life support systems, 280-298.
-
-X. Howard, R. A., Matheson, J. E. (1984). <u>Influence diagrams</u>. The Principles and Applications of Decision Analysis (Vol. II), 719-762
-
-Jensen, F., Jensen, F. V., & Dittmer, S. (1994). From influence diagrams to junction trees. In Proceedings of the 10th Conference on Uncertainty in Artificial Intelligence (UAI) (pp. 367-373).
-
-Madsen, A. L., & Jensen, F. (1999). Lazy evaluation of symmetric Bayesian decision problems . In Proceedings of the Fifteenth Conference on Uncertainty in Artificial Intelligence (UAI)  (pp. 382–390). Morgan Kaufmann.
-
-Lauritzen, S. L., & Nilsson, D. (2001). Representing and solving decision problems with limited information. Management Science, 47(9), 1235-1251.
-
-Shachter, R. D. (1986). Evaluating influence diagrams. Operations research, 34(6), 871-882.
-
-Shachter, R. D. & Kenley, C. R. (1989). <i>Gaussian influence diagrams</i>. <i>Management Science</i>, 35(5), 527–550.<br>
-Bielza, C., Müller, P. & Ríos-Insua, D. (1999). <i>Decision analysis by augmented probability simulation</i>. <i>Management Science</i>, 45(7), 995–1007.<br>
-
-Jenzarli, A. (1995, January). Solving influence diagrams using Gibbs sampling. In Pre-proceedings of the Fifth International Workshop on Artificial Intelligence and Statistics (pp. 278-284). PMLR.
-
-Bielza, C., Müller, P., & Insua, D. R. (1999). Decision analysis by augmented probability simulation. Management Science , 45(7), 995–1007.
-
-
-Cobb, B. R., & Shenoy, P. P. (2008). Decision making with hybrid influence diagrams using mixtures of truncated exponentials. European Journal of Operational Research, 186(1), 261-275.
-
-
-Winn, J. & Bishop, C. M. (2005). <i>Variational message passing</i>. <i>Journal of Machine Learning Research</i>, 6, 661–694.</small>
-
-SHAFER, G., AND P. P. SHENOY. 1990. Probability Propagation. Ann. Math. Artif. Intell. 2, 327-352.
-* https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content
+<br><br>
+2. Rodriguez, F. (2025, June 8). Introduction to decision theory: Part I. https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html
+<br><br>
+1. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Conditional_independence">conditional independence</a></u>.
+<br><br>
+2. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Tree_diagram_(probability_theory)">probability trees</a></u>.
+<br><br>
+3. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Bayesian_network">Bayesian networks</a></u>.
+<br><br>
+5. Howard, R. A., & Matheson, J. E. (1984). <u>Influence diagrams</u>. The Principles and Applications of Decision Analysis (Vol. II), 719-762.
+<br><br>
+6. Bielza, C., & Shenoy, P. P. (1999). <a href="https://cig.fi.upm.es/wp-content/uploads/2024/01/A-Comparison-of-Graphical-Techniques-for-Asymmetric-Decision-Problems.pdf"><u>A comparison of graphical techniques for asymmetric decision problems</u></a>. European Journal of Operational Research, 119(1), 1-13.
+<br><br>
+7. Lauritzen, S. L., & Nilsson, D. (2001). <a href="https://web.math.ku.dk/~lauritzen/papers/limids.pdf"><u>Representing and solving decision problems with limited information</u></a>. Management Science, 47(9), 1235-1251.
+<br><br>
+8. Shachter, R. D. (1986). <a href="http://www.cis.umassd.edu/~x2zhang/courses/CIS561/readings/EvaluatingID.pdf"><u>Evaluating influence diagrams</u></a>. Operations research, 34(6), 871-882.
+<br><br>
+9. Wikipedia article on <u><a href="https://artint.info/3e/html/ArtInt3e.Ch4.S5.html">variable elimination</a></u>.
+<br><br>
+10. Jensen, F., Jensen, F. V., & Dittmer, S. (1994). <a href="https://arxiv.org/pdf/1302.6824"><u>From influence diagrams to junction trees</u></a>. In Proceedings of the 10th Conference on Uncertainty in Artificial Intelligence (UAI) (pp. 367-373).
+<br><br>
+11. Madsen, A. L., & Jensen, F. (1999). <a href="https://arxiv.org/pdf/1301.6716"><u>Lazy evaluation of symmetric Bayesian decision problems</u></a>. In Proceedings of the Fifteenth Conference on Uncertainty in Artificial Intelligence (UAI) (pp. 382–390). Morgan Kaufmann.
+<br><br>
+12. Shachter, R. D., & Kenley, C. R. (1989). <a href="https://www.jstor.org/stable/2632102"><u>Gaussian influence diagrams</u></a>. Management Science, 35(5), 527–550.
+<br><br>
+13. Jenzarli, A. (1995). <a href="https://proceedings.mlr.press/r0/jenzarli95a/jenzarli95a.pdf"><u>Solving influence diagrams using Gibbs sampling</u></a>. In Pre-proceedings of the Fifth International Workshop on Artificial Intelligence and Statistics (pp. 278-284). PMLR.
+<br><br>
+14. Bielza, C., Müller, P., & Ríos-Insua, D. (1999). <a href="https://cig.fi.upm.es/wp-content/uploads/2024/01/Decision-Analysis-by-Augmented-Probability-Simulation.pdf"><u>Decision analysis by augmented probability simulation</u></a>. Management Science, 45(7), 995–1007.
+<br><br>
+15. Cobb, B. R., & Shenoy, P. P. (2008). <a href="https://doi.org/10.1016/j.ejor.2007.01.036"><u>Decision making with hybrid influence diagrams using mixtures of truncated exponentials</u></a>. European Journal of Operational Research, 186(1), 261-275.
+<br><br>
+16. Winn, J., & Bishop, C. M. (2005). <a href="https://jmlr.org/papers/volume6/winn05a/winn05a.pdf"><u>Variational message passing</u></a>. Journal of Machine Learning Research, 6, 661–694.
+<br><br>
+17. Shafer, G., & Shenoy, P. P. (1990). <a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Probability Propagation</u></a>. Annals of Mathematics and Artificial Intelligence, 2, 327-352.
