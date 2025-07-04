@@ -69,297 +69,298 @@ Creo que habria que utilizar la misma notacion matematica que abajo
 
 In addition to the issue of combinatorial explosion, decision trees have another important limitation: they assume a strict, linear chain of dependence. In a decision tree, every variable is implicitly conditioned on **all** previous events along its particular path. This rigid structure prevents us from explicitly representing one of the most important concepts in probabilistic modeling: <b><a href="https://en.wikipedia.org/wiki/Conditional_independence"><u>conditional independence</u></a></b>.
 
-To illustrate this, consider a generic problem with four <span style="color:purple;"><b>random variables</b></span>: $$A$$ and $$B$$ (each with two possible states, $$a_1, a_2$$ and $$b_1, b_2$$, respectively), and $$C$$ and $$D$$ (each with three possible states, $$c_1, c_2, c_3$$ and $$d_1, d_2, d_3$$. In a traditional decision tree, where conditional independencies cannot be explicitly represented, you must specify the entire joint probability distribution for all variables. This means assigning a probability to every possible combination of outcomes, as shown in the joint probability table below:
+To illustrate this, consider a generic problem with four random variables: $$\textcolor{purple}{A}$$ and $$\textcolor{purple}{B}$$ (each with two possible states, $$\textcolor{purple}{a_1}, \textcolor{purple}{a_2}$$ and $$\textcolor{purple}{b_1}, \textcolor{purple}{b_2}$$, respectively), and $$\textcolor{purple}{C}$$ and $$\textcolor{purple}{D}$$ (each with three possible states, $$\textcolor{purple}{c_1}, \textcolor{purple}{c_2}, \textcolor{purple}{c_3}$$ and $$\textcolor{purple}{d_1}, \textcolor{purple}{d_2}, \textcolor{purple}{d_3}$$). In a traditional decision tree, where conditional independencies cannot be explicitly represented, you must specify the entire joint probability distribution for all variables. This means assigning a probability to every possible combination of outcomes, as shown in the joint probability table below:
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(A, B, C, D)</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">A</span>, <span style="color:purple;">B</span>, <span style="color:purple;">C</span>, <span style="color:purple;">D</span>)</summary>
+
 
 <table>
   <thead>
     <tr>
-      <th>$$A$$</th>
-      <th>$$B$$</th>
-      <th>$$C$$</th>
-      <th>$$D$$</th>
+      <th>$$\textcolor{purple}{A}$$</th>
+      <th>$$\textcolor{purple}{B}$$</th>
+      <th>$$\textcolor{purple}{C}$$</th>
+      <th>$$\textcolor{purple}{D}$$</th>
       <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{1},c_{1},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{1},c_{1},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{1},c_{1},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{1},c_{2},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{1},c_{2},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{1},c_{2},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{1},c_{3},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{1},c_{3},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{1},c_{3},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{2},c_{1},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{2},c_{1},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{2},c_{1},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{2},c_{2},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{2},c_{2},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{2},c_{2},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{1},b_{2},c_{3},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{1},b_{2},c_{3},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{1},b_{2},c_{3},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{1},c_{1},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{1},c_{1},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{1},c_{1},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{1},c_{2},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{1},c_{2},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{1},c_{2},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{1},c_{3},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{1},c_{3},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{1},c_{3},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{1}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{2},c_{1},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{2},c_{1},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{2},c_{1},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{1}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{2},c_{2},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{2},c_{2},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{2},c_{2},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{2}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(a_{2},b_{2},c_{3},d_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(a_{2},b_{2},c_{3},d_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(a_{2},b_{2},c_{3},d_{3})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}},\textcolor{purple}{b_{2}},\textcolor{purple}{c_{3}},\textcolor{purple}{d_{3}})$$</td>
     </tr>
   </tbody>
 </table>
 
 </details>
 
-**Total distinct probabilities:** $$ 2 \; (\text{for } A) \cdot 2 \; (\text{for } B) \cdot 3 \; (\text{for } C) \cdot 3 \; (\text{for } D) = \mathbf{36} $$.
+**Total distinct probabilities:** $$ 2 \; (\text{for } \textcolor{purple}{A}) \cdot 2 \; (\text{for } \textcolor{purple}{B}) \cdot 3 \; (\text{for } \textcolor{purple}{C}) \cdot 3 \; (\text{for } \textcolor{purple}{D}) = \mathbf{36} $$.
 
 <div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
   This example demonstrates conditional independencies using a simplified version of a decision tree, where all nodes are probabilistic (often called a <a href="https://en.wikipedia.org/wiki/Tree_diagram_(probability_theory)"><u>probability tree</u></a>). However, the core concepts and benefits of explicit conditional independence representation apply equally to the chance nodes of any general decision tree.
 </div>
 <div style="height: 1.1em;"></div>
 
-Now, let's say that conditional independencies do exist in this problem. For instance, let's say that $$B$$ is conditionally independent of $$C$$ and $$D$$ given $$A$$. We denote that statement by $$(B \bot \{C, D\} \mid A)$$. In that case:
+Now, let's say that conditional independencies do exist in this problem. For instance, let's say that $$\textcolor{purple}{B}$$ is conditionally independent of $$\textcolor{purple}{C}$$ and $$\textcolor{purple}{D}$$ given $$\textcolor{purple}{A}$$. We denote that statement by $$(\textcolor{purple}{B} \bot \{\textcolor{purple}{C}, \textcolor{purple}{D}\} \mid \textcolor{purple}{A})$$. In that case:
 
 $$
-P(B \mid A, C, D) = P(B \mid A)
+P(\textcolor{purple}{B} \mid \textcolor{purple}{A}, \textcolor{purple}{C}, \textcolor{purple}{D}) = P(\textcolor{purple}{B} \mid \textcolor{purple}{A})
 $$
 
 This fundamental concept allows us to represent relationships far more efficiently. Consider Figure 3, which implies the following conditional independence statements:
-* &nbsp;$$ (B \bot \{C, D\} \mid A)$$
-* &nbsp;$$ (C \bot B \mid A)$$
-* &nbsp;$$ (D \bot \{A,B\} \mid C)$$
+* &nbsp;$$ (\textcolor{purple}{B} \bot \{\textcolor{purple}{C}, \textcolor{purple}{D}\} \mid \textcolor{purple}{A})$$
+* &nbsp;$$ (\textcolor{purple}{C} \bot \textcolor{purple}{B} \mid \textcolor{purple}{A})$$
+* &nbsp;$$ (\textcolor{purple}{D} \bot \{\textcolor{purple}{A},\textcolor{purple}{B}\} \mid \textcolor{purple}{C})$$
 
 The diagram corresponds to the directed acyclic graph of a <a href="https://en.wikipedia.org/wiki/Bayesian_network"><u>Bayesian network</u></a>, which visually encodes these independencies: arrows indicate direct probabilistic influence, while the absence of an arrow between two nodes reflects a conditional independence given their parents.
 
@@ -380,30 +381,30 @@ The diagram corresponds to the directed acyclic graph of a <a href="https://en.w
 
 When these conditional independencies are recognized and modeled, we no longer need to construct a single large joint probability table. Instead, the full joint probability distribution can be factored into a product of smaller, more manageable conditional probability tables (CPTs). In our example, this means we only need to specify:
 
-* &nbsp;$$ P(A) \rightarrow 2 = 2 $$ entries
-* &nbsp;$$ P(B \mid A) \rightarrow 2 \cdot 2 = 4 $$ entries  
-* &nbsp;$$ P(C \mid A) \rightarrow 2 \cdot 3 = 6 $$ entries
-* &nbsp;$$ P(D \mid C) \rightarrow 3 \cdot 3 = 9 $$ entries
+* &nbsp;$$ P(\textcolor{purple}{A}) \rightarrow 2 = 2 $$ entries
+* &nbsp;$$ P(\textcolor{purple}{B} \mid \textcolor{purple}{A}) \rightarrow 2 \cdot 2 = 4 $$ entries  
+* &nbsp;$$ P(\textcolor{purple}{C} \mid \textcolor{purple}{A}) \rightarrow 2 \cdot 3 = 6 $$ entries
+* &nbsp;$$ P(\textcolor{purple}{D} \mid \textcolor{purple}{C}) \rightarrow 3 \cdot 3 = 9 $$ entries
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(A)</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">A</span>)</summary>
 
 <table>
   <thead>
     <tr>
-      <th>$$A$$</th>
+      <th>$$\textcolor{purple}{A}$$</th>
       <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$P(a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$P(a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{a_{2}})$$</td>
     </tr>
   </tbody>
 </table>
@@ -413,36 +414,36 @@ When these conditional independencies are recognized and modeled, we no longer n
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(B | A)</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">B</span> | <span style="color:purple;">A</span>)</summary>
 
 <table>
   <thead>
     <tr>
-      <th>$$A$$</th>
-      <th>$$B$$</th>
+      <th>$$\textcolor{purple}{A}$$</th>
+      <th>$$\textcolor{purple}{B}$$</th>
       <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$P(b_{1} \mid a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{b_{1}} \mid \textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$P(b_{2} \mid a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{b_{2}} \mid \textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{1}$$</td>
-      <td>$$P(b_{1} \mid a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{b_{1}} \mid \textcolor{purple}{a_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$b_{2}$$</td>
-      <td>$$P(b_{2} \mid a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{b_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{b_{2}} \mid \textcolor{purple}{a_{2}})$$</td>
     </tr>
   </tbody>
 </table>
@@ -451,46 +452,46 @@ When these conditional independencies are recognized and modeled, we no longer n
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(C | A)</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">C</span> | <span style="color:purple;">A</span>)</summary>
 
 <table>
   <thead>
     <tr>
-      <th>$$A$$</th>
-      <th>$$C$$</th>
+      <th>$$\textcolor{purple}{A}$$</th>
+      <th>$$\textcolor{purple}{C}$$</th>
       <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$P(c_{1} \mid a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{1}} \mid \textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$P(c_{2} \mid a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{2}} \mid \textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{1}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$P(c_{3} \mid a_{1})$$</td>
+      <td>$$\textcolor{purple}{a_{1}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{3}} \mid \textcolor{purple}{a_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$c_{1}$$</td>
-      <td>$$P(c_{1} \mid a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{1}} \mid \textcolor{purple}{a_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$c_{2}$$</td>
-      <td>$$P(c_{2} \mid a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{2}} \mid \textcolor{purple}{a_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$a_{2}$$</td>
-      <td>$$c_{3}$$</td>
-      <td>$$P(c_{3} \mid a_{2})$$</td>
+      <td>$$\textcolor{purple}{a_{2}}$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{c_{3}} \mid \textcolor{purple}{a_{2}})$$</td>
     </tr>
   </tbody>
 </table>
@@ -499,61 +500,61 @@ When these conditional independencies are recognized and modeled, we no longer n
 
 <details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
 
-<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(D | C)</summary>
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">P(<span style="color:purple;">D</span> | <span style="color:purple;">C</span>)</summary>
 
 <table>
   <thead>
     <tr>
-      <th>$$C$$</th>
-      <th>$$D$$</th>
+      <th>$$\textcolor{purple}{C}$$</th>
+      <th>$$\textcolor{purple}{D}$$</th>
       <th style="text-align: center;">Probability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(d_{1} \mid c_{1})$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{1}} \mid \textcolor{purple}{c_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(d_{2} \mid c_{1})$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{2}} \mid \textcolor{purple}{c_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{1}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(d_{3} \mid c_{1})$$</td>
+      <td>$$\textcolor{purple}{c_{1}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{3}} \mid \textcolor{purple}{c_{1}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(d_{1} \mid c_{2})$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{1}} \mid \textcolor{purple}{c_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(d_{2} \mid c_{2})$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{2}} \mid \textcolor{purple}{c_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{2}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(d_{3} \mid c_{2})$$</td>
+      <td>$$\textcolor{purple}{c_{2}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{3}} \mid \textcolor{purple}{c_{2}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{1}$$</td>
-      <td>$$P(d_{1} \mid c_{3})$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{1}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{1}} \mid \textcolor{purple}{c_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{2}$$</td>
-      <td>$$P(d_{2} \mid c_{3})$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{2}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{2}} \mid \textcolor{purple}{c_{3}})$$</td>
     </tr>
     <tr>
-      <td>$$c_{3}$$</td>
-      <td>$$d_{3}$$</td>
-      <td>$$P(d_{3} \mid c_{3})$$</td>
+      <td>$$\textcolor{purple}{c_{3}}$$</td>
+      <td>$$\textcolor{purple}{d_{3}}$$</td>
+      <td>$$P(\textcolor{purple}{d_{3}} \mid \textcolor{purple}{c_{3}})$$</td>
     </tr>
   </tbody>
 </table>
@@ -607,11 +608,11 @@ The following image displays the influence diagram structure for the decision pr
 </table>
 </center>
 
-This diagram illustrates a traditional influence diagram, which operates under the assumption of perfect recall. The information arcs indicate that the Test / No Test (<span style="color:red;"><b>T</b></span>) decision is made prior to the Buy / No Buy (<span style="color:red;"><b>B</b></span>) decision. Furthermore, no information is available before making the test decision, and the test results are known when making the buy decision. This establishes the temporal sequence of variables: <span style="color:red;"><b>T</b></span>, <span style="color:purple;"><b>R</b></span>, <span style="color:red;"><b>B</b></span>, and finally <span style="color:purple;"><b>Q</b></span> (oil field quality).
+This diagram illustrates a traditional influence diagram, which operates under the assumption of perfect recall. The information arcs indicate that the Test / No Test ($$\textcolor{red}{T}$$) decision is made prior to the Buy / No Buy ($$\textcolor{red}{B}$$) decision. Furthermore, no information is available before making the test decision, and the test results ($$\textcolor{purple}{R}$$) are known when making the buy decision. This establishes the temporal sequence of variables: $$\textcolor{red}{T}$$, $$\textcolor{purple}{R}$$, $$\textcolor{red}{B}$$, and finally $$\textcolor{purple}{Q}$$ (oil field quality).
 
 However, traditional influence diagrams can become computationally complex to solve, particularly for intricate problems, and they may not accurately reflect the realistic limitations of human decision-making. For these reasons, LIMIDs (<a href="https://web.math.ku.dk/~lauritzen/papers/limids.pdf"><u>Lauritzen & Nilsson, 2001</u></a>) are often the preferred choice. These models relax the perfect recall assumption and allow for explicit representation of limited memory. Memory arcs in LIMIDs explicitly specify which past decisions and observations are remembered and used for each current decision.
 
-The subsequent image presents the corresponding LIMID, enhanced with a green memory arc. This memory arc extends from <span style="color:red;"><b>T</b></span> to <span style="color:red;"><b>B</b></span> because the outcome of the porosity test decision is crucial for the subsequent decision on buying or not buying the field.
+The subsequent image presents the corresponding LIMID, enhanced with a green memory arc. This memory arc extends from $$\textcolor{red}{T}$$ to $$\textcolor{red}{B}$$ because the outcome of the porosity test decision is crucial for the subsequent decision on buying or not buying the field.
 
 <center>
 <table>
@@ -637,11 +638,11 @@ For this problem, we will utilize the LIMID version of the oil decision problem.
 
 Since all our random variables are categorical, we can conveniently represent the quantitative information of the model in tabular form. Below, we specify the prior probabilities, the CPTs, and the utility values relevant to the oil field decision problem.
 
-Prior probabilities for the oil field quality (<b><span style="color: purple;">Q</span></b>):
+Prior probabilities for the oil field quality ($$\textcolor{purple}{Q}$$):
 
 <table>
   <tr>
-    <th colspan="2" style="text-align: center;">P(<span style="color: purple"><b>Q</b></span>)</th>
+    <th colspan="2" style="text-align: center;">$$P(\textcolor{purple}{Q})$$</th>
   </tr>
   <tr>
     <td><span style="color: purple;">high</span></td>
@@ -657,11 +658,11 @@ Prior probabilities for the oil field quality (<b><span style="color: purple;">Q
   </tr>
 </table>
 
-Conditional probabilities of observing each possible test result (<b><span style="color: purple;">R</span></b>), given the true oil field quality (<b><span style="color: purple;">Q</span></b>) and whether the test was performed (<b><span style="color: red;">T</span></b>):
+Conditional probabilities of observing each possible test result $$\textcolor{purple}{R}$$, given the true oil field quality $$\textcolor{purple}{Q}$$ and whether the test was performed $$\textcolor{red}{T}$$:
 
 <table>
   <tr>
-    <th rowspan="2" style="text-align: center;">P(<span style="color: purple">R</span> | <span style="color: purple">Q</span>, <span style="color: red">T</span>)</th>
+    <th rowspan="2" style="text-align: center;">$$P(\textcolor{purple}{R} \mid \textcolor{purple}{Q},\, \textcolor{red}{T})$$</th>
     <th colspan="3" style="text-align: center;"><span style="color: red;">perform</span></th>
     <th colspan="3" style="text-align: center;"><span style="color: red;">no perform</span></th>
   </tr>
@@ -706,10 +707,10 @@ Utility (<b><span style="color: blue;">U</span></b>) for each combination of tes
 
 <table>
   <tr>
-    <th style="text-align: center;"><span style="color: red;">T</span></th>
-    <th style="text-align: center;"><span style="color: red;">B</span></th>
-    <th style="text-align: center;"><span style="color: purple;">Q</span></th>
-    <th style="text-align: center;"><span style="color: blue;">U</span></th>
+    <th style="text-align: center;">$$\textcolor{red}{T}$$</th>
+    <th style="text-align: center;">$$\textcolor{red}{B}$$</th>
+    <th style="text-align: center;">$$\textcolor{purple}{Q}$$</th>
+    <th style="text-align: center;">$$\textcolor{blue}{U}$$</th>
   </tr>
   <tr>
     <td rowspan="6"><span style="color: red;">perform</span></td>
@@ -798,21 +799,21 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     </center> 
 
 2. **Chance-Node Removal:**
-    Once a chance node $$C$$ becomes a leaf (i.e., **it has no children except outcome nodes**), it can be eliminated via marginalization (taking an expectation). For every outcome node $$O$$ that has $$C$$ as a parent, a new utility table, $$u'_O$$, is computed. This new table will depend on the original parents of $$O$$ (excluding $$C$$) and all the parents of $$C$$.
+    Once a chance node $$\textcolor{purple}{C}$$ becomes a leaf (i.e., **it has no children except outcome nodes**), it can be eliminated via marginalization (taking an expectation). For every outcome node $$\textcolor{blue}{O}$$ that has $$\textcolor{purple}{C}$$ as a parent, a new utility table, $$u'_{\textcolor{blue}{O}}$$, is computed. This new table will depend on the original parents of $$\textcolor{blue}{O}$$ (excluding $$\textcolor{purple}{C}$$) and all the parents of $$\textcolor{purple}{C}$$.
 
     $$
-    u'_O(\mathbf{\text{Pa}}_{O} \cup \mathbf{\text{Pa}}_{C} \setminus \{C\}) = \sum_c u_O(\mathbf{\text{Pa}}_{O}) P(c \mid \mathbf{\text{Pa}}_{C})
+    u'_{\textcolor{blue}{O}}\left(\mathbf{\text{Pa}}_{\textcolor{blue}{O}} \cup \mathbf{\text{Pa}}_{\textcolor{purple}{C}} \setminus \{\textcolor{purple}{C}\}\right) = \sum_{\textcolor{purple}{c}} u_{\textcolor{blue}{O}}(\mathbf{\text{Pa}}_{\textcolor{blue}{O}}) \; P(\textcolor{purple}{c} \mid \mathbf{\text{Pa}}_{\textcolor{purple}{C}})
     $$
 
     Here:
-    *   $$\mathbf{\text{Pa}}_{O}$$ denotes the set of parents of $$O$$ in the diagram *before* removing $$C$$.
-    *   $$\mathbf{\text{Pa}}_{C}$$ denotes the set of parents of $$C$$.
-    *   $$u'_O$$ represents the *new* utility table for node $$O$$.
+    *   $$\mathbf{\text{Pa}}_{\textcolor{blue}{O}}$$ denotes the set of parents of $$\textcolor{blue}{O}$$ in the diagram *before* removing $$\textcolor{purple}{C}$$.
+    *   $$\mathbf{\text{Pa}}_{\textcolor{purple}{C}}$$ denotes the set of parents of $$\textcolor{purple}{C}$$.
+    *   $$u'_{\textcolor{blue}{O}}$$ represents the *new* utility table for node $$\textcolor{blue}{O}$$.
 
     <br>
-    Node $$C$$ and its CPT are then deleted. This operation "pushes expected utility forward" by embedding the influence of $$C$$ into the successor utility tables. The outcome node $$O$$ effectively inherits the predecessors of $$C$$, ensuring that all relevant dependencies are preserved.
+    Node $$\textcolor{purple}{C}$$ and its CPT are then deleted. This operation "pushes expected utility forward" by embedding the influence of $$\textcolor{purple}{C}$$ into the successor utility tables. The outcome node $$\textcolor{blue}{O}$$ effectively inherits the predecessors of $$\textcolor{purple}{C}$$, ensuring that all relevant dependencies are preserved.
 
-    Figure 7 showcases the process of chance node removal, specifically $$C_2$$. The first diagram becomes the second, where parents of $$C_{2}$$ become the parents of $$O_1$$.
+    Figure 7 showcases the process of chance node removal, specifically $$\textcolor{purple}{C_2}$$. The first diagram becomes the second, where parents of $$\textcolor{purple}{C_{2}}$$ become the parents of $$\textcolor{blue}{O_1}$$.
 
     <center>
     <table>
@@ -830,19 +831,19 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     </center> 
 
 3. **Decision-Node Removal:**
-    When a decision node $$D$$ becomes a leaf in the influence diagram, meaning its only children are outcome nodes, it can be eliminated. This step requires identifying the optimal decision for $$D$$ in every possible situation, or "information state", defined by the specific combination of observed values of $$D$$'s parent nodes.
+    When a decision node $$\textcolor{red}{D}$$ becomes a leaf in the influence diagram, meaning its only children are outcome nodes $$\textcolor{blue}{O}$$, it can be eliminated. This step requires identifying the optimal decision for $$\textcolor{red}{D}$$ in every possible situation, or "information state", defined by the specific combination of observed values of $$\textcolor{red}{D}$$'s parent nodes.
 
-    For each information state $$i$$, we choose the action $$d$$ that maximizes the expected utility $$\mathbb{E}[u(d, i)]$$. This action represents the best possible choice for that information state and forms part of the overall optimal policy:
+    For each information state $$i$$, we choose the action $$\textcolor{red}{d}$$ that maximizes the expected utility $$\mathbb{E}[u(\textcolor{red}{d}, i)]$$. This action represents the best possible choice for that information state and forms part of the overall optimal policy:
 
     $$
-    \delta^*(i) = \text{argmax}_d \ \mathbb{E}[u(d, i)]
+    \delta^*(i) = \text{argmax}_{\textcolor{red}{d}} \ \mathbb{E}[u(\textcolor{red}{d}, i)]
     $$
 
-    The function $$\delta^*(i)$$ is recorded as the optimal decision rule for node $$D$$ in information state $$i$$. After removing $$D$$, each outcome node $$O$$ that was a child of $$D$$ has its utility table updated to reflect the maximum expected utility (MEU) achievable by making the optimal decision at $$D$$, given the information state $$i$$.
+    The function $$\delta^*(i)$$ is recorded as the optimal decision rule for node $$\textcolor{red}{D}$$ in information state $$i$$. After removing $$\textcolor{red}{D}$$, each outcome node $$\textcolor{blue}{O}$$ that was a child of $$\textcolor{red}{D}$$ has its utility table updated to reflect the maximum expected utility (MEU) achievable by making the optimal decision at $$\textcolor{red}{D}$$, given the information state $$i$$.
 
-    This process "locks in" the optimal strategy for $$D$$ and propagates the MEU forward through the diagram, similar to how chance nodes are eliminated by marginalization.
+    This process "locks in" the optimal strategy for $$\textcolor{red}{D}$$ and propagates the MEU forward through the diagram, similar to how chance nodes $$\textcolor{purple}{C}$$ are eliminated by marginalization.
 
-    Figure 8 demonstrates the process of eliminating a decision node, specifically $$D_2$$. In the first diagram, the decision node is present; in the second, it has been removed, and the utility table has been updated to incorporate the optimal decision rule $$\delta^*(D_2)$$ for each information state (i.e., each combination of parent values). Only the maximum attainable utilities for each state are preserved.
+    Figure 8 demonstrates the process of eliminating a decision node, specifically $$\textcolor{red}{D_2}$$. In the first diagram, the decision node is present; in the second, it has been removed, and the utility table has been updated to incorporate the optimal decision rule $$\delta^*(\textcolor{red}{D_2})$$ for each information state (i.e., each combination of parent values). Only the maximum attainable utilities for each state are preserved.
 
     <center>
     <table>
@@ -862,37 +863,37 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
 4. **Arc Reversal (between chance nodes):**
     In most influence diagrams, nodes are not naturally leaves. They may have children that prevent us from eliminating them directly. To solve this, we use arc reversal to make a target node into a leaf by pushing its influence "backwards" to its children and adjusting the rest of the diagram so that it still represents the same probabilistic relationships.
 
-    Let's say we want to reverse an arc $$X \rightarrow Y$$ where $$\mathbf{\text{Pa}}_{X}$$ is the set of parents of $$X$$ and $$\mathbf{\text{Pa}}_{Y}$$ is the parents of $$Y$$, including $$X$$ itself.
+    Let's say we want to reverse an arc $$\textcolor{purple}{X} \rightarrow \textcolor{purple}{Y}$$ where $$\mathbf{\text{Pa}}_{\textcolor{purple}{X}}$$ is the set of parents of $$\textcolor{purple}{X}$$ and $$\mathbf{\text{Pa}}_{\textcolor{purple}{Y}}$$ is the parents of $$\textcolor{purple}{Y}$$, including $$\textcolor{purple}{X}$$ itself.
 
-    To reverse, we remove the arc $$X \rightarrow Y$$, add a new arc $$Y \rightarrow X$$, add arcs from $$\mathbf{\text{Pa}}_{X}$$ to $$Y$$ if they are not already parents of $$Y$$, and add arcs from $$\mathbf{\text{Pa}}_{Y}$$ to $$X$$, if needed, to preserve dependencies. This means the new parents of $$X$$ and $$Y$$ are:
+    To reverse, we remove the arc $$\textcolor{purple}{X} \rightarrow \textcolor{purple}{Y}$$, add a new arc $$\textcolor{purple}{Y} \rightarrow \textcolor{purple}{X}$$, add arcs from $$\mathbf{\text{Pa}}_{\textcolor{purple}{X}}$$ to $$\textcolor{purple}{Y}$$ if they are not already parents of $$\textcolor{purple}{Y}$$, and add arcs from $$\mathbf{\text{Pa}}_{\textcolor{purple}{Y}}$$ to $$\textcolor{purple}{X}$$, if needed, to preserve dependencies. This means the new parents of $$\textcolor{purple}{X}$$ and $$\textcolor{purple}{Y}$$ are:
 
-    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{Y} = \mathbf{\text{Pa}}_{X} \cup \mathbf{\text{Pa}}_{Y}  \setminus \{Y\}$$
-    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{X} = \mathbf{\text{Pa}}_{X} \cup \mathbf{\text{Pa}}_{Y}  \cup \{Y\} \setminus \{X\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{Y}} = \mathbf{\text{Pa}}_{\textcolor{purple}{X}} \cup \mathbf{\text{Pa}}_{\textcolor{purple}{Y}}  \setminus \{\textcolor{purple}{Y}\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{X}} = \mathbf{\text{Pa}}_{\textcolor{purple}{X}} \cup \mathbf{\text{Pa}}_{\textcolor{purple}{Y}}  \cup \{\textcolor{purple}{Y}\} \setminus \{\textcolor{purple}{X}\}$$
     
     <br>
     To ensure the joint distribution remains unchanged under the new structure, we compute the new CPT using Bayes' Theorem:
     
     $$
     \begin{aligned}
-    P(Y \mid \mathbf{\text{Pa}}^{\text{new}}_{Y}) 
-    &= \sum_{X} P(Y \mid \mathbf{\text{Pa}}_{Y}) \cdot P(X \mid \mathbf{\text{Pa}}_{X}) \\ \\
+    P(\textcolor{purple}{Y} \mid \mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{Y}}) 
+    &= \sum_{\textcolor{purple}{X}} P(\textcolor{purple}{Y} \mid \mathbf{\text{Pa}}_{\textcolor{purple}{Y}}) \cdot P(\textcolor{purple}{X} \mid \mathbf{\text{Pa}}_{\textcolor{purple}{X}}) \\ \\
     
-    P(X \mid \mathbf{\text{Pa}}^{\text{new}}_{X}) 
-    &= \frac{P(Y \mid \mathbf{\text{Pa}}_{Y}) \cdot P(X \mid \mathbf{\text{Pa}}_{X})}{P(Y \mid \mathbf{\text{Pa}}^{\text{new}}_{Y})}
+    P(\textcolor{purple}{X} \mid \mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{X}}) 
+    &= \frac{P(\textcolor{purple}{Y} \mid \mathbf{\text{Pa}}_{\textcolor{purple}{Y}}) \cdot P(\textcolor{purple}{X} \mid \mathbf{\text{Pa}}_{\textcolor{purple}{X}})}{P(\textcolor{purple}{Y} \mid \mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{Y}})}
     \end{aligned}
     $$
 
-    As an example, consider the influence diagram shown in Figure 9, which contains three chance nodes. We will reverse the arc $$C_2 \rightarrow C_3$$. Before reversal, the parent sets are:
+    As an example, consider the influence diagram shown in Figure 9, which contains three chance nodes. We will reverse the arc $$\textcolor{purple}{C_2} \rightarrow \textcolor{purple}{C_3}$$. Before reversal, the parent sets are:
     
-    * &nbsp;$$\mathbf{\text{Pa}}_{C_2} = \{C_1\}$$
-    * &nbsp;$$\mathbf{\text{Pa}}_{C_3} = \{C_2\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}_{\textcolor{purple}{C_2}} = \{\textcolor{purple}{C_1}\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}_{\textcolor{purple}{C_3}} = \{\textcolor{purple}{C_2}\}$$
 
     <div style="height: 1.1em;"></div>
 
     After reversal, the new parent sets become:
 
-    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{C_2} = \{C_1, C_3\}$$
-    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{C_3} = \{C_1\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{C_2}} = \{\textcolor{purple}{C_1}, \textcolor{purple}{C_3}\}$$
+    * &nbsp;$$\mathbf{\text{Pa}}^{\text{new}}_{\textcolor{purple}{C_3}} = \{\textcolor{purple}{C_1}\}$$
 
     <div style="height: 1.1em;"></div>
 
@@ -916,69 +917,69 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <thead>
         <tr>
-          <th colspan="2" style="text-align:center">$$P(C_1)$$</th>
+          <th colspan="2" style="text-align:center">$$P(\textcolor{purple}{C_1})$$</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>$$c_{1,1}$$</td><td>0.7</td></tr>
-        <tr><td>$$c_{1,2}$$</td><td>0.3</td></tr>
-      </tbody>
-    </table>
-
-      <table>
-      <thead>
-        <tr>
-          <th>$$P(C_2 \mid C_1)$$</th><th>$$c_{1,1}$$</th><th>$$c_{1,2}$$</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>$$c_{2,1}$$</td><td>0.6</td><td>0.1</td></tr>
-        <tr><td>$$c_{2,2}$$</td><td>0.4</td><td>0.9</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{1,1}}$$</td><td>0.7</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{1,2}}$$</td><td>0.3</td></tr>
       </tbody>
     </table>
 
     <table>
       <thead>
         <tr>
-          <th>$$P(C_3 \mid C_2)$$</th><th>$$c_{2,1}$$</th><th>$$c_{2,2}$$</th>
+          <th>$$P(\textcolor{purple}{C_2} \mid \textcolor{purple}{C_1})$$</th><th>$$\textcolor{purple}{c_{1,1}}$$</th><th>$$\textcolor{purple}{c_{1,2}}$$</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>$$c_{3,1}$$</td><td>0.9</td><td>0.2</td></tr>
-        <tr><td>$$c_{3,2}$$</td><td>0.1</td><td>0.8</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{2,1}}$$</td><td>0.6</td><td>0.1</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{2,2}}$$</td><td>0.4</td><td>0.9</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr>
+          <th>$$P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_2})$$</th><th>$$\textcolor{purple}{c_{2,1}}$$</th><th>$$\textcolor{purple}{c_{2,2}}$$</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>$$\textcolor{purple}{c_{3,1}}$$</td><td>0.9</td><td>0.2</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{3,2}}$$</td><td>0.1</td><td>0.8</td></tr>
       </tbody>
     </table>
     
     <!-- To compute the new CPT for $$C_3$$ we have to marginalize $$C_2$$: -->
 
-    **Step 1: Compute new CPT for $$C_3 \mid C_1$$**
+    **Step 1: Compute new CPT for $$P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_1})$$**
 
     Using marginalization:
 
     $$
-    P(C_3 \mid C_1) = \sum_{c_2} P(C_3 \mid c_2) P(c_2 \mid C_1).
+    P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_1}) = \sum_{\textcolor{purple}{c_2}} P(\textcolor{purple}{C_3} \mid \textcolor{purple}{c_2}) P(\textcolor{purple}{c_2} \mid \textcolor{purple}{C_1}).
     $$
 
-    $$c_{1,1}$$:
+    $$\textcolor{purple}{c_{1,1}}$$:
     
 
     $$
     \begin{aligned}
-    P(c_{3,1} \mid c_{1,1}) &= P(c_{3,1} \mid c_{2,2})P(c_{2,2} \mid c_{1,1}) + P(c_{3,1} \mid c_{2,1})P(c_{2,1} \mid c_{1,1}) \\
+    P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,1}}) &= P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,2}})P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,1}}) + P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,1}})P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}}) \\
                         &= 0.2 \cdot 0.4 + 0.9 \cdot 0.6 \\
                         &= 0.08 + 0.54 = 0.62 \\
-    P(c_{3,2} \mid c_{1,1}) &= 1 - P(c_{3,1} \mid c_{1,1}) = 1 - 0.62 = 0.38
+    P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{1,1}}) &= 1 - P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,1}}) = 1 - 0.62 = 0.38
     \end{aligned}
     $$
 
-    $$c_{1,2}$$:
+    $$\textcolor{purple}{c_{1,2}}$$:
     
     $$
     \begin{aligned}
-    P(c_{3,1} \mid c_{1,2}) &= P(c_{3,1} \mid c_{2,2})P(c_{2,2} \mid c_{1,2}) + P(c_{3,1} \mid c_{2,1})P(c_{2,1} \mid c_{1,2}) \\
+    P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,2}}) &= P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,2}})P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,2}}) + P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,1}})P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}}) \\
                         &= 0.2 \cdot 0.9 + 0.9 \cdot 0.1 \\
                         &= 0.18 + 0.09 = 0.27 \\
-    P(c_{3,2} \mid c_{1,2}) &= 1 - P(c_{3,1} \mid c_{1,2}) = 1 - 0.27 = 0.73
+    P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{1,2}}) &= 1 - P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,2}}) = 1 - 0.27 = 0.73
     \end{aligned}
     $$
 
@@ -986,55 +987,55 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
 
     <table>
       <thead>
-        <tr><th>$$P(C_3 \mid C_1)$$</th><th>$$c_{1,1}$$</th><th>$$c_{1,2}$$</th></tr>
+        <tr><th>$$P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_1})$$</th><th>$$\textcolor{purple}{c_{1,1}}$$</th><th>$$\textcolor{purple}{c_{1,2}}$$</th></tr>
       </thead>
       <tbody>
-        <tr><td>$$c_{3,1}$$</td><td>0.62</td><td>0.27</td></tr>
-        <tr><td>$$c_{3,2}$$</td><td>0.38</td><td>0.73</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{3,1}}$$</td><td>0.62</td><td>0.27</td></tr>
+        <tr><td>$$\textcolor{purple}{c_{3,2}}$$</td><td>0.38</td><td>0.73</td></tr>
       </tbody>
     </table>
 
-    **Step 2: Compute new CPT for $$C_2 \mid C_1, C_3$$**
+    **Step 2: Compute new CPT for $$P(\textcolor{purple}{C_2} \mid \textcolor{purple}{C_1}, \textcolor{purple}{C_3})$$**
 
     Using Bayes' Theorem, rounding results to three decimal places:
 
     $$
-    P(C_2 \mid C_1, C_3) = \frac{P(C_3 \mid C_2) \, P(C_2 \mid C_1)}{P(C_3 \mid C_1)}.
+    P(\textcolor{purple}{C_2} \mid \textcolor{purple}{C_1}, \textcolor{purple}{C_3}) = \frac{P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_2}) \, P(\textcolor{purple}{C_2} \mid \textcolor{purple}{C_1})}{P(\textcolor{purple}{C_3} \mid \textcolor{purple}{C_1})}.
     $$
 
-    ($$c_{1,1}$$, $$c_{3,1}$$):
+    ($$\textcolor{purple}{c_{1,1}}$$, $$\textcolor{purple}{c_{3,1}}$$):
 
     $$
     \begin{aligned}
-    &\quad P(c_{2,1} \mid c_{1,1}, c_{3,1}) = \frac{P(c_{3,1} \mid c_{2,1}) \, P(c_{2,1} \mid c_{1,1})}{P(c_{3,1} \mid c_{1,1})} = \frac{0.9 \cdot 0.6}{0.62} = 0.871 \\
-    &\quad P(c_{2,2} \mid c_{1,1}, c_{3,1}) = 1 - P(c_{2,1} \mid c_{1,1}, c_{3,1}) = 1 - 0.871 = 0.129
+    &\quad P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,1}}) = \frac{P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,1}}) \, P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}})}{P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,1}})} = \frac{0.9 \cdot 0.6}{0.62} = 0.871 \\
+    &\quad P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,1}}) = 1 - P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,1}}) = 1 - 0.871 = 0.129
     \end{aligned}
     $$
 
-    ($$c_{1,2}$$, $$c_{3,1}$$):
+    ($$\textcolor{purple}{c_{1,2}}$$, $$\textcolor{purple}{c_{3,1}}$$):
 
     $$
     \begin{aligned}
-    &\quad P(c_{2,1} \mid c_{1,2}, c_{3,1}) = \frac{P(c_{3,1} \mid c_{2,1}) \, P(c_{2,1} \mid c_{1,2})}{P(c_{3,1} \mid c_{1,2})} = \frac{0.9 \cdot 0.1}{0.27} = 0.333 \\
-    &\quad P(c_{2,2} \mid c_{1,2}, c_{3,1}) = 1 - P(c_{2,1} \mid c_{1,2}, c_{3,1}) = 1 - 0.333 = 0.667 \\[3ex]
+    &\quad P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,1}}) = \frac{P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{2,1}}) \, P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}})}{P(\textcolor{purple}{c_{3,1}} \mid \textcolor{purple}{c_{1,2}})} = \frac{0.9 \cdot 0.1}{0.27} = 0.333 \\
+    &\quad P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,1}}) = 1 - P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,1}}) = 1 - 0.333 = 0.667 \\[3ex]
     \end{aligned}
     $$
 
-    ($$c_{1,1}$$, $$c_{3,2}$$):
+    ($$\textcolor{purple}{c_{1,1}}$$, $$\textcolor{purple}{c_{3,2}}$$):
 
     $$
     \begin{aligned}
-    &\quad P(c_{2,1} \mid c_{1,1}, c_{3,2}) = \frac{P(c_{3,2} \mid c_{2,1}) \, P(c_{2,1} \mid c_{1,1})}{P(c_{3,2} \mid c_{1,1})} = \frac{0.1 \cdot 0.6}{0.38} = 0.158 \\
-    &\quad P(c_{2,2} \mid c_{1,1}, c_{3,2}) = 1 - P(c_{2,1} \mid c_{1,1}, c_{3,2}) = 1 - 0.158 = 0.842 \\[3ex]
+    &\quad P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,2}}) = \frac{P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{2,1}}) \, P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}})}{P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{1,1}})} = \frac{0.1 \cdot 0.6}{0.38} = 0.158 \\
+    &\quad P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,2}}) = 1 - P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,1}}, \textcolor{purple}{c_{3,2}}) = 1 - 0.158 = 0.842 \\[3ex]
     \end{aligned}
     $$
 
-    ($$c_{1,2}$$, $$c_{3,2}$$):
+    ($$\textcolor{purple}{c_{1,2}}$$, $$\textcolor{purple}{c_{3,2}}$$):
 
     $$
     \begin{aligned}
-    &\quad P(c_{2,1} \mid c_{1,2}, c_{3,2}) = \frac{P(c_{3,2} \mid c_{2,1}) \, P(c_{2,1} \mid c_{1,2})}{P(c_{3,2} \mid c_{1,2})} = \frac{0.1 \cdot 0.1}{0.73} = 0.014 \\
-    &\quad P(c_{2,2} \mid c_{1,2}, c_{3,2}) = 1 - P(c_{2,1} \mid c_{1,2}, c_{3,2}) = 1 - 0.014 = 0.986 \\[3ex]
+    &\quad P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,2}}) = \frac{P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{2,1}}) \, P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}})}{P(\textcolor{purple}{c_{3,2}} \mid \textcolor{purple}{c_{1,2}})} = \frac{0.1 \cdot 0.1}{0.73} = 0.014 \\
+    &\quad P(\textcolor{purple}{c_{2,2}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,2}}) = 1 - P(\textcolor{purple}{c_{2,1}} \mid \textcolor{purple}{c_{1,2}}, \textcolor{purple}{c_{3,2}}) = 1 - 0.014 = 0.986 \\[3ex]
     \end{aligned}
     $$
 
@@ -1043,27 +1044,27 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <thead>
         <tr>
-          <th rowspan="2" style="text-align: center;">$$P(C_2 \mid C_1, C_3)$$</th>
-          <th colspan="2" style="text-align: center;">$$c_{3,1}$$</th>
-          <th colspan="2" style="text-align: center;">$$c_{3,2}$$</th>
+          <th rowspan="2" style="text-align: center;">$$P(\textcolor{purple}{C_2} \mid \textcolor{purple}{C_1}, \textcolor{purple}{C_3})$$</th>
+          <th colspan="2" style="text-align: center;">$$\textcolor{purple}{c_{3,1}}$$</th>
+          <th colspan="2" style="text-align: center;">$$\textcolor{purple}{c_{3,2}}$$</th>
         </tr>
         <tr>
-          <th style="text-align: center;">$$c_{1,1}$$</th>
-          <th style="text-align: center;">$$c_{1,2}$$</th>
-          <th style="text-align: center;">$$c_{1,1}$$</th>
-          <th style="text-align: center;">$$c_{1,2}$$</th>
+          <th style="text-align: center;">$$\textcolor{purple}{c_{1,1}}$$</th>
+          <th style="text-align: center;">$$\textcolor{purple}{c_{1,2}}$$</th>
+          <th style="text-align: center;">$$\textcolor{purple}{c_{1,1}}$$</th>
+          <th style="text-align: center;">$$\textcolor{purple}{c_{1,2}}$$</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>$$c_{2,1}$$</td>
+          <td>$$\textcolor{purple}{c_{2,1}}$$</td>
           <td>0.871</td>
           <td>0.333</td>
           <td>0.158</td>
           <td>0.014</td>
         </tr>
         <tr>
-          <td>$$c_{2,2}$$</td>
+          <td>$$\textcolor{purple}{c_{2,2}}$$</td>
           <td>0.129</td>
           <td>0.667</td>
           <td>0.842</td>
