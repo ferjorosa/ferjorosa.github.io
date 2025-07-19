@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Introduction to Decision Theory: Part II"
-date: 2025-07-4
+date: 2025-07-04
 categories: blog
 description: "Explores the strengths and limitations of decision trees, introduces influence diagrams as a scalable alternative, details their evaluation using the arc-reversal / node-reduction algorithm, and surveys Python libraries (PyAgrum, PyCID) for practical decision analysis."
 tags: [Decision Theory]
@@ -59,7 +59,7 @@ The number of decision paths is profoundly affected by the order and meaning of 
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/1_oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="240">
+      <img src="/assets/2025-07-04-decision-theory-II/1_oil_asymmetric_tree_annotated.png" alt="Decision tree diagram of the asymmetric oil problem from Part I" height="240">
     </td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@ Conversely, a problem with the same types of variables, but structured *symmetri
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/2_oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="240">
+      <img src="/assets/2025-07-04-decision-theory-II/2_oil_symmetric_tree_annotated.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="240">
     </td>
   </tr>
   <tr>
@@ -396,7 +396,7 @@ The diagram corresponds to the directed acyclic graph of a <a href="https://en.w
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/3_bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="300">
+      <img src="/assets/2025-07-04-decision-theory-II/3_bayesian_network_example.png" alt="Decision tree diagram of a hypothetical symmetric oil problem" height="300">
     </td>
   </tr>
   <tr>
@@ -625,7 +625,7 @@ The following image displays the influence diagram structure for the decision pr
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/4_influence_diagram_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
+      <img src="/assets/2025-07-04-decision-theory-II/4_influence_diagram_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -646,7 +646,7 @@ The subsequent image presents the corresponding LIMID, enhanced with a green mem
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/5_limid_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
+      <img src="/assets/2025-07-04-decision-theory-II/5_limid_oil.png" alt="Influence diagram structure of the asymmetric oil problem from Part I" width="320">
     </td>
   </tr>
   <tr>
@@ -815,7 +815,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/6_barren_node_elimination.png" alt="Barren node elimination example" height="400">
+          <img src="/assets/2025-07-04-decision-theory-II/6_barren_node_elimination.png" alt="Barren node elimination example" height="400">
         </td>
       </tr>
       <tr>
@@ -847,7 +847,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/7_chance_node_removal.png" alt="Chance node removal example" height="150">
+          <img src="/assets/2025-07-04-decision-theory-II/7_chance_node_removal.png" alt="Chance node removal example" height="150">
         </td>
       </tr>
       <tr>
@@ -877,7 +877,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/8_decision_node_removal.png" alt="Decision node removal example" width="600">
+          <img src="/assets/2025-07-04-decision-theory-II/8_decision_node_removal.png" alt="Decision node removal example" width="600">
         </td>
       </tr>
               <tr>
@@ -929,7 +929,7 @@ The arc-reversal / node-reduction algorithm employs a set of fundamental, local 
     <table>
       <tr>
         <td align="center">
-          <img src="/assets/2025-06-14-decision-theory-II/9_arc_reversal.png" alt="Decision node removal example" width="600">
+          <img src="/assets/2025-07-04-decision-theory-II/9_arc_reversal.png" alt="Decision node removal example" width="600">
         </td>
       </tr>
               <tr>
@@ -1166,7 +1166,7 @@ Figure 10 shows the result of reversing $$\textcolor{purple}{Q} \rightarrow \tex
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/10_oil_reverse_q.png" alt="Influence diagram after reversing arc Q &rarr; R" width="320">
+      <img src="/assets/2025-07-04-decision-theory-II/10_oil_reverse_q.png" alt="Influence diagram after reversing arc Q &rarr; R" width="320">
     </td>
   </tr>
   <tr>
@@ -1317,7 +1317,7 @@ After reversing the arc $$\textcolor{purple}{Q} \rightarrow \textcolor{purple}{R
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/11_oil_remove_q.png" alt="Influence diagram after removing node Q" width="320">
+      <img src="/assets/2025-07-04-decision-theory-II/11_oil_remove_q.png" alt="Influence diagram after removing node Q" width="320">
     </td>
   </tr>
   <tr>
@@ -1541,7 +1541,7 @@ We can now remove the decision node $$\textcolor{red}{B}$$, as it is a leaf node
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/12_oil_remove_b.png" alt="Influence diagram after removing decision node B" width="300">
+      <img src="/assets/2025-07-04-decision-theory-II/12_oil_remove_b.png" alt="Influence diagram after removing decision node B" width="300">
     </td>
   </tr>
   <tr>
@@ -1601,7 +1601,7 @@ After removing $$\textcolor{red}{B}$$, $$\textcolor{purple}{R}$$ becomes a leaf 
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/13_oil_remove_r.png" alt="Influence diagram after removing chance node R" width="180">
+      <img src="/assets/2025-07-04-decision-theory-II/13_oil_remove_r.png" alt="Influence diagram after removing chance node R" width="180">
     </td>
   </tr>
   <tr>
@@ -1679,7 +1679,7 @@ At this stage, the only remaining node is the decision node $$\textcolor{red}{T}
 <table>
   <tr>
     <td align="center">
-      <img src="/assets/2025-06-14-decision-theory-II/14_oil_remove_t.png" alt="Final influence diagram after removing decision node T" width="60">
+      <img src="/assets/2025-07-04-decision-theory-II/14_oil_remove_t.png" alt="Final influence diagram after removing decision node T" width="60">
     </td>
   </tr>
   <tr>
