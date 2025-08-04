@@ -12,12 +12,34 @@ tags: [Decision Theory]
 
 <ul style="margin-top: 0.5em;">
   <li style="margin-bottom: 0.5em;"><a href="#closing-the-loop">Closing the Loop</a></li>
-  <li style="margin-bottom: 0.5em;"><a href="#building-the-oil-field-limid-in-pyagrum">Building the Oil-Field LIMID in PyAgrum</a></li>
-  <li style="margin-bottom: 0.5em;"><a href="#testing-robustness-with-deterministic-sensitivity-analysis">Testing Robustness with Deterministic Sensitivity Analysis</a>
+  <li style="margin-bottom: 0.5em;"><a href="#building-the-oil-field-limid-in-pyagrum">Building the Oil-Field LIMID in PyAgrum</a>
     <ul style="margin-top: 0.3em;">
-      <li style="margin-bottom: 0.3em;"><a href="#single-parameter-sensitivity-analysis">Single Parameter Sensitivity Analysis</a></li>
-      <li style="margin-bottom: 0.3em;"><a href="#tornado-diagrams-visualizing-parameter-impact">Tornado Diagrams: Visualizing Parameter Impact</a></li>
-      <li style="margin-bottom: 0.3em;"><a href="#interactive-gradio-interface-real-time-multi-parameter-exploration">Interactive Gradio Interface: Real-Time Multi-Parameter Exploration</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#setting-up-the-network-structure">Setting Up the Network Structure</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#filling-in-the-numbers">Filling in the Numbers</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#solving-the-network">Solving the Network</a></li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#testing-robustness-with-sensitivity-analysis">Testing Robustness with Sensitivity Analysis</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#single-parameter-sensitivity-analysis">Single Parameter Sensitivity Analysis</a>
+        <ul style="margin-top: 0.2em;">
+          <li style="margin-bottom: 0.2em;"><a href="#example-1-prior-probability-of-high-quality-fields">Example 1: Prior Probability of High-Quality Fields - P(Q=high)</a></li>
+          <li style="margin-bottom: 0.2em;"><a href="#example-2-test-precision-for-medium-quality-fields">Example 2: Test Precision for Medium-Quality Fields - P(R=pass | Q=medium)</a></li>
+        </ul>
+      </li>
+      <li style="margin-bottom: 0.3em;"><a href="#tornado-diagrams-visualizing-parameter-impact">Tornado Diagrams: Visualizing Parameter Impact</a>
+        <ul style="margin-top: 0.2em;">
+          <li style="margin-bottom: 0.2em;"><a href="#example-1-direct-utility-value-sensitivity">Example 1: Direct Utility Value Sensitivity</a></li>
+          <li style="margin-bottom: 0.2em;"><a href="#example-2-test-cost-sensitivity">Example 2: Test Cost Sensitivity - A More Natural Application</a></li>
+        </ul>
+      </li>
+      <li style="margin-bottom: 0.3em;"><a href="#interactive-gradio-interface-real-time-multi-parameter-exploration">Interactive Gradio Interface: Real-Time Multi-Parameter Exploration</a>
+        <ul style="margin-top: 0.2em;">
+          <li style="margin-bottom: 0.2em;"><a href="#why-gradio-for-decision-analysis">Why Gradio for Decision Analysis?</a></li>
+          <li style="margin-bottom: 0.2em;"><a href="#implementation-overview">Implementation Overview</a></li>
+          <li style="margin-bottom: 0.2em;"><a href="#live-interactive-interface">Live Interactive Interface</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li style="margin-bottom: 0.5em;"><a href="#conclusion-building-robust-decision-strategies">Conclusion: Building Robust Decision Strategies</a></li>
@@ -28,21 +50,23 @@ tags: [Decision Theory]
 
 <h2 id="closing-the-loop">Closing the Loop</h2>
 
-In Part I, we faced the oil company's dilemma: buy the field or walk away? A decision tree helped us think through the problem systematically, weighing probabilities and payoffs to find the best choice. Part II revealed the limitations of decision trees and introduced influence diagrams as a more scalable alternative. Then, just as we did in our first post, we showed how to evaluate them by hand, confirming they yield the same recommendation as a decision tree.
+In [Part I](https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html), we tackled the oil company's dilemma: buy the field or walk away? We used a decision tree to work through the problem step by step, weighing probabilities and payoffs to find the optimal choice. In [Part II](https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html), we discussed the limitations of decision trees and learned about influence diagrams as a more scalable approach. We worked through the same problem by hand again, proving that influence diagrams give us the same answer as decision trees.
 
-But here's the thing: no one wants to redraw diagrams and recalculate expected utilities every time a geological estimate changes or market conditions shift. Real decision problems need tools that can adapt quickly. That's where this final part comes in. We'll tackle two essential questions:
+But let's be honest, constantly redrawing diagrams and recalculating expected utilities every time geological estimates change or market conditions shift is not realistic. Real-world decision problems need tools that adapt quickly. That's what we'll build in this final part, focusing on two crucial questions:
 
-1. How do we actually build and solve these models in code? We'll recreate our oil-field analysis using PyAgrum, turning those manual calculations into a few lines of Python.
+1. **How do we actually implement these models in code?** We'll see how to recreate our oil field analysis using <a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a>, transforming those tedious manual calculations into just a few lines of Python.
 
-2. How confident should we be in our recommendation? Through sensitivity analysis, we'll stress-test our assumptions and see just how robust—or fragile—our "buy the field" decision really is. We'll explore different types of plots and show how Gradio can turn our decision problem into an interactive tool where you can tweak any variable and instantly see what happens.
+2. **How much should we trust the model's recommendation?** Using sensitivity analysis, we'll discover whether our "buy the field" decision is robust to parameter changes. We'll build different types of visualizations and create an interactive <a href="https://www.gradio.app/"><code>Gradio</code></a> interface where we can adjust any parameter and immediately see the impact.
 
 <h2 id="building-the-oil-field-limid-in-pyagrum">Building the Oil-Field LIMID in PyAgrum</h2>
 
-**PyAgrum** is a Python wrapper around the C++ aGrUM library, designed for building and solving probabilistic graphical models—including Bayesian networks, influence diagrams, and LIMIDs. What took us pages of manual calculation in Part II becomes a few lines of code: describe the network structure, plug in the probabilities and utilities, solve, and extract the optimal policy. Let's recreate our oil-field analysis and see the difference.
+<a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> is a Python wrapper around the C++ <a href="https://agrum.gitlab.io/pages/agrum.html"><code>aGrUM</code></a> library for building and solving probabilistic graphical models such as Bayesian networks, LIMIDs, causal networks, and more. With a few lines of Python code we can define the influence diagram's structure, add the probabilities and utilities, execute, and get the optimal policy. 
 
-### Setting Up the Network Structure
+Let's now code the decision problem.
 
-We start by importing PyAgrum and creating an empty influence diagram. Then we add our four variables: oil field quality (Q), test results (R), the test decision (T), the buy decision (B), and a utility node (U).
+<h3 id="setting-up-the-network-structure">Setting Up the LIMID Structure</h3>
+
+We start by importing <code>pyagrum</code> and creating an empty influence diagram. Then we add our four variables: oil field quality ($$\textcolor{purple}{Q}$$), test results ($$\textcolor{purple}{R}$$), the test decision ($$\textcolor{red}{T}$$), the buy decision ($$\textcolor{red}{B}$$), and a utility node ($$\textcolor{blue}{U}$$).
 
 ```python
 import pyagrum as grum
@@ -63,33 +87,33 @@ B = influence_diagram.addDecisionNode(
 U = influence_diagram.addUtilityNode("U")  # Utility node takes just a name
 ```
 
-Next, we connect the nodes with arcs to capture the dependencies from our LIMID. The memory arc from T to B is crucial—it tells PyAgrum that when making the buy decision, we remember what we chose for the test.
+Next, we connect the nodes with arcs to capture the dependencies from our diagram. Notice the memory arc from $$\textcolor{red}{T}$$ to $$\textcolor{red}{B}$$ that transforms the diagram into a LIMID.
 
 ```python
 # Add arcs to define dependencies
-influence_diagram.addArc("T", "R")    # Test decision affects test results
+influence_diagram.addArc("T", "R")   
 influence_diagram.addArc("T", "B")    # Memory arc: buy decision remembers test choice
-influence_diagram.addArc("T", "U")    # Test decision affects utility (cost)
-influence_diagram.addArc("R", "B")    # Test results inform buy decision  
-influence_diagram.addArc("B", "U")    # Buy decision affects utility
-influence_diagram.addArc("Q", "R")    # Oil quality affects test results
-influence_diagram.addArc("Q", "U")    # Oil quality affects utility
+influence_diagram.addArc("T", "U")    
+influence_diagram.addArc("R", "B")
+influence_diagram.addArc("B", "U")
+influence_diagram.addArc("Q", "R")
+influence_diagram.addArc("Q", "U")
 ```
 
-PyAgrum makes it easy to visualize what we've built. We can generate a diagram directly from our code:
+<a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> makes it easy to visualize what we've built. We can generate a diagram directly from our code:
 
 ```python
 import pyagrum.lib.notebook as gnb
 from pyagrum.lib import image
 
-# Display in notebook (if using Jupyter)
+# Display if run in Jupyter notebook
 gnb.sideBySide(influence_diagram, captions=["Oil field influence diagram"])
 
 # Or export to PNG for use elsewhere
 image.export(influence_diagram, "influence_diagram.png")
 ```
 
-Here's the resulting diagram—the same LIMID from Part II, now built and visualized entirely in code:
+Here's the resulting <code>influence_diagram.png</code>, the same LIMID from [Part II](https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html).
 
 <center>
 <table>
@@ -106,7 +130,7 @@ Here's the resulting diagram—the same LIMID from Part II, now built and visual
 </table>
 </center>
 
-### Filling in the Numbers
+<h3 id="filling-in-the-numbers">Filling in the Numbers</h3>
 
 The network structure is just the skeleton. Now we need to populate it with the probabilities and utilities from our original problem. 
 
@@ -144,11 +168,14 @@ influence_diagram.utility(U)[{"T": "not_do", "B": "buy"}] = np.array([1250, 630,
 influence_diagram.utility(U)[{"T": "not_do", "B": "not_buy"}] = np.array([350, 350, 350])[:, np.newaxis]
 ```
 
-The `[:, np.newaxis]` reshaping is a PyAgrum requirement for multi-dimensional utility tables—the library expects utilities organized by the order of parent nodes.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+The <code>[:, np.newaxis]</code> reshaping is used to align the data with the expected order of parent nodes. While not confirmed to be a universal PyAgrum requirement, this approach proved effective in this specific implementation.
+</div>
+<div style="height: 1.1em;"></div>
 
-### Solving the Network
+<h3 id="solving-the-network">Solving the Network</h3>
 
-With structure and parameters in place, PyAgrum can solve the entire problem in just a few lines. We create an inference engine, run the computation, and extract the results:
+With structure and parameters in place, we can create an inference engine and solve the decision problem. In this case, we use the Shafer-Shenoy algorithm for LIMIDs (<a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Shafer & Shenoy, 1990</u></a>):
 
 ```python
 # Create inference engine and solve
@@ -158,7 +185,7 @@ inference_engine.makeInference()
 print(f"Is the diagram solvable?: {inference_engine.isSolvable()}")
 ```
 
-We can examine the optimal decision for each decision node. For example, the test decision (T):
+We can examine the optimal decision for each decision node. For example, the test decision ($$\textcolor{red}{T}$$):
 
 ```python
 from IPython.display import display
@@ -186,7 +213,7 @@ This outputs both a text representation and a formatted table in Jupyter noteboo
 </table>
 </center>
 
-PyAgrum can also generate a visual representation of the solved network, showing the optimal decisions and expected utilities:
+We can also generate a visual representation of the solved network, showing the optimal decisions and expected utilities:
 
 ```python
 # Note: On macOS, you may need this line to avoid cairo issues
@@ -217,13 +244,13 @@ image.exportInference(influence_diagram, "inference_result.png", engine=inferenc
 </table>
 </center>
 
-The results confirm our Part II calculations: the optimal strategy is to skip the test and buy the field directly, with a maximum expected utility of 721 million dollars—exactly matching our manual computation. What took us pages of manual calculations in Part II, PyAgrum solved in just 0.24 milliseconds.
+The results confirm our hand-written calculations: the optimal strategy is to skip the test and buy the field directly, with a maximum expected utility of 721 million dollars. What took us pages of manual calculations, <a href="https://pyagrum.readthedocs.io"><code>PyAgrum</code></a> solved in just 0.24 milliseconds.
 
-<h2 id="testing-robustness-with-deterministic-sensitivity-analysis">Testing Robustness with Deterministic Sensitivity Analysis</h2>
+<h2 id="testing-robustness-with-sensitivity-analysis">Testing Robustness with Sensitivity Analysis</h2>
 
-The boardroom went quiet when you presented the recommendation: "Skip the test, buy the field." Then came the inevitable questions. The CFO leaned forward: "What if our estimate of high-quality probability is off by 10%?" The head geologist chimed in: "And what if the test cost isn't $30M but $50M?" The CEO, fingers drumming on the mahogany table, asked the real question: "How sure are we that this decision won't fall apart if our assumptions are wrong?"
+Now that we've found the best strategy for buying the oil field, we may wonder: What happens if we got some of our numbers wrong? Maybe the geological survey isn't as accurate as we thought, or test costs could jump higher than expected. At what point do these changes actually matter for our decision?
 
-This is where sensitivity analysis becomes your best friend. After finding the optimal decision strategy, it's crucial to understand how sensitive our results are to changes in the input parameters. Sensitivity analysis helps identify which uncertainties have the greatest impact on the expected utility and, consequently, on the optimal decisions.
+This is exactly what sensitivity analysis helps us figure out. Once we have our optimal strategy, we need to test how much our answer depends on the specific numbers we plugged in. Some parameters might barely affect our decision, while others could completely flip our recommendation with just small changes.
 
 We'll tackle this challenge with three complementary approaches:
 
@@ -231,55 +258,38 @@ We'll tackle this challenge with three complementary approaches:
 
 2. **Tornado diagrams**: Create visual summaries that show which variables have the most impact on our decision, sorted by magnitude of influence.
 
-3. **Interactive Gradio interface**: Build a web app where anyone can drag sliders, change multiple parameters simultaneously, and instantly see how the optimal decision and expected utility respond.
+3. **Interactive Gradio interface**: Build a web app where we can change multiple parameters simultaneously, and instantly see how the optimal decision and expected utility respond.
 
 <h3 id="single-parameter-sensitivity-analysis">Single Parameter Sensitivity Analysis</h3>
 
-Single parameter sensitivity analysis examines how changes in one specific parameter affect the optimal decision and expected utility while keeping all other parameters constant. This approach is particularly valuable because it:
+Single parameter sensitivity analysis examines how changes in one specific parameter affect 
+the optimal decision and expected utility while keeping all other parameters constant. This 
+approach is particularly valuable because it:
 
-- **Isolates parameter impact**: By varying only one parameter at a time, we can clearly see its individual effect on the decision outcome
-- **Identifies critical thresholds**: We can discover specific values where the optimal decision changes
-- **Guides data collection**: Parameters with high sensitivity may warrant additional research or more precise estimation
-- **Supports robust decision-making**: Understanding sensitivity helps assess the reliability of our recommendations
+- **Identifies critical thresholds**: We can discover specific values where the optimal decision changes.
+- **Guides data collection**: Parameters with high sensitivity may warrant additional 
+research or more precise estimation.
 
-Let's examine two key parameters in our oil field decision problem to demonstrate this approach.
+Let's apply this to two key parameters in our oil field problem.
 
-#### Example 1: Prior Probability of High-Quality Fields - P(Q=high)
+<h4 id="example-1-prior-probability-of-high-quality-fields">Example 1: Prior Probability of High-quality Fields</h4>
 
-Our first analysis examines how changes in the prior probability that a field is of high quality affect our decision strategy. We test four scenarios where P(Q=high) increases from the baseline 0.35 to 0.40, 0.45, and 0.50, while maintaining the proportional distribution among the remaining quality levels.
+Our first analysis explores how varying the prior probability that a field is high quality influences our decision strategy. Beginning with the baseline value $$P(Q=\text{high}) = 0.35$$, we adjust this probability by ±0.15 in increments of 0.05, producing seven scenarios. The probabilities of the remaining quality categories are rescaled proportionally so that the distribution still sums to one.
 
-[PLACEHOLDER FOR P(Q=HIGH) SENSITIVITY PLOT]
+placeholder for plot
 
-The results reveal an interesting pattern:
+These changes definitely affect how much money we expect to make, but they don't change the optimal policy: skip the test and buy the field directly. This makes sense when you think about it: knowing that fields in this region are more likely to be high quality affects our expected profits, but it doesn't change how useful the test would be.
 
-- **Decision stability**: Across all tested values, the optimal strategy remains unchanged - we still recommend not conducting the test and directly purchasing the field
-- **Utility sensitivity**: While the decision doesn't change, the expected utility increases significantly from the baseline 721.0 to 761.7, 802.4, and 843.1 respectively
-- **Linear relationship**: The utility increase follows an approximately linear pattern, with each 0.05 increase in P(Q=high) adding roughly 40 points to the expected utility
+<h4 id="example-2-test-precision-for-medium-quality-fields">Example 2: Test Precision for Medium-Quality Fields - P(R=pass | Q=medium)</h4>
 
-This analysis demonstrates that while our strategic recommendation is robust to changes in prior beliefs about field quality, the economic value of the decision is highly sensitive to these beliefs. Even without changing our action plan, more optimistic priors about field quality substantially improve the expected outcome.
+For our second analysis, let's look at the geological test's accuracy, specifically focusing on its ability to correctly identify medium-quality fields. Medium-quality fields are particularly interesting because they are profitable but seem easy to mistake for 
+low-grade ones.
 
-#### Example 2: Test Precision for Medium-Quality Fields - P(R=pass | Q=medium)
-
-Our second analysis examines the precision of the geological test, specifically focusing on its ability to correctly identify medium-quality fields. Medium-quality fields represent a particularly interesting case because:
-
-- They are **profitable** (unlike low-quality fields)
-- They are **harder to detect** due to intermediate porosity levels that make classification more challenging
-- Improved test precision for this category could significantly impact the value of testing
-
-We analyze scenarios where the test becomes more precise at identifying medium-quality fields, increasing P(R=pass | Q=medium) from the baseline 0.70 to values up to 0.95.
+What if we could improve the test to better identify these medium-quality fields? We'll vary the test's pass rate for true medium fields from 0.70 to 0.95 to see when the improved accuracy makes testing worthwhile.
 
 [PLACEHOLDER FOR P(R=PASS|Q=MEDIUM) SENSITIVITY PLOT]
 
-This analysis reveals a **critical decision threshold**:
-
-- **Below 0.9**: The optimal strategy remains "don't test, buy the field" - the same as our baseline recommendation
-- **At 0.9 and above**: The optimal strategy shifts to "conduct the test first" - if the test passes, buy the field; if it fails, don't buy
-
-**Why does this threshold matter?**
-
-When the test becomes sufficiently precise at identifying medium-quality fields (P(R=pass | Q=medium) ≥ 0.9), the value of information increases enough to justify the testing cost. The improved ability to distinguish profitable medium-quality fields from unprofitable low-quality fields makes the test worthwhile, as we can now more confidently avoid the costly mistake of purchasing a low-quality field.
-
-The economic intuition is clear: better test precision reduces uncertainty about field quality, and when this reduction is substantial enough, the value of this information exceeds the cost of obtaining it. This threshold analysis provides actionable insights - if we can improve our testing technology to achieve at least 90% accuracy for medium-quality fields, conducting the test becomes the preferred strategy.
+Interestingly, once the test becomes good enough at spotting medium-quality fields (achieving 90% accuracy or better), testing suddenly becomes worth the cost. The takeaway is clear: if we can upgrade our testing technology to correctly identify medium-quality fields at least 90% of the time, we should start using the test before making purchase decisions.
 
 <h3 id="tornado-diagrams-visualizing-parameter-impact">Tornado Diagrams: Visualizing Parameter Impact</h3>
 
@@ -289,7 +299,7 @@ Tornado diagrams are particularly valuable when we have **underlying variables t
 
 In our simplified oil field problem, we'll examine two different types of tornado analyses to illustrate the concept.
 
-#### Example 1: Direct Utility Value Sensitivity
+<h4 id="example-1-direct-utility-value-sensitivity">Example 1: Direct Utility Value Sensitivity</h4>
 
 Our first tornado analysis examines how changes in the direct utility values affect the maximum expected utility. We test each utility parameter by applying a ±100 million dollar variation while keeping all other parameters constant.
 
@@ -305,7 +315,7 @@ The analysis reveals that **U(not_do, buy, medium)** - the utility of buying a m
 
 However, it's worth noting that while tornado diagrams can technically be applied to any parameter, **they're most meaningful when applied to underlying variables** that feed into the model through formulas rather than direct utility assignments.
 
-#### Example 2: Test Cost Sensitivity - A More Natural Application
+<h4 id="example-2-test-cost-sensitivity">Example 2: Test Cost Sensitivity - A More Natural Application</h4>
 
 A more natural application of tornado analysis in our problem focuses on the **test cost** - a variable that would realistically vary based on market conditions, technology improvements, or operational factors.
 
@@ -326,7 +336,7 @@ This demonstrates the power of tornado analysis for **operational variables**: a
 
 While single parameter analysis and tornado diagrams provide valuable insights into individual variable impacts, **Gradio** offers a powerful way to explore multiple parameters simultaneously through an interactive web interface. Gradio is a Python library that transforms our PyAgrum decision analysis code into a user-friendly web application that anyone can use - no Python knowledge required.
 
-#### Why Gradio for Decision Analysis?
+<h4 id="why-gradio-for-decision-analysis">Why Gradio for Decision Analysis?</h4>
 
 The beauty of Gradio lies in its ability to democratize complex decision analysis:
 
@@ -335,7 +345,7 @@ The beauty of Gradio lies in its ability to democratize complex decision analysi
 - **Comprehensive parameter space**: Unlike the focused analysis of single parameter or tornado methods, users can explore any combination of parameters to discover unexpected interactions
 - **Immediate feedback**: Changes in probabilities, utilities, or test costs are reflected instantly in both the influence diagram visualization and decision recommendations
 
-#### Implementation Overview
+<h4 id="implementation-overview">Implementation Overview</h4>
 
 Our Gradio interface provides interactive controls for all key model parameters:
 
@@ -391,7 +401,7 @@ demo.launch(share=True)
 
 [LINK TO FULL IMPLEMENTATION CODE IN REPOSITORY]
 
-#### Live Interactive Interface
+<h4 id="live-interactive-interface">Live Interactive Interface</h4>
 
 You can explore the decision problem yourself using our deployed Gradio interface. Try adjusting different parameters to see how they affect the optimal strategy:
 
