@@ -274,7 +274,7 @@ Let's apply this to two key parameters in our oil field problem.
 
 <h4 id="example-1-prior-probability-of-high-quality-fields">Example 1: Prior Probability of High-quality Fields</h4>
 
-Our first analysis explores how varying the prior probability that a field is high quality influences our decision strategy. Beginning with the baseline value $$P(Q=\text{high}) = 0.35$$, we adjust this probability by ±0.15 in increments of 0.05, producing seven scenarios. The probabilities of the remaining quality categories are rescaled proportionally so that the distribution still sums to one.
+Our first analysis explores how varying the prior probability that a field is high quality influences our decision strategy. Beginning with the baseline value $$P(Q=\text{high}) = 0.35$$, we adjust this probability by $$\pm0.15$$ in increments of $$0.05$$, producing seven scenarios. The probabilities of the remaining quality categories are rescaled proportionally so that the distribution still sums to one.
 
 placeholder for plot
 
@@ -285,52 +285,44 @@ These changes definitely affect how much money we expect to make, but they don't
 For our second analysis, let's look at the geological test's accuracy, specifically focusing on its ability to correctly identify medium-quality fields. Medium-quality fields are particularly interesting because they are profitable but seem easy to mistake for 
 low-grade ones.
 
-What if we could improve the test to better identify these medium-quality fields? We'll vary the test's pass rate for true medium fields from 0.70 to 0.95 to see when the improved accuracy makes testing worthwhile.
+What if we could improve the test to better identify these medium-quality fields? We'll vary the test's pass rate for true medium fields from $$0.70$$ to $$0.95$$ to see when the improved accuracy makes testing worthwhile.
 
 [PLACEHOLDER FOR P(R=PASS|Q=MEDIUM) SENSITIVITY PLOT]
 
-Interestingly, once the test becomes good enough at spotting medium-quality fields (achieving 90% accuracy or better), testing suddenly becomes worth the cost. The takeaway is clear: if we can upgrade our testing technology to correctly identify medium-quality fields at least 90% of the time, we should start using the test before making purchase decisions.
+Interestingly, once the test becomes good enough at spotting medium-quality fields (achieving $$0.9$$ accuracy or better), testing suddenly becomes worth the cost. The takeaway is clear: if we can upgrade our testing technology to correctly identify medium-quality fields at least 90% of the time, we should start using the test before making purchase decisions.
 
 <h3 id="tornado-diagrams-visualizing-parameter-impact">Tornado Diagrams: Visualizing Parameter Impact</h3>
 
-While single parameter analysis shows us how individual variables affect our decision, **tornado diagrams** provide a powerful visual summary that ranks all parameters by their impact on the expected utility. These charts get their name from their distinctive shape - wide at the top (high impact variables) and narrow at the bottom (low impact variables), resembling a tornado.
+While single parameter analysis tells us how each variable affects our decision, <a href="https://en.wikipedia.org/wiki/Tornado_diagram"><u>tornado diagrams</u></a> give us the big picture by ranking all parameters by their **individual** impact. These charts get their name from their shape: wide at the top for the most important variables and narrow at the bottom for the least important.
 
-Tornado diagrams are particularly valuable when we have **underlying variables that feed into our model through formulas**. For instance, if our utility calculations involved complex discounted cash flow models, we could analyze how changes in drilling time, labor costs, oil prices, or discount rates affect the final decision. Each of these variables would feed into the utility calculations, and tornado diagrams would show us which ones deserve the most attention.
+These diagrams are particularly valuable when we have formulas that define the utilities. For instance, if our utility numbers depended on a formula based on factors like drilling costs, oil prices, or project timelines, a tornado diagram would easily show us whether a 10% change in oil prices matters more than a 20% change in drilling costs.
 
-In our simplified oil field problem, we'll examine two different types of tornado analyses to illustrate the concept.
+For our oil field problem, we'll look at two examples to see how this works.
 
 <h4 id="example-1-direct-utility-value-sensitivity">Example 1: Direct Utility Value Sensitivity</h4>
 
-Our first tornado analysis examines how changes in the direct utility values affect the maximum expected utility. We test each utility parameter by applying a ±100 million dollar variation while keeping all other parameters constant.
-
-**Baseline Expected Utility: 721.00 million**
+Our first tornado analysis examines how changes in the direct utility values affect the maximum expected utility. We test each utility parameter by applying a $$\pm100$$ million dollar variation while keeping all other parameters constant.
 
 [PLACEHOLDER FOR UTILITY TORNADO PLOT]
 
-The analysis reveals that **U(not_do, buy, medium)** - the utility of buying a medium-quality field without testing - has the largest impact on our decision. This makes intuitive sense when we consider the underlying probabilities:
+The analysis reveals that **U(not_do, buy, medium)** - the utility of buying a 
+medium-quality field without testing - has the largest impact on our decision, which makes 
+intuitive sense given that medium-quality fields have the highest prior probability (0.45), so changes to their utility values disproportionately affect the overall expected utility.
 
-- Medium-quality fields have a substantial probability (45% prior)
-- The "not_do, buy" scenario represents our current optimal strategy  
-- Medium-quality fields are profitable, so changes in their utility values significantly affect the overall expected outcome
+Changes to utilities involving testing ("do" scenarios) have smaller impacts because testing is already suboptimal in our baseline analysis. These utility values would need to change enough to flip the optimal strategy from "not_do" to "do" before they could significantly affect the final result.
 
 However, it's worth noting that while tornado diagrams can technically be applied to any parameter, **they're most meaningful when applied to underlying variables** that feed into the model through formulas rather than direct utility assignments.
 
-<h4 id="example-2-test-cost-sensitivity">Example 2: Test Cost Sensitivity - A More Natural Application</h4>
+<h4 id="example-2-test-cost-sensitivity">Example 2: Test Cost Sensitivity</h4>
 
-A more natural application of tornado analysis in our problem focuses on the **test cost** - a variable that would realistically vary based on market conditions, technology improvements, or operational factors.
-
-**Baseline MEU: 721.00 million | Cost variation: ±25 million**
+Our second tornado analysis examines how changes in test cost affect the maximum expected utility. This variable would realistically vary based on market conditions, technology improvements, or operational 
+factors. We evaluate the test cost parameter by applying a $$\pm25$$ million dollar variation while keeping all other parameters constant.
 
 [PLACEHOLDER FOR TEST COST TORNADO PLOT]
 
-This analysis reveals a fascinating threshold effect:
+The diagram shows that test cost has a limited impact on our decision strategy. Even with a substantial 83% cost reduction (from $30M to $5M), the optimal strategy remains virtually unchanged: the MEU increases from 721 million (not testing) to only 721.95 million (testing when it costs $5M), representing a marginal 0.13% improvement.
 
-- **Test cost reduction (-25)**: MEU increases to 721.95 million - **the optimal decision changes** from "don't test, buy" to "test first" because testing now provides higher expected utility (721.95) than buying directly (721.00)
-- **Test cost increase (+25)**: MEU remains at 721.00 million with zero impact because we already choose not to test at the baseline cost, so making testing even more expensive doesn't affect our decision
-
-This demonstrates the power of tornado analysis for **operational variables**: a relatively modest 25 million reduction in test cost (from 30 to 5 million) is sufficient to flip our strategic recommendation. This insight could guide negotiations with testing contractors or investments in testing technology.
-
-**The Key Insight**: Tornado diagrams shine brightest when analyzing variables that represent real-world parameters you can actually influence - costs, timeframes, technological capabilities, market conditions - rather than abstract utility assignments. These are the variables where sensitivity analysis translates directly into actionable business decisions.
+This suggests that **cost reduction alone is insufficient** to make testing attractive. To meaningfully shift our strategy toward testing, we would likely need either significant improvements in test reliability (as demonstrated in Example 2 of the single-parameter analysis) or a combination of cost reduction paired with enhanced test accuracy.
 
 <h3 id="interactive-gradio-interface-real-time-multi-parameter-exploration">Interactive Gradio Interface: Real-Time Multi-Parameter Exploration</h3>
 
