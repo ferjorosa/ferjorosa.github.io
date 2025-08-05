@@ -156,6 +156,7 @@ DEPENDENCIES
   jekyll-reading-time
   jekyll-sitemap (~> 1.4)
   minima (~> 2.5)
+  rouge (~> 4.0)
   webrick (~> 1.8)
 
 BUNDLED WITH
