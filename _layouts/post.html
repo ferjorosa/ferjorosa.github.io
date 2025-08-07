@@ -31,7 +31,7 @@ layout: default
     {% include sharelinks.html %}
   </div>
 
-  <div class="post-content e-content" itemprop="articleBody">
+  <div class="post-content e-content{% if content contains 'gradio-container' %} gradio-page{% endif %}" itemprop="articleBody">
     {{ content }}
     {% include navlinks.html %}
   </div>

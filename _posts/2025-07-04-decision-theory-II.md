@@ -1722,7 +1722,7 @@ Language Models (LLMs), and handling continuous probabilistic variables. -->
 
 1. Shenoy, P. P. (2009). <a href="https://pshenoy.ku.edu/Papers/EOLSS09.pdf"><u>Decision trees and influence diagrams</u></a>. Encyclopedia of life support systems, 280-298.
 <br><br>
-2. Rodriguez, F. (2025, June 8). Introduction to decision theory: Part I. https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html
+2. Rodriguez, F. (2025, June 8). <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html">Introduction to decision theory: Part I</a>. 
 <br><br>
 1. Wikipedia article on <u><a href="https://en.wikipedia.org/wiki/Conditional_independence">conditional independence</a></u>.
 <br><br>
