@@ -116,6 +116,8 @@ I enjoy 3D printing and painting miniatures, mostly from the Warhammer universe.
 
 #### Conference Papers
 
+* Abbes, I., Prato, G., Fournier, Q., **Rodríguez, F.**, Boukhary, A., Elwood, A., & Chandar, S. (2025). [Small Encoders Can Rival Large Decoders in Detecting Groundedness](https://aclanthology.org/2025.findings-acl.1134/). *Findings of the Association for Computational Linguistics: ACL 2025*, 21998–22005.
+
 * **Rodríguez-Sánchez, F.**, Larrañaga, P., & Bielza, C. (2018). [Discrete model-based clustering with overlapping subsets of attributes](https://proceedings.mlr.press/v72/rodriguez-sanchez18a/rodriguez-sanchez18a.pdf). *Proceedings of the 9th International Conference on Probabilistic Graphical Models*, 72, 392–403.
 
 #### Technical Reports

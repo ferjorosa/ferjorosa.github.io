@@ -3,6 +3,49 @@ hr {
   margin-bottom: 20px;
 }
 
+/* Gradio-specific CSS isolation (only applied when Gradio is present) */
+
+/* Isolate Gradio container to prevent CSS leakage */
+#gradio-container {
+  /* Create a new stacking context */
+  position: relative;
+  z-index: 1;
+  /* Reset any inherited styles */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: normal;
+  /* Contain layout changes */
+  contain: layout style;
+  /* Ensure isolation */
+  isolation: isolate;
+}
+
+/* Ensure Gradio doesn't affect surrounding content */
+#gradio-container * {
+  /* Prevent Gradio styles from bubbling up */
+  box-sizing: border-box;
+}
+
+/* Specific protection for post content when Gradio is present */
+.post-content.gradio-page {
+  /* Only apply these rules when Gradio is on the same page */
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.post-content.gradio-page p,
+.post-content.gradio-page li {
+  line-height: 1.6;
+}
+
+.post-content.gradio-page h1,
+.post-content.gradio-page h2,
+.post-content.gradio-page h3,
+.post-content.gradio-page h4,
+.post-content.gradio-page h5,
+.post-content.gradio-page h6 {
+  line-height: 1.3;
+}
+
 /* Post navigation links */
 .post_navi {
   display: flex;

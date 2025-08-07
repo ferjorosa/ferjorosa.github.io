@@ -22,8 +22,10 @@ theme: "minima"
 rss: rss
 
 kramdown:
+  syntax_highlighter: rouge
   syntax_highlighter_opts:
-    disable: true
+    block:
+      line_numbers: false
     
 plugins:
   - jekyll-feed
@@ -40,7 +42,7 @@ header_pages:
 defaults:
   - scope:
       path: ""
-      type: post
+      type: posts
     values:
       tags: Other
 
