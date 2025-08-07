@@ -547,7 +547,7 @@ demo.launch(share=True)
 
 <h4 id="live-interactive-interface">Demo</h4>
 
-I have deployed the Gradio application using HuggingFace Spaces. Try adjusting different parameters to see how they affect the optimal strategy and expected utility:
+I have deployed the Gradio application using <a href="https://huggingface.co/docs/hub/spaces-overview">Hugging Face spaces</a>. Try adjusting different parameters to see how they affect the optimal strategy and expected utility:
 
 <div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
 If after 10 seconds or so you don't see the loaded application, you can go here and restart the space. It is a public HuggingFace space so you dont need permissions to restart it.
@@ -721,8 +721,10 @@ We’ll dive deeper into these possibilities in a future post, so stay tuned!
 <h2 id="references">References</h2>
 1. Rodriguez, F. (2025, June 8). <a href="https://ferjorosa.github.io/blog/2025/06/08/decision-theory-I.html">Introduction to decision theory: Part I</a>. 
 <br><br>
-1. Rodriguez, F. (2025, July 4). <a href="https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html">Introduction to decision theory: Part II</a>. 
+2. Rodriguez, F. (2025, July 4). <a href="https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html">Introduction to decision theory: Part II</a>. 
 <br><br>
-1. Shafer, G., & Shenoy, P. P. (1990). <a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Probability Propagation</u></a>. Annals of Mathematics and Artificial Intelligence, 2, 327-352.
+3. Shafer, G., & Shenoy, P. P. (1990). <a href="https://kuscholarworks.ku.edu/server/api/core/bitstreams/c353aa52-11ad-46c0-b867-f5d05f7f1962/content"><u>Probability Propagation</u></a>. Annals of Mathematics and Artificial Intelligence, 2, 327-352.
 <br><br>
-1. Wikipedia article on <a href="https://en.wikipedia.org/wiki/Tornado_diagram"><u>tornado diagrams</u></a>.
+4. Wikipedia article on <a href="https://en.wikipedia.org/wiki/Tornado_diagram"><u>tornado diagrams</u></a>.
+<br><br>
+5. Hugging Face documentation page on <a href="https://huggingface.co/docs/hub/spaces-overview">spaces</a>.
