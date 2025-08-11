@@ -550,7 +550,7 @@ demo.launch(share=True)
 I have deployed the Gradio application using <a href="https://huggingface.co/docs/hub/spaces-overview">Hugging Face spaces</a>. Try adjusting different parameters to see how they affect the optimal strategy and expected utility:
 
 <div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
-If after 10 seconds or so you don't see the loaded application, you can go here and restart the space. It is a public HuggingFace space so you dont need permissions to restart it.
+If after 10 seconds or so you don't see the loaded application, <a href="https://huggingface.co/spaces/ferjorosa/oil-field-purchase-decision"><b>you can go here and restart the space</b></a>. It is a public HuggingFace space so you dont need permissions to restart it.
 </div>
 <div style="height: 1.1em;"></div>
 
