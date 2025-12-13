@@ -1,0 +1,14 @@
+[project]
+name = "blogpost-bn-example"
+version = "0.1.0"
+description = "Simple Bayesian Network example for blogpost"
+requires-python = ">=3.12.3"
+
+dependencies = [
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "openai>=2.11.0",
+    "pgmpy>=1.0.0",
+    "plotly>=6.5.0",
+    "python-dotenv>=1.0.0",
+]
