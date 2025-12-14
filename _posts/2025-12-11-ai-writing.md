@@ -3,7 +3,7 @@ layout: post
 title: "Some reflections on AI and Creativity"
 date: 2025-12-11
 categories: blog
-description: "Can we use AI as a tool without losing ourselves? I think so, we probably need to stay connected to why we create things in the first place."
+description: "Can we use AI as a tool without losing ourselves?  I think so, as long as we stay connected to why we create things in the first place."
 tags: [Reflections]
 ---
 
