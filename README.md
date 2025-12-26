@@ -120,21 +120,21 @@ This will install all gems into the `vendor/bundle` directory, keeping them isol
 ### 7. Serve the Site Locally
 
 ```bash
-bundle exec jekyll serve
+bundle exec jekyll serve --port 5000
 ```
 
-Visit your site at [http://localhost:4000](http://localhost:4000)
+Visit your site at [http://localhost:5000](http://localhost:5000)
 
 ### Additional Options
 
 Auto-reload on changes:
 ```bash
-bundle exec jekyll serve --livereload
+bundle exec jekyll serve --port 5000 --livereload
 ```
 
 Show draft posts:
 ```bash
-bundle exec jekyll serve --drafts
+bundle exec jekyll serve --port 5000 --drafts
 ```
 
 ## Project Structure
