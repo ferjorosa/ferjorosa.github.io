@@ -1,12 +1,30 @@
 #!/usr/bin/env python3
 """
-Convert JSON result files to markdown format.
+Convert JSON result files to markdown format for code results.
 Extracts reasoning and content fields and creates markdown files.
+Transforms <code></code> tags into Python code blocks.
 """
 
 import json
-import os
+import re
 from pathlib import Path
+
+
+def convert_code_tags_to_markdown(content):
+    """Convert <code></code> tags to markdown Python code blocks."""
+    # Pattern to match <code>...</code> tags (including multiline)
+    pattern = r'<code>(.*?)</code>'
+    
+    def replace_code(match):
+        code_content = match.group(1).strip()
+        # Remove leading/trailing newlines from code content
+        code_content = code_content.strip('\n')
+        return f'```python\n{code_content}\n```'
+    
+    # Replace all <code></code> tags with markdown code blocks
+    converted = re.sub(pattern, replace_code, content, flags=re.DOTALL)
+    
+    return converted
 
 
 def process_json_to_markdown(json_path, output_dir):
@@ -18,6 +36,9 @@ def process_json_to_markdown(json_path, output_dir):
     model = data.get('model', 'unknown')
     reasoning = data.get('reasoning', '')
     content = data.get('content', '')
+    
+    # Convert <code></code> tags to markdown code blocks
+    content = convert_code_tags_to_markdown(content)
     
     # Create title from model name
     title = f"# {model}\n"
@@ -42,11 +63,11 @@ def process_json_to_markdown(json_path, output_dir):
 
 
 def main():
-    """Process all JSON files in the results directory."""
+    """Process all JSON files in the results_code directory."""
     # Define paths
     script_dir = Path(__file__).parent
-    results_dir = script_dir / 'results'
-    output_dir = script_dir / 'results_md'
+    results_dir = script_dir / 'results_code'
+    output_dir = script_dir / 'results_code_md'
     
     # Create output directory if it doesn't exist
     output_dir.mkdir(exist_ok=True)
@@ -72,6 +93,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
 

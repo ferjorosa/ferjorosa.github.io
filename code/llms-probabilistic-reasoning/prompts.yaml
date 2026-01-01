@@ -67,3 +67,39 @@ prompt_base: |
   - Use at least 4 decimal places for precision
   - The line must end immediately after the numeric value
   - No trailing spaces, periods, or other characters
+
+prompt_base_code: |
+  ## Task
+
+  Below you will find conditional probability tables and a query. Write Python code to compute the exact probability for the query.
+
+  **Conditional Probability Tables (CPTs):**
+
+  {cpts}
+
+  ## Query
+
+  Write Python code to compute the exact probability for the following query:
+
+  {query}
+
+  ## Output Format
+
+  Provide your Python code in this EXACT format:
+
+  <code>
+  # Your Python code here
+  # The code should output ONLY the numeric probability (a decimal number between 0 and 1)
+  # Use print() to output the result
+  </code>
+
+  CRITICAL REQUIREMENTS:
+  - Output your code between <code></code> tags
+  - The code must output ONLY the numeric probability when executed (nothing else)
+  - The probability must be a decimal number between 0 and 1
+  - Use print() to output the result (e.g., print(0.1234))
+  - You have access to standard Python libraries, pgmpy, and pyAgrum
+  - The code should be executable and produce only the numeric value
+  - Use at least 4 decimal places for precision
+  - If the probability is 0, output "0.0" not "0"
+  - If the probability is 1, output "1.0" not "1"
