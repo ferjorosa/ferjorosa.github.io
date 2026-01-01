@@ -375,25 +375,21 @@ $$
 
 ## How LLMs do it
 
-<!-- 
+After solving the inference problem manually, I wanted to see how LLMs approach the task. To evaluate this comprehensively, I designed two complementary experiments:
 
-Aqui puedo comentar un par de papers que me he encontrado, uno de ellos no se centra en redes Bayesianas sino en evaluar los LLMs para problemas con distribuciones univariates. El otro si que se centra en redes Bayesianas 
+1. **"Raw" reasoning**: Provide the network definition with CPTs in the prompt and ask for the answer without any tools. This tests whether LLMs can apply inference algorithms (variable elimination, junction tree, brute force, etc.) and perform arithmetic operations correctly. It's essentially a test of what I did above but without a calculator (which I used).
 
--->
+2. **Code generation**: Provide the network definition with CPTs in the prompt and ask LLMs to write Python code to solve the problem. Given that current reasoning models have demonstrated excellent coding capabilities, this tests their ability to translate the problem into code and solve it. This is a "one-shot" test. I wanted to see what kind of code they would generate and how many output tokens were required compared to the "mental reasoning" approach.
 
-### Experiment setup
+Both experiments use the same Bayesian network and query from our manual example: computing $$P(\textcolor{purple}{V_3} = \textcolor{purple}{s_1} \mid \textcolor{purple}{V_1} = \textcolor{purple}{s_0})$$.
 
-<!--
+### Experimental setup
 
-Comentamos como es el prompt y que modelos vamos a utilizar, distinguiendo en que modelos son open-source y closed-source. Comentar que vamos a ejecutarlo usando OpenRouter y que se nos provee de las trazas de razonamiento completas en el caso open-source y un resumen de las mismas en el caso closed-source
+I evaluated 7 state-of-the-art language models, including both open-source and closed-source reasoning models. The experiments were conducted using [OpenRouter](https://openrouter.ai/), which provides complete reasoning traces for open-source models and summarized reasoning for closed-source models.
 
-Comentar donde se encuentra el codigo disponible y que para ejecutarlo simplemente se necesita unos pocos creditos de OpenRouter. De cualquier forma comparto los resultados como archivos JSON para que puedan ser analizados.
+The complete experimental code is available in the [`code/llms-probabilistic-reasoning/`](https://github.com/ferjorosa/ferjorosa.github.io/tree/main/code/llms-probabilistic-reasoning) directory. Running the experiments requires only a few OpenRouter credits, and I've shared all results as JSON files for analysis.
 
--->
-
-
-
-To evaluate LLMs on their ability to do probabilistic inference fully on their own, I have prepared the following prompt. 
+**Models evaluated:** 
 
 
 <table>
@@ -465,9 +461,7 @@ To evaluate LLMs on their ability to do probabilistic inference fully on their o
 </tbody>
 </table>
 
-### Results
-
-All the models achieved the correct answer. Here are the results:
+### "Raw" reasoning results
 
 <table>
 <thead>
@@ -486,43 +480,43 @@ All the models achieved the correct answer. Here are the results:
 <td>3275 <sup>(1)</sup></td>
 </tr>
 <tr>
-<td>DeepSeek-R1-0528</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/deepseek_deepseek-r1-0528_20251226_164351.md">DeepSeek-R1-0528</a></td>
 <td>0.789967</td>
 <td>1031</td>
 <td>14786</td>
 </tr>
 <tr>
-<td>Kimi-K2-thinking</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/moonshotai_kimi-k2-thinking_20251213_171713.md">Kimi-K2-thinking</a></td>
 <td>0.78996796</td>
 <td>987</td>
 <td>39224</td>
 </tr>
 <tr>
-<td>Qwen3-235B-A22B-thinking-2507</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/qwen_qwen3-235b-a22b-thinking-2507_20251226_172229.md">Qwen3-235B-A22B-thinking-2507</a></td>
 <td>0.7900</td>
 <td>1079</td>
 <td>7623</td>
 </tr>
 <tr>
-<td>GLM-4.7</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/z-ai_glm-4.7_20251226_170612.md">GLM-4.7</a></td>
 <td>0.78997</td>
 <td>1044</td>
 <td>12432</td>
 </tr>
 <tr>
-<td>Claude Sonnet 4.5</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/anthropic_claude-sonnet-4.5_20251226_173811.md">Claude Sonnet 4.5</a></td>
 <td>0.7899686793</td>
 <td>1188</td>
 <td>18721</td>
 </tr>
 <tr>
-<td>Gemini-3-Pro</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/google_gemini-3-pro-preview_20251226_175749.md">Gemini-3-Pro</a></td>
 <td>0.7900</td>
 <td>1155</td>
 <td>7576</td>
 </tr>
 <tr>
-<td>GPT-5.2-high</td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/openai_gpt-5.2_20251226_180834.md">GPT-5.2-high</a></td>
 <td>0.789967957981</td>
 <td>1029</td>
 <td>10004</td>
@@ -537,11 +531,166 @@ All the models achieved the correct answer. Here are the results:
 </tfoot>
 </table>
 
-But what is especially interesting (at least for me) is taking a look at 
+All models successfully computed the correct probability. Now, what's particularly interesting is analyzing *how* each model approached the problem. Here's what I observed in their reasoning traces:
 
-## Related work
+**[DeepSeek-R1-0528](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/deepseek_deepseek-r1-0528_20251226_164351.md)**: Applied variable elimination correctly, explicitly recognizing that $$\textcolor{purple}{V_2}$$ could be ignored as a barren node. The model systematically worked through factor multiplication and marginalization steps, showing clear understanding of the conditional independence structure.
 
-<!-- Hablar de los 2 papers y de otros -->
+**[Kimi-K2-thinking](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/moonshotai_kimi-k2-thinking_20251213_171713.md)**: Used a hybrid approach, starting with variable elimination but then switching to direct conditional probability calculation using Bayes' rule. Showed excellent arithmetic precision throughout the lengthy calculation chain.
+
+**[Qwen3-235B-A22B-thinking-2507](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/qwen_qwen3-235b-a22b-thinking-2507_20251226_172229.md)**: Implemented a clean variable elimination algorithm, correctly identifying the elimination order and performing factor operations step-by-step. Demonstrated strong understanding of when variables can be safely eliminated.
+
+**[GLM-4.7](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/z-ai_glm-4.7_20251226_170612.md)**: Applied the chain rule decomposition effectively, breaking down the joint probability calculation into manageable components. Showed good intuition about conditional independence relationships.
+
+**[Claude Sonnet 4.5](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/anthropic_claude-sonnet-4.5_20251226_173811.md)**: Used variable elimination with explicit factor notation, closely mirroring the textbook algorithm. Provided detailed explanations for each elimination step and correctly handled the evidence restriction.
+
+**[Gemini-3-Pro](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/google_gemini-3-pro-preview_20251226_175749.md)**: Employed a systematic marginalization approach, computing all relevant joint probabilities before normalization. Showed strong numerical accuracy in the final calculations.
+
+**[GPT-5.2-high](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/openai_gpt-5.2_20251226_180834.md)**: Applied variable elimination with careful attention to elimination ordering. Demonstrated understanding of computational efficiency by recognizing which variables could be eliminated early.
+
+All models correctly identified that $$\textcolor{purple}{V_2}$$ was irrelevant to the query (a "barren node") and could be safely ignored.
+
+### Code generation results
+
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Response</th>
+<th>Input tokens</th>
+<th>Completion tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ground truth</td>
+<td>0.7900</td>
+<td>1039 <sup>(1)</sup></td>
+<td>636 <sup>(1)</sup></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/deepseek_deepseek-r1-0528_20251227_193907.md">DeepSeek-R1-0528</a></td>
+<td>0.789967</td>
+<td>1048</td>
+<td>2793</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/moonshotai_kimi-k2-thinking_20251227_194650.md">Kimi-K2-thinking</a></td>
+<td>0.78996796</td>
+<td>963</td>
+<td>27339</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/qwen_qwen3-235b-a22b-thinking-2507_20251227_200602.md">Qwen3-235B-A22B-thinking-2507</a></td>
+<td>0.7900</td>
+<td>1097</td>
+<td>13353</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/z-ai_glm-4.7_20251227_195156.md">GLM-4.7</a></td>
+<td>0.78997</td>
+<td>1064</td>
+<td>5663</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/anthropic_claude-sonnet-4.5_20251227_193625.md">Claude Sonnet 4.5</a></td>
+<td>0.7899686793</td>
+<td>1205</td>
+<td>19864</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/google_gemini-3-pro-preview_20251227_163622.md">Gemini-3-Pro</a></td>
+<td>0.7900</td>
+<td>1167</td>
+<td>5885</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/openai_gpt-5.2_20251227_193226.md">GPT-5.2-high</a></td>
+<td>0.789967957981</td>
+<td>1049</td>
+<td>11799</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td colspan="4" style="font-size: 0.9em; font-style: italic; padding-top: 10px;">
+<sup>(1)</sup> <a href="https://platform.openai.com/tokenizer">Ground truth token values were approximated using OpenAI's GPT-4o tokenizer.</a>
+</td>
+</tr>
+</tfoot>
+</table>
+
+All models achieved the correct numerical answer in their code implementations. However, despite the prompt esplictly mentioning the possibility to write code for `pgmpy` and `pyAgrum`, **none of the models used these established BN libraries**. Instead, they all the same pattern: use "raw" reasoning to get the result and then write vanilla Python code to print the result. Some did the final normalization too.
+
+To be honest, I was a bit puzzled about this. It is possible that a different prompt would fix this possible bias. From my personal tests I know they are aware of these libraries and know how to write code but they may not have enough expose for them to have confidence. They may also find (incrrectly in my opinion) that direct calculations are more explainable and debuggable (this was Sonnet 4 answer when I asked about it, who knows)
+
+For comparison sake, here's how the problem should ideally be solved using `pgmpy`. This is what I have considered ground truth for this experiment:
+
+```python
+from pgmpy.inference import VariableElimination
+from pgmpy.models import DiscreteBayesianNetwork
+from pgmpy.factors.discrete import TabularCPD
+
+# Create the Bayesian Network structure
+bn = DiscreteBayesianNetwork([('V0', 'V1'), ('V0', 'V2'), ('V0', 'V3'), ('V1', 'V3')])
+
+# Define CPDs based on the provided tables
+
+# CPD for V0 (root node)
+cpd_v0 = TabularCPD(
+    variable='V0',
+    variable_card=2,
+    values=[[0.5072], [0.4928]],
+    state_names={'V0': ['s0', 's1']}
+)
+
+# CPD for V1 (depends on V0)
+cpd_v1 = TabularCPD(
+    variable='V1',
+    variable_card=2,
+    values=[[0.3110, 0.0704],
+            [0.6890, 0.9296]],
+    evidence=['V0'],
+    evidence_card=[2],
+    state_names={'V1': ['s0', 's1'], 'V0': ['s0', 's1']}
+)
+
+# CPD for V2 (depends on V0)
+cpd_v2 = TabularCPD(
+    variable='V2',
+    variable_card=2,
+    values=[[0.8950, 0.0562],
+            [0.1050, 0.9438]],
+    evidence=['V0'],
+    evidence_card=[2],
+    state_names={'V2': ['s0', 's1'], 'V0': ['s0', 's1']}
+)
+
+# CPD for V3 (depends on V0 and V1)
+cpd_v3 = TabularCPD(
+    variable='V3',
+    variable_card=2,
+    values=[[0.0607, 0.8173, 0.8890, 0.2251],
+            [0.9393, 0.1827, 0.1110, 0.7749]],
+    evidence=['V0', 'V1'],
+    evidence_card=[2, 2],
+    state_names={'V3': ['s0', 's1'], 'V0': ['s0', 's1'], 'V1': ['s0', 's1']}
+)
+
+# Add CPDs to the bn
+bn.add_cpds(cpd_v0, cpd_v1, cpd_v2, cpd_v3)
+
+# Validate the bn
+assert bn.check_model()
+
+# Create inference object
+inference = VariableElimination(bn)
+
+# Compute P(V3=s1 | V1=s0)
+query_result = inference.query(variables=['V3'], evidence={'V1': 's0'})
+prob_v3_s1_given_v1_s0 = query_result.values[1]  # Index 1 corresponds to V3=s1
+
+print(prob_v3_s1_given_v1_s0)
+```
 
 ## Conclusions
 

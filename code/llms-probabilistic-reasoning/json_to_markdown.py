@@ -42,17 +42,17 @@ def process_json_to_markdown(json_path, output_dir):
 
 
 def main():
-    """Process all JSON files in the results directory."""
+    """Process all JSON files in subdirectories of the results directory."""
     # Define paths
     script_dir = Path(__file__).parent
     results_dir = script_dir / 'results'
-    output_dir = script_dir / 'results_md'
+    output_base_dir = script_dir / 'results_md'
     
-    # Create output directory if it doesn't exist
-    output_dir.mkdir(exist_ok=True)
+    # Create output base directory if it doesn't exist
+    output_base_dir.mkdir(exist_ok=True)
     
-    # Find all JSON files
-    json_files = list(results_dir.glob('*.json'))
+    # Find all JSON files in subdirectories
+    json_files = list(results_dir.glob('**/*.json'))
     
     if not json_files:
         print(f"No JSON files found in {results_dir}")
@@ -63,11 +63,19 @@ def main():
     # Process each JSON file
     for json_file in json_files:
         try:
-            process_json_to_markdown(json_file, output_dir)
+            # Get relative path from results_dir to maintain subdirectory structure
+            relative_path = json_file.relative_to(results_dir)
+            subdirectory = relative_path.parent
+            
+            # Create corresponding output subdirectory
+            output_subdir = output_base_dir / subdirectory
+            output_subdir.mkdir(parents=True, exist_ok=True)
+            
+            process_json_to_markdown(json_file, output_subdir)
         except Exception as e:
             print(f"Error processing {json_file}: {e}")
     
-    print(f"\nDone! Markdown files created in {output_dir}")
+    print(f"\nDone! Markdown files created in {output_base_dir}")
 
 
 if __name__ == '__main__':
