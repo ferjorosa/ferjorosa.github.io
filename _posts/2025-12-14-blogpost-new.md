@@ -377,17 +377,13 @@ $$
 
 After solving the inference problem manually, I wanted to see how LLMs approach the task. To evaluate this comprehensively, I designed two complementary experiments:
 
-1. **"Raw" reasoning**: Provide the network definition with CPTs in the prompt and ask for the answer without any tools. This tests whether LLMs can apply inference algorithms (variable elimination, junction tree, brute force, etc.) and perform arithmetic operations correctly. It's essentially a test of what I did above but without a calculator (which I used).
+1. **Raw reasoning**: Provide the network definition with CPTs in the prompt and ask for the answer without any tools. This tests whether LLMs can apply inference algorithms (variable elimination, junction tree, brute force, etc.) and perform arithmetic operations correctly. It's essentially a test of what I did above but without a calculator (which I used).
 
 2. **Code generation**: Provide the network definition with CPTs in the prompt and ask LLMs to write Python code to solve the problem. Given that current reasoning models have demonstrated excellent coding capabilities, this tests their ability to translate the problem into code and solve it. This is a "one-shot" test. I wanted to see what kind of code they would generate and how many output tokens were required compared to the "mental reasoning" approach.
-
-Both experiments use the same Bayesian network and query from our manual example: computing $$P(\textcolor{purple}{V_3} = \textcolor{purple}{s_1} \mid \textcolor{purple}{V_1} = \textcolor{purple}{s_0})$$.
 
 ### Experimental setup
 
 I evaluated 7 state-of-the-art language models, including both open-source and closed-source reasoning models. The experiments were conducted using [OpenRouter](https://openrouter.ai/), which provides complete reasoning traces for open-source models and summarized reasoning for closed-source models.
-
-The complete experimental code is available in the [`code/llms-probabilistic-reasoning/`](https://github.com/ferjorosa/ferjorosa.github.io/tree/main/code/llms-probabilistic-reasoning) directory. Running the experiments requires only a few OpenRouter credits, and I've shared all results as JSON files for analysis.
 
 **Models evaluated:** 
 
@@ -461,6 +457,10 @@ The complete experimental code is available in the [`code/llms-probabilistic-rea
 </tbody>
 </table>
 
+The complete experimental code is available in the [`code/llms-probabilistic-reasoning/`](https://github.com/ferjorosa/ferjorosa.github.io/tree/main/code/llms-probabilistic-reasoning) directory. Running the experiments requires only a few OpenRouter credits, and I've shared all results as JSON files for analysis.
+
+Each experiment has a different prompt. Both of them are under the same file with different keys. The raw reasoning template is defined in <code>prompt_base</code> and the code generation template is defined in <code>prompt_base_code</code>.
+
 ### "Raw" reasoning results
 
 <table>
@@ -478,6 +478,9 @@ The complete experimental code is available in the [`code/llms-probabilistic-rea
 <td>0.7900</td>
 <td>1018 <sup>(1)</sup></td>
 <td>3275 <sup>(1)</sup></td>
+</tr>
+<tr>
+<td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Open-source</td>
 </tr>
 <tr>
 <td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/deepseek_deepseek-r1-0528_20251226_164351.md">DeepSeek-R1-0528</a></td>
@@ -502,6 +505,9 @@ The complete experimental code is available in the [`code/llms-probabilistic-rea
 <td>0.78997</td>
 <td>1044</td>
 <td>12432</td>
+</tr>
+<tr>
+<td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Closed-source</td>
 </tr>
 <tr>
 <td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/anthropic_claude-sonnet-4.5_20251226_173811.md">Claude Sonnet 4.5</a></td>
@@ -531,23 +537,49 @@ The complete experimental code is available in the [`code/llms-probabilistic-rea
 </tfoot>
 </table>
 
-All models successfully computed the correct probability. Now, what's particularly interesting is analyzing *how* each model approached the problem. Here's what I observed in their reasoning traces:
+All models successfully computed the correct probability. However, to be honest, that was not especially surprising. Reasoning models have shown great performances in math benchmarks these last years, and the inference problem is not especially complicated given the size of the network.
 
-**[DeepSeek-R1-0528](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/deepseek_deepseek-r1-0528_20251226_164351.md)**: Applied variable elimination correctly, explicitly recognizing that $$\textcolor{purple}{V_2}$$ could be ignored as a barren node. The model systematically worked through factor multiplication and marginalization steps, showing clear understanding of the conditional independence structure.
+Now, what is particularly interesting to me is how each model approached the task. To analyze this, I used Gemini-3 Pro to read the resulting reasoning traces and compare them against the VE algorithm I followed above.
 
-**[Kimi-K2-thinking](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/moonshotai_kimi-k2-thinking_20251213_171713.md)**: Used a hybrid approach, starting with variable elimination but then switching to direct conditional probability calculation using Bayes' rule. Showed excellent arithmetic precision throughout the lengthy calculation chain.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+Note that for closed-source models (Claude, Gemini, GPT), we only have access to reasoning summaries rather than the full thinking trace so the analysis of closed source models is not as accurate.
+</div>
+<div style="height: 1.1em;"></div>
 
-**[Qwen3-235B-A22B-thinking-2507](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/qwen_qwen3-235b-a22b-thinking-2507_20251226_172229.md)**: Implemented a clean variable elimination algorithm, correctly identifying the elimination order and performing factor operations step-by-step. Demonstrated strong understanding of when variables can be safely eliminated.
 
-**[GLM-4.7](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/z-ai_glm-4.7_20251226_170612.md)**: Applied the chain rule decomposition effectively, breaking down the joint probability calculation into manageable components. Showed good intuition about conditional independence relationships.
+**As a summary, none of the models used the formal Variable Elimination algorithm.** Instead, they relied on probability theory "first principles" (i.e., Chain Rule). All of them except GPT-5.2 essentially wrote out the formula for the full joint distribution and then summed it up. 
 
-**[Claude Sonnet 4.5](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/anthropic_claude-sonnet-4.5_20251226_173811.md)**: Used variable elimination with explicit factor notation, closely mirroring the textbook algorithm. Provided detailed explanations for each elimination step and correctly handled the evidence restriction.
+DeepSeek, Kimi, Claude, and Gemini wrote the full joint distribution using the Chain Rule and brute-force the summation. While this approach is straightforward and easy to verify step-by-step, it has the downside of exponential growth. It forces to keep the full table on memory and forces the model re-calculate the same sub-problems multiple times (e.g., computing the probability of the parents for both the numerator and denominator separately). This redundancy is a major driver of token bloat.
 
-**[Gemini-3-Pro](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/google_gemini-3-pro-preview_20251226_175749.md)**: Employed a systematic marginalization approach, computing all relevant joint probabilities before normalization. Showed strong numerical accuracy in the final calculations.
+GLM 4.7 and Qwen also summed over the full joint distribution but they realized that the numerator and denominator shared common terms (like $$P(V_0)P(V_1 \mid V_0)$$), so they explicitly calculated these "blocks" once and reused them, naming them for exmaple `term1`and `term2`. However, while they avoid re-multiplying the same numbers, they are still committed to a formula that grows **exponentially with the network size**.
 
-**[GPT-5.2-high](https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/openai_gpt-5.2_20251226_180834.md)**: Applied variable elimination with careful attention to elimination ordering. Demonstrated understanding of computational efficiency by recognizing which variables could be eliminated early.
+Finally, GPT-5.2 is the only one that truly changed the structure of the problem. It seems to have applied <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf"><b>Cutset conditioning</b></a>. The idea is to find the minimal set of nodes whose instantiation will make the remainer of the network "singly connected" (i.e., a polytree). Once we have a tree inference easy and efficient. In this case, GPT-5.2 correctly identified that GPT-5.2 correctly identified that $$V_0$$ acts as a cutset (of size 1). Instantiating $$V_0$$ breaks the connection between the "left" path ($$V_1$$) and "right" path ($$V_2$$). After it solved a small problem (finding $V_0$'s posterior) it then used that answer to solve the next small problem (finding $V_3$). To be honest, I was impressed by this. This is what I was expecting to see, LLMs using their reasoning to find "heuristics" to solve the inference problem. 
 
-All models correctly identified that $$\textcolor{purple}{V_2}$$ was irrelevant to the query (a "barren node") and could be safely ignored.
+<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
+<b>The "Arithmetic Anxiety" Phenomenon</b>
+
+It seems the choice of strategy had a direct impact on the model's "arithmetic confidence".
+</div>
+<div style="height: 1.1em;"></div>
+
+<!-- 
+
+### The "Arithmetic Anxiety" Phenomenon
+
+The choice of strategy had a direct impact on the model's confidence. Because the **Direct Expansion** approach creates a messy web of numbers, models using it suffered from severe verification loops, which I call "arithmetic anxiety."
+
+**The Sufferers (DeepSeek, Kimi, Claude)**
+These models spent 70-90% of their tokens not on reasoning, but on checking their own math.
+*   **Kimi** was the extreme case (~39k tokens), performing manual long division to **over 100 decimal places** for a problem that only needed 4.
+*   **DeepSeek** recalculated simple products dozens of times using different formats (decimals, fractions, scientific notation) to "be sure."
+*   **Claude** constantly interrupted itself to double-check divisions, catching and correcting its own precision errors.
+
+**The Efficient Ones (Qwen, Gemini, GPT-5.2)**
+*   **Qwen (7.6k tokens)** avoided loops by using clever estimation. It would calculate a rough estimate (like 0.79) and checking if the numerator/denominator ratio matched it closely, rather than deriving it from scratch digit-by-digit.
+*   **Gemini (7.5k tokens)** appeared to run internal verification passes ("Confirming...") but kept the output structured without looping.
+*   **GPT-5.2** avoided anxiety by simplifying the math itself. By using the Posterior Decomposition method, it didn't *have* complex sums to verify, allowing it to use clean rational arithmetic (fractions) efficiently. 
+
+-->
 
 ### Code generation results
 
@@ -566,6 +598,9 @@ All models correctly identified that $$\textcolor{purple}{V_2}$$ was irrelevant 
 <td>0.7900</td>
 <td>1039 <sup>(1)</sup></td>
 <td>636 <sup>(1)</sup></td>
+</tr>
+<tr>
+<td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Open-source</td>
 </tr>
 <tr>
 <td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/deepseek_deepseek-r1-0528_20251227_193907.md">DeepSeek-R1-0528</a></td>
@@ -590,6 +625,9 @@ All models correctly identified that $$\textcolor{purple}{V_2}$$ was irrelevant 
 <td>0.78997</td>
 <td>1064</td>
 <td>5663</td>
+</tr>
+<tr>
+<td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Closed-source</td>
 </tr>
 <tr>
 <td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/anthropic_claude-sonnet-4.5_20251227_193625.md">Claude Sonnet 4.5</a></td>
