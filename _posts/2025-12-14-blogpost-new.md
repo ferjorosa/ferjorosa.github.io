@@ -1,32 +1,57 @@
 ---
 layout: post
-title: "How Capable Are Language Models At Probabilistic Reasoning?"
+title: "How capable are language models at probabilistic reasoning?"
 date: 2025-12-13
 categories: blog
 description: "TODO"
 tags: [Probabilistic Reasoning]
 ---
 
-<h2 id="the-challenge-of-decision-making">Can large language models think "rationally"?</h2>
+<details style="margin: 1em 0; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
+<summary style="cursor: pointer; font-weight: bold; padding: 0.5em;">Table of Contents</summary>
 
-This question has been on my mind for a while. It has motivated me to revise probabilistic graphical models and write my blog series on Decision Theory during summer. [In my last post of that series](https://ferjorosa.github.io/blog/2025/08/07/decision-theory-III.html), I talked about combining large language models (LLMs) with influence diagrams. 
+<ul style="margin-top: 0.5em;">
+  <li style="margin-bottom: 0.5em;"><a href="#can-large-language-models-think-rationally">Can large language models think "rationally"?</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#bayesian-networks">Bayesian networks</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#probabilistic-inference-on-bayesian-networks">Probabilistic inference on Bayesian networks</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#variable-elimination-algorithm">Variable elimination algorithm</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#operations-on-factors">Operations on factors</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#the-algorithm">The algorithm</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#example">Example</a>
+        <ul style="margin-top: 0.3em;">
+          <li style="margin-bottom: 0.3em;"><a href="#step-1-restrict-factors">Step 1: Restrict factors based on evidence</a></li>
+          <li style="margin-bottom: 0.3em;"><a href="#step-2-eliminate-v2">Step 2: Eliminate V2</a></li>
+          <li style="margin-bottom: 0.3em;"><a href="#step-3-eliminate-v0">Step 3: Eliminate V0</a></li>
+          <li style="margin-bottom: 0.3em;"><a href="#step-4-normalize">Step 4: Normalize</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#how-llms-do-it">How LLMs do it</a>
+    <ul style="margin-top: 0.3em;">
+      <li style="margin-bottom: 0.3em;"><a href="#experimental-setup">Experimental setup</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#raw-reasoning-results">Raw reasoning results</a></li>
+      <li style="margin-bottom: 0.3em;"><a href="#code-generation-results">Code generation results</a></li>
+    </ul>
+  </li>
+  <li style="margin-bottom: 0.5em;"><a href="#conclusion">Conclusion</a></li>
+  <li style="margin-bottom: 0.5em;"><a href="#references">References</a></li>
+</ul>
 
-The truth is, I had already started exploring that idea even before writing the first blog post. Back in May 2025, I put together a [notebook](https://github.com/ferjorosa/decision-theory-llms/blob/main/notebooks/how_good_are_llms_decision_problems.ipynb) testing how well LLMs could solve decision problems. The results were interesting. LLMs like O3 and Gemini 2.5 Pro reached correct solutions on the three small problems I tested. 
+</details>
 
-Now, interestingly, they solved those problems using decision trees which, [as I explained in another post](https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html), have theoretical limitations. In that same post I have shown how we can solve this problems "manually" with all the operations that were required.
+<h2 id="can-large-language-models-think-rationally">Can large language models think "probabilistically"?</h2>
 
-So, I wondered, were LLMs solving those problems with decision trees because it was easier for them or because they "dont know" how to apply the algorithms themselves. To test that idea I set out to run more extensive experiments and for that I needed a dataset of synthetic decision problems. But I found that generating decision problems is not easy to scale. I still need a way to figure it out. For example, those 3 examples were done "hybrid process" where I manually defineed influence diagrams manually and then doing back-and-forth iterations with LLMs to define a good "story" around them.
+This question has been on my mind for a while. It motivated me to revisit probabilistic graphical models, write my [blog series on Decision Theory](https://ferjorosa.github.io/blog/2025/08/07/decision-theory-III.html), and explore how large language models (LLMs) solved [a few hand-crafted decision problems](https://github.com/ferjorosa/decision-theory-llms/blob/main/notebooks/how_good_are_llms_decision_problems.ipynb).
 
-Then, I thought about ignoring the context part and just focusing on the numerical reasoning capabilities but since influence diagrams are are essentially Bayesian networks augmented with decisions and utilities, I thought it would be interesting to start understand how LLMs handle basic probabilistic inference. If they struggle with probability calculations on Bayesian networks, expecting them to solve influence diagrams could be premature.
+Early experiments were promising: models like O3 and Gemini-2.5 Pro reached correct solutions on these small decision problems. But they solved them using decision trees, which [have theoretical limitations](https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html). I wondered: were they using decision trees because it was "easier", or because they didn't know how to apply influence diagrams?
 
+To answer that, I started running more extensive experiments. But midway through, I realized I was getting ahead of myself. If I wanted to evaluate LLMs on influence diagrams, I should probably start with Bayesian networks, since influence diagrams are essentially Bayesian networks augmented with decisions and utilities. If LLMs struggle with probabilistic inference on Bayesian networks, expecting them to solve full decision problems could be premature.
 
-<!-- 
-No se si ponerlo aqui, pero la idea es resolver una probabilistic query a mano con variable elimination y luego comparar ese resultado con el resultado de LLMs, comparar si llegan a la solucion y ver que clase de tokens escriben en su thinking. Me voy a centrar principalmente en reasoning models. 
+So that's what this post explores: **how do current frontier LLMs handle probabilistic inference on a Bayesian network?** I'll walk through the Variable Elimination algorithm since is one of the easiest to understand and implement, solve an example by hand with it, and then compare how seven reasoning models approach the same query, analyzing not just whether they get the right answer, but *how* they reason through the problem.
 
-Me parece igual de interesante ver si llegan a la solucion que ver como difiere una solucion a mano de lo que haga yo. Tambien puede ser que no aplicquen variable elimination, hay otras opciones como junction tree of belief propagation. Explicare variable elimination porque es de los mas "faciles" de entender a mi parecer
--->
-
-## Bayesian networks
+<h2 id="bayesian-networks">Bayesian networks</h2>
 
 A Bayesian network (BN) is a directed acyclic graph (DAG) in which nodes represent random variables. Arcs encode conditional dependencies between variables in a way that allows us to factorize the joint probability distribution into a product of conditional probability distributions (CPDs),
 
@@ -141,7 +166,7 @@ As an example, consider a Bayesian network with 4 binary variables ($$\textcolor
   </tr>
 </table>
 
-## Probabilistic inference on Bayesian networks
+<h2 id="probabilistic-inference-on-bayesian-networks">Probabilistic inference on Bayesian networks</h2>
 
 Once we have a BN, we can use it to reason by performing probabilistic inference. This task involves computing the probability of query variables $$\mathbf{\textcolor{purple}{Q}}$$ given some observed evidence $$\mathbf{\textcolor{purple}{E}} = \mathbf{\textcolor{purple}{e}}$$.
 
@@ -157,7 +182,7 @@ However, this naive approach is computationally unfeasible. It requires building
 
 Efficient inference algorithms avoid this by working directly with the factorized representation. Rather than constructing the full joint, they manipulate individual CPTs and perform marginalization locally. Well-known examples include Variable Elimination, Junction Tree algorithm, and Belief Propagation. We'll focus on Variable Elimination since it's the easiest to explain and commonly used when teaching BN inference.
 
-## Variable elimination algorithm
+<h2 id="variable-elimination-algorithm">Variable elimination algorithm</h2>
 
 As the name suggests, the **Variable Elimination** algorithm works by eliminating the variables of the network until it yields the answer to a specific query. This algorithm is
 typically defined in terms of factors.
@@ -166,7 +191,7 @@ A **factor** $$\phi(\mathbf{\textcolor{purple}{X}})$$ is a function that maps a 
 
 During inference, new factors are created by multiplying and marginalizing existing ones. These **intermediate factors** are generally **unnormalized**, meaning their values do not sum to one. This is not a problem, since normalization is only required for the final result. Working with unnormalized factors simplifies computation and allows inference algorithms to focus on local operations.
 
-### Operations on factors
+<h3 id="operations-on-factors">Operations on factors</h3>
 
 Variable elimination relies on three operations:
 
@@ -182,7 +207,7 @@ $$
 
 3. **Evidence restriction:** If variable $$\textcolor{purple}{E}$$ is observed to be $$\textcolor{purple}{e}$$, restrict any factor containing $$\textcolor{purple}{E}$$ to that value—essentially selecting the slice of the table consistent with the observation.
 
-### The algorithm
+<h3 id="the-algorithm">The algorithm</h3>
 
 Given a Bayesian network, query variables $$\mathbf{\textcolor{purple}{Q}}$$, and evidence $$\mathbf{\textcolor{purple}{E}} = \mathbf{\textcolor{purple}{e}}$$:
 
@@ -200,7 +225,7 @@ Given a Bayesian network, query variables $$\mathbf{\textcolor{purple}{Q}}$$, an
 
 4. **Normalize:** Multiply remaining factors (now only over $$\mathbf{\textcolor{purple}{Q}}$$) and normalize to obtain $$P(\mathbf{\textcolor{purple}{Q}} = \mathbf{\textcolor{purple}{q}} \mid \mathbf{\textcolor{purple}{E}} = \mathbf{\textcolor{purple}{e}})$$.
 
-### Example
+<h3 id="example">Example</h3>
 
 As an example we are going to use the BN we defined in Figure 1 and compute the probability of $$\textcolor{purple}{V_3}$$ being $$\textcolor{purple}{s_1}$$ given that $$\textcolor{purple}{V_1}$$ is observed to be $$\textcolor{purple}{s_0}$$:
 
@@ -373,7 +398,7 @@ P(\textcolor{purple}{V_3} = \textcolor{purple}{s_1} \mid \textcolor{purple}{V_1}
 \end{aligned}
 $$
 
-## How LLMs do it
+<h2 id="how-llms-do-it">How LLMs do it</h2>
 
 After solving the inference problem manually, I wanted to see how LLMs approach the task. To evaluate this comprehensively, I designed two complementary experiments:
 
@@ -381,9 +406,9 @@ After solving the inference problem manually, I wanted to see how LLMs approach 
 
 2. **Code generation**: Provide the network definition with CPTs in the prompt and ask LLMs to write Python code to solve the problem. Given that current reasoning models have demonstrated excellent coding capabilities, this tests their ability to translate the problem into code and solve it. This is a "one-shot" test. I wanted to see what kind of code they would generate and how many output tokens were required compared to the "mental reasoning" approach.
 
-### Experimental setup
+<h3 id="experimental-setup">Experimental setup</h3>
 
-I evaluated 7 state-of-the-art language models, including both open-source and closed-source reasoning models. The experiments were conducted using [OpenRouter](https://openrouter.ai/), which provides complete reasoning traces for open-source models and summarized reasoning for closed-source models.
+I evaluated seven state-of-the-art language models, including both open-source and closed-source reasoning models. The experiments were conducted using [OpenRouter](https://openrouter.ai/), which provides complete reasoning traces for open-source models and summarized reasoning for closed-source models.
 
 **Models evaluated:** 
 
@@ -461,7 +486,7 @@ The complete experimental code is available in the [`code/llms-probabilistic-rea
 
 Each experiment has a different prompt. Both of them are under the same file with different keys. The raw reasoning template is defined in <code>prompt_base</code> and the code generation template is defined in <code>prompt_base_code</code>.
 
-### "Raw" reasoning results
+<h3 id="raw-reasoning-results">Raw reasoning results</h3>
 
 <table>
 <thead>
@@ -537,51 +562,29 @@ Each experiment has a different prompt. Both of them are under the same file wit
 </tfoot>
 </table>
 
-All models successfully computed the correct probability. However, to be honest, that was not especially surprising. Reasoning models have shown great performances in math benchmarks these last years, and the inference problem is not especially complicated given the size of the network.
+All models successfully computed the correct probability. However, to be honest, that was not especially surprising. Reasoning models have shown great performance on math benchmarks in recent years, and the inference query of this blog post is not especially complicated given the size of the network. What is particularly interesting to me is **how each model approached the task**. 
 
-Now, what is particularly interesting to me is how each model approached the task. To analyze this, I used Gemini-3 Pro to read the resulting reasoning traces and compare them against the VE algorithm I followed above.
-
-<div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
-Note that for closed-source models (Claude, Gemini, GPT), we only have access to reasoning summaries rather than the full thinking trace so the analysis of closed source models is not as accurate.
-</div>
-<div style="height: 1.1em;"></div>
+To analyze their approaches, I reviewed the traces and used Gemini-3 Pro to compare them against the VE algorithm I manually applied above. Note that for closed-source models (Sonnet-4.5, Gemini-3, GPT-5.2), we only have access to reasoning summaries rather than the full thinking trace, so the analysis of closed-source models is not as accurate.
 
 
 **As a summary, none of the models used the formal Variable Elimination algorithm.** Instead, they relied on probability theory "first principles" (i.e., Chain Rule). All of them except GPT-5.2 essentially wrote out the formula for the full joint distribution and then summed it up. 
 
-DeepSeek, Kimi, Claude, and Gemini wrote the full joint distribution using the Chain Rule and brute-force the summation. While this approach is straightforward and easy to verify step-by-step, it has the downside of exponential growth. It forces to keep the full table on memory and forces the model re-calculate the same sub-problems multiple times (e.g., computing the probability of the parents for both the numerator and denominator separately). This redundancy is a major driver of token bloat.
+DeepSeek-R1, Kimi-K2, Sonnet-4.5, and Gemini-3 wrote the full joint distribution using the Chain Rule and brute-forced the summation. While this approach is straightforward and easy to verify step-by-step, it has the downside of exponential growth. It forces them to keep the full table in memory and forces the model to re-calculate the same sub-problems multiple times (e.g., computing the probability of the parents for both the numerator and denominator separately). This redundancy is a major driver of token bloat.
 
-GLM 4.7 and Qwen also summed over the full joint distribution but they realized that the numerator and denominator shared common terms (like $$P(V_0)P(V_1 \mid V_0)$$), so they explicitly calculated these "blocks" once and reused them, naming them for exmaple `term1`and `term2`. However, while they avoid re-multiplying the same numbers, they are still committed to a formula that grows **exponentially with the network size**.
+GLM-4.7 and Qwen-3 also summed over the full joint distribution, but they realized that the numerator and denominator shared common terms (like $$P(V_0)P(V_1 \mid V_0)$$), so they explicitly calculated these "blocks" once and reused them, naming them for example `term1` and `term2`. However, while they avoid re-multiplying the same numbers, they are still committed to a formula that grows **exponentially with the network size**.
 
-Finally, GPT-5.2 is the only one that truly changed the structure of the problem. It seems to have applied <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf"><b>Cutset conditioning</b></a>. The idea is to find the minimal set of nodes whose instantiation will make the remainer of the network "singly connected" (i.e., a polytree). Once we have a tree inference easy and efficient. In this case, GPT-5.2 correctly identified that GPT-5.2 correctly identified that $$V_0$$ acts as a cutset (of size 1). Instantiating $$V_0$$ breaks the connection between the "left" path ($$V_1$$) and "right" path ($$V_2$$). After it solved a small problem (finding $V_0$'s posterior) it then used that answer to solve the next small problem (finding $V_3$). To be honest, I was impressed by this. This is what I was expecting to see, LLMs using their reasoning to find "heuristics" to solve the inference problem. 
+Finally, GPT-5.2 is the only one that truly changed the structure of the problem. It seems to have applied <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf"><b>Cutset conditioning</b></a>. The idea is to find the minimal set of nodes whose instantiation will make the remainder of the network "singly connected" (i.e., a polytree). Once we have a tree, inference is easy and efficient. In this case, GPT-5.2 correctly identified that $$V_0$$ acts as a cutset (of size 1). Instantiating $$V_0$$ breaks the connection between the "left" path ($$V_1$$) and "right" path ($$V_2$$). After it solved a small problem (finding $$V_0$$'s posterior), it then used that answer to solve the next small problem (finding $$V_3$$). To be honest, I was impressed by this. This is what I was hoping to see: LLMs using their reasoning capabilities to find "heuristics" to solve the inference problem. 
 
 <div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
 <b>The "Arithmetic Anxiety" Phenomenon</b>
-
-It seems the choice of strategy had a direct impact on the model's "arithmetic confidence".
+<br><br>
+It seems the choice of strategy had a direct impact on the model's "arithmetic confidence". Basically, some of the models, usually those that approached the problem from a "brute-force" perspective, suffered from severe verification loops. 
+<br><br>
+For instance, <b>DeepSeek-R1</b> recalculated simple products dozens of times using different formats (decimals, fractions, scientific notation) to "be sure". <b>Sonnet 4.5</b> constantly interrupted itself to double-check divisions, catching and correcting its own precision errors. <b>Kimi-K2</b> was the most extreme case, performing manual long division to <b>over 100 decimal places</b> for a problem that only needed 4. Finally, Gemini-3 seems to have done some verification steps, but given the lack of full reasoning, we cannot be sure. It is probably not very anxious given the amount of tokens it generated.
 </div>
 <div style="height: 1.1em;"></div>
 
-<!-- 
-
-### The "Arithmetic Anxiety" Phenomenon
-
-The choice of strategy had a direct impact on the model's confidence. Because the **Direct Expansion** approach creates a messy web of numbers, models using it suffered from severe verification loops, which I call "arithmetic anxiety."
-
-**The Sufferers (DeepSeek, Kimi, Claude)**
-These models spent 70-90% of their tokens not on reasoning, but on checking their own math.
-*   **Kimi** was the extreme case (~39k tokens), performing manual long division to **over 100 decimal places** for a problem that only needed 4.
-*   **DeepSeek** recalculated simple products dozens of times using different formats (decimals, fractions, scientific notation) to "be sure."
-*   **Claude** constantly interrupted itself to double-check divisions, catching and correcting its own precision errors.
-
-**The Efficient Ones (Qwen, Gemini, GPT-5.2)**
-*   **Qwen (7.6k tokens)** avoided loops by using clever estimation. It would calculate a rough estimate (like 0.79) and checking if the numerator/denominator ratio matched it closely, rather than deriving it from scratch digit-by-digit.
-*   **Gemini (7.5k tokens)** appeared to run internal verification passes ("Confirming...") but kept the output structured without looping.
-*   **GPT-5.2** avoided anxiety by simplifying the math itself. By using the Posterior Decomposition method, it didn't *have* complex sums to verify, allowing it to use clean rational arithmetic (fractions) efficiently. 
-
--->
-
-### Code generation results
+<h3 id="code-generation-results">Code generation results</h3>
 
 <table>
 <thead>
@@ -657,11 +660,15 @@ These models spent 70-90% of their tokens not on reasoning, but on checking thei
 </tfoot>
 </table>
 
-All models achieved the correct numerical answer in their code implementations. However, despite the prompt esplictly mentioning the possibility to write code for `pgmpy` and `pyAgrum`, **none of the models used these established BN libraries**. Instead, they all the same pattern: use "raw" reasoning to get the result and then write vanilla Python code to print the result. Some did the final normalization too.
+All models achieved the correct numerical answer. However, despite the prompt explicitly mentioning the possibility to write code for `pgmpy` and `pyAgrum`, **none of the models used these established BN libraries**. Instead, they all followed the same pattern: first reason through the problem mentally using the chain rule, and then write vanilla Python code that implements the same formula.
 
-To be honest, I was a bit puzzled about this. It is possible that a different prompt would fix this possible bias. From my personal tests I know they are aware of these libraries and know how to write code but they may not have enough expose for them to have confidence. They may also find (incrrectly in my opinion) that direct calculations are more explainable and debuggable (this was Sonnet 4 answer when I asked about it, who knows)
+Interestingly, **all models used the chain rule approach**, even GPT-5.2 which had applied cutset conditioning in the raw reasoning experiment. None implemented Variable Elimination or any other inference algorithm. The reasoning traces show explicit chain rule formulations like "P(V0, V1, V3) = P(V0) × P(V1|V0) × P(V3|V0, V1)" followed by enumeration over $$V_0$$.
 
-For comparison sake, here's how the problem should ideally be solved using `pgmpy`. This is what I have considered ground truth for this experiment:
+Looking at the traces, most models computed the answer (or at least verified their approach) mentally before writing any code. Kimi-K2 and GPT-5.2 were the most extreme: they performed the full calculation by hand, including manual long division to many decimal places. Their code then used high-precision arithmetic (`fractions.Fraction` for Kimi-K2, `decimal.Decimal` with 50-digit precision for GPT-5.2), essentially double-checking their mental work rather than delegating the computation.
+
+In short, the models treated this as a "reasoning task that happens to output code" rather than a "coding task". They did not leverage the code to try a different approach (like using a BN library or implementing VE) or to avoid mental computation. From my personal tests, I know these models are aware of pgmpy and pyAgrum and can write code with them, but they seem to prefer direct calculations, perhaps finding them more explainable (this was Gemini-3's answer when I asked about it).
+
+For comparison's sake, here's how the problem should ideally be solved using `pgmpy`. This is what I have considered ground truth for this experiment:
 
 ```python
 from pgmpy.inference import VariableElimination
@@ -730,23 +737,36 @@ prob_v3_s1_given_v1_s0 = query_result.values[1]  # Index 1 corresponds to V3=s1
 print(prob_v3_s1_given_v1_s0)
 ```
 
-## Conclusions
+<h2 id="conclusion">Conclusion</h2>
 
-https://www.youtube.com/watch?v=AWqvBdqCAAE&t=86s
+This post explored how current frontier LLMs handle probabilistic inference on Bayesian networks. All seven models successfully computed the correct probability, which is encouraging. However, the more interesting finding is **how** they approached the problem: none of them used the formal Variable Elimination algorithm. Instead, they relied on probability theory first principles, writing out the full joint distribution and summing over it.
 
-Video from MLST where they discuss why it is interesting to better understand if LLMs can (without tools) do certain computations correctly. Some people have focused on the arithmetic side, and it is true that this task has a lot of "arithmetic complexity", but it is an interesting exercise to know how they think.
+In the raw reasoning experiment, most models (DeepSeek-R1, Kimi-K2, Sonnet-4.5, Gemini-3) took a brute-force approach that, while correct, scales exponentially with network size. GLM-4.7 and Qwen-3 showed some optimization by reusing common terms. GPT-5.2 stood out by applying what appears to be cutset conditioning, a more principled approach that decomposes the problem into smaller subproblems.
 
-A different way to test the capabilities of these models is to evaluate their steps only (without arithmetic operations) and analyze if the proposed elimination order is better than curren heuristics in terms of max factor size, which translates in fewer or more multiplications and sums.
+The code generation experiment revealed two interesting patterns. First, despite being prompted to use established BN libraries like `pgmpy` or `pyAgrum`, all models wrote vanilla Python code implementing the chain rule, even GPT-5.2 which had used cutset conditioning in raw reasoning. Second, most models computed the answer mentally before writing code, treating it as a "reasoning task that happens to output code" rather than delegating computation to Python. This suggests that LLMs may not yet reliably leverage specialized tools or code execution even when explicitly offered.
 
-<!-- 
+**Limitations of this analysis.** This was a small-scale exploration with a single query on a 4-node network. The query itself is not especially complex given the network size. I also did not evaluate what happens when LLMs are given tools via function calling, which would test a more agentic approach to problem-solving. A systematic evaluation would require varying network sizes, query complexities, and prompting strategies.
 
-Aparte de las conclusiones que obtenga, comentar como pasos siguientes es que estoy escribiendo un paper con Bojan donde hacemos un estudio sistematizado de este problema. En parte esta inspirado por el trabajo de Nafar.
+**Related work.** I am not the first to investigate LLM capabilities on probabilistic reasoning tasks. Two recent papers are particularly relevant:
 
-We extend their study by means of a more comprehensive analysis of different query complexities. 
-In addition, we consider powerful, reasoning models. 
-We want to establish a baseline, where there is no specific prompting and where the underlying model is given explicitly.
-We also carefully consider the query complexity, not just in terms of the computational cost of variable elimiantion,
-but also in terms of relevance complexity [@druzdzel1993]. 
+- Nafar et al. (2025) introduced the <a href="https://arxiv.org/abs/2402.09614"><u>Bayesian Linguistic Inference Dataset (BLInD)</u></a> to test probabilistic reasoning in LLMs. They found that models still exhibit significant difficulties with this type of reasoning and proposed strategies that map problems to formal representations like Python code and probabilistic logical programming.
 
-Creo que es importante comentar que no hemos evaluado que ocurre cuando damos herramientas a los LLMs, ver si son capaces de resolver el problema mas rapido. Creo que en tal caso nos estariamos introduciendo mas en aspectos tipo agente con function calling y multiples pasos, aunque se podria evaluar tambien mediante un unico paso, forzandoles a 1 try.
--->
+- Paruchuri et al. (2024) evaluated LLMs on <a href="https://arxiv.org/abs/2406.12830"><u>probabilistic reasoning over statistical distributions</u></a>, finding that models can make inferences about distributions and benefit from real-world context and example shots.
+
+**Looking ahead.** Understanding how LLMs reason about probability is a stepping stone toward evaluating their capabilities on more complex decision problems. If they struggle with basic inference, expecting them to solve influence diagrams would be premature. Now that I have a baseline for probabilistic inference, the natural next step is to return to decision problems and see how these same models handle expected utility calculations and optimal policy identification.
+
+<h2 id="references">References</h2>
+
+1. Rodriguez, F. (2025, July 4). <a href="https://ferjorosa.github.io/blog/2025/07/04/decision-theory-II.html"><u>Introduction to decision theory: Part II</u></a>.
+<br><br>
+2. Rodriguez, F. (2025, August 7). <a href="https://ferjorosa.github.io/blog/2025/08/07/decision-theory-III.html"><u>Introduction to decision theory: Part III</u></a>.
+<br><br>
+4. Koller, D., & Friedman, N. (2009). <a href="http://mcb111.org/w06/KollerFriedman.pdf"><u>Probabilistic Graphical Models: Principles and Techniques</u></a>. MIT Press.
+<br><br>
+5. Cutset conditioning lecture notes from Imperial College London. <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf"><u>PDF link</u></a>.
+<br><br>
+6. Nafar, A., Venable, K. B., & Kordjamshidi, P. (2025). <a href="https://arxiv.org/abs/2402.09614"><u>Reasoning over uncertain text by generative large language models</u></a>. In Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 39, No. 23, pp. 24911-24920).
+<br><br>
+7. Paruchuri, A., Garrison, J., Liao, S., et al. (2024). <a href="https://arxiv.org/abs/2406.12830"><u>What are the odds? Language models are capable of probabilistic reasoning</u></a>. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing (pp. 11712-11733).
+<br><br>
+8. pgmpy documentation: <a href="https://pgmpy.org/"><u>https://pgmpy.org/</u></a>.
