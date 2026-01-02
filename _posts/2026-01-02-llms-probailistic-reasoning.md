@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "How capable are language models at probabilistic reasoning?"
+title: "How do language models solve Bayesian network inference?"
 date: 2026-01-02
 categories: blog
-description: "Exploring how frontier LLMs approach probabilistic inference on Bayesian networks, comparing their reasoning strategies against the Variable Elimination algorithm."
+description: "Exploring how frontier LLMs approach probabilistic inference on Bayesian networks, comparing their reasoning strategies against the traditional Variable Elimination algorithm."
 tags: [Probabilistic Reasoning]
 ---
 
@@ -518,25 +518,25 @@ Each experiment uses a different prompt, both defined in the [`prompts.yaml`](ht
 <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Open-source</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/deepseek_deepseek-r1-0528_20251226_164351.md">DeepSeek-R1-0528</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/deepseek_deepseek-r1-0528_20251226_164351.md">DeepSeek-R1-0528</a></td>
 <td>0.789967</td>
 <td>1031</td>
 <td>14786</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/moonshotai_kimi-k2-thinking_20251213_171713.md">Kimi-K2-thinking</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/moonshotai_kimi-k2-thinking_20251213_171713.md">Kimi-K2-thinking</a></td>
 <td>0.78996796</td>
 <td>987</td>
 <td>39224</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/qwen_qwen3-235b-a22b-thinking-2507_20251226_172229.md">Qwen3-235B-A22B-thinking-2507</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/qwen_qwen3-235b-a22b-thinking-2507_20251226_172229.md">Qwen3-235B-A22B-thinking-2507</a></td>
 <td>0.7900</td>
 <td>1079</td>
 <td>7623</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/z-ai_glm-4.7_20251226_170612.md">GLM-4.7</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/z-ai_glm-4.7_20251226_170612.md">GLM-4.7</a></td>
 <td>0.78997</td>
 <td>1044</td>
 <td>12432</td>
@@ -545,19 +545,19 @@ Each experiment uses a different prompt, both defined in the [`prompts.yaml`](ht
 <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Closed-source</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/anthropic_claude-sonnet-4.5_20251226_173811.md">Claude Sonnet-4.5</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/anthropic_claude-sonnet-4.5_20251226_173811.md">Claude Sonnet-4.5</a></td>
 <td>0.7899686793</td>
 <td>1188</td>
 <td>18721</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/google_gemini-3-pro-preview_20251226_175749.md">Gemini-3-Pro</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/google_gemini-3-pro-preview_20251226_175749.md">Gemini-3-Pro</a></td>
 <td>0.7900</td>
 <td>1155</td>
 <td>7576</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/openai_gpt-5.2_20251226_180834.md">GPT-5.2-high</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/raw_reasoning/openai_gpt-5.2_20251226_180834.md">GPT-5.2-high</a></td>
 <td>0.789967957981</td>
 <td>1029</td>
 <td>10004</td>
@@ -582,7 +582,7 @@ DeepSeek-R1, Kimi-K2, Sonnet-4.5, and Gemini-3 wrote the full joint distribution
 
 GLM-4.7 and Qwen-3 also summed over the full joint distribution, but they realized that the numerator and denominator shared common terms, like $$P(\textcolor{purple}{V_0})P(\textcolor{purple}{V_1} \mid \textcolor{purple}{V_0})$$, so they explicitly calculated these "blocks" once and reused them, naming them for example `term1` and `term2`. However, while they avoid re-multiplying the same numbers, they are still committed to a formula that grows **exponentially with the network size**.
 
-Finally, GPT-5.2 is the only one that truly changed the structure of the problem. It seems to me that it has applied <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf"><b>Cutset conditioning</b></a>. The idea is to find the minimal set of nodes whose instantiation will make the remainder of the network "singly connected" (i.e., a polytree). Once we have a tree, inference is easy and efficient. In this case, GPT-5.2 correctly identified that $$\textcolor{purple}{V_0}$$ acts as a cutset (of size 1). Instantiating $$V_0$$ breaks the connection between the "left" path ($$\textcolor{purple}{V_1}$$) and "right" path ($$\textcolor{purple}{V_2}$$). After it solved a small problem (finding $$\textcolor{purple}{V_0}$$'s posterior), it then used that answer to solve the next small problem (finding $$\textcolor{purple}{V_3}$$). To be honest, I was impressed by this. This is what I was hoping to see: **LLMs using their reasoning capabilities to find "heuristics" to simplify the inference problem**. 
+Finally, GPT-5.2 is the only one that truly changed the structure of the problem. It seems to me that it has applied <a href="https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/IDAPILecture09.pdf">Cutset conditioning</a>. The idea is to find the minimal set of nodes whose instantiation will make the remainder of the network "singly connected" (i.e., a polytree). Once we have a tree, inference is easy and efficient. In this case, GPT-5.2 correctly identified that $$\textcolor{purple}{V_0}$$ acts as a cutset (of size 1). Instantiating $$V_0$$ breaks the connection between the "left" path ($$\textcolor{purple}{V_1}$$) and "right" path ($$\textcolor{purple}{V_2}$$). After it solved a small problem (finding $$\textcolor{purple}{V_0}$$'s posterior), it then used that answer to solve the next small problem (finding $$\textcolor{purple}{V_3}$$). To be honest, I was impressed by this. This is what I was hoping to see: **LLMs using their reasoning capabilities to find "heuristics" to simplify the inference problem**. 
 <br>
 
 <div style="background-color: #e0f7fa; padding: 10px; border-radius: 5px;">
@@ -618,25 +618,25 @@ For instance, DeepSeek-R1 recalculated simple products dozens of times using dif
 <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Open-source</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/deepseek_deepseek-r1-0528_20251227_193907.md">DeepSeek-R1-0528</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/deepseek_deepseek-r1-0528_20251227_193907.md">DeepSeek-R1-0528</a></td>
 <td>0.789968</td>
 <td>1048</td>
 <td>2793</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/moonshotai_kimi-k2-thinking_20251227_194650.md">Kimi-K2-thinking</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/moonshotai_kimi-k2-thinking_20251227_194650.md">Kimi-K2-thinking</a></td>
 <td>0.789967957981</td>
 <td>963</td>
 <td>27339</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/qwen_qwen3-235b-a22b-thinking-2507_20251227_200602.md">Qwen3-235B-A22B-thinking-2507</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/qwen_qwen3-235b-a22b-thinking-2507_20251227_200602.md">Qwen3-235B-A22B-thinking-2507</a></td>
 <td>0.7900</td>
 <td>1097</td>
 <td>13353</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/z-ai_glm-4.7_20251227_195156.md">GLM-4.7</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/z-ai_glm-4.7_20251227_195156.md">GLM-4.7</a></td>
 <td>0.7899679579812788</td>
 <td>1064</td>
 <td>5663</td>
@@ -645,19 +645,19 @@ For instance, DeepSeek-R1 recalculated simple products dozens of times using dif
 <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">Closed-source</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/anthropic_claude-sonnet-4.5_20251227_193625.md">Claude Sonnet-4.5</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/anthropic_claude-sonnet-4.5_20251227_193625.md">Claude Sonnet-4.5</a></td>
 <td>0.7899679579812788</td>
 <td>1205</td>
 <td>19864</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/google_gemini-3-pro-preview_20251227_163622.md">Gemini-3-Pro</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/google_gemini-3-pro-preview_20251227_163622.md">Gemini-3-Pro</a></td>
 <td>0.7899679579812788</td>
 <td>1167</td>
 <td>5885</td>
 </tr>
 <tr>
-<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_code_md/openai_gpt-5.2_20251227_193226.md">GPT-5.2-high</a></td>
+<td><a href="https://github.com/ferjorosa/ferjorosa.github.io/blob/main/code/llms-probabilistic-reasoning/results_md/code_generation/openai_gpt-5.2_20251227_193226.md">GPT-5.2-high</a></td>
 <td>0.7899679580</td>
 <td>1049</td>
 <td>11799</td>
@@ -779,13 +779,13 @@ print(prob_v3_s1_given_v1_s0)
 
 Writing code using the chain rule for a small network is not "bad" per se, but it may suggest that these models are not accustomed to using BN libraries. This could be an issue for more complex queries, where translating the problem manually becomes error-prone or even infeasible.
 
-A more significant observation is that all models manually solved the problem before writing the code. This redundancy, combined with the verbose chain rule approach, generates a substantial number of tokens. Since reasoning LLMs have limited context windows and generation speeds (often 50-100 tokens/s), reducing this manual verification would make the process far more efficient.
+A more significant observation is that every model chose to solve the inference problem manually before writing a single line of code. This "double-work", combined with the verbose chain-rule derivation, leads to token bloat. Since reasoning LLMs have limited context windows and generation speeds (often 50-100 tokens/s), reducing this manual verification would make the process far more efficient. For instance, some responses took over 10-15 minutes to complete purely due to this verbosity.
 
 Now, I don't want to be all "doom and gloom". First, this is based on a single example, and **more experiments are needed**. Second, I think these results are very interesting and hint at notable opportunities for optimization (e.g., **training LLMs to use these BN libraries more often**), especially as we move from pure LLMs to agents with iterative reasoning processes and tools.
 
 <h2 id="conclusion">Conclusion</h2>
 
-The key takeaway from this exploration is that **LLMs can solve probabilistic inference problems, but they do so inefficiently**. Rather than applying BN algorithms like VE, they seem to prefer to write the chain rule formula and brute-force the arithmetic. This works for small networks but does not scale.
+The key takeaway from this exploration is that **LLMs can solve probabilistic inference problems, but they currently do so inefficiently**. Rather than applying BN algorithms like VE, they seem to prefer to write the chain rule formula and brute-force the arithmetic. This works for small networks but does not scale.
 
 **Limitations.** This was a small-scale exploration with a single query on a 4-node network. A systematic evaluation would require varying network sizes, query complexities, and prompting strategies. I also did not test function calling, which would enable a more agentic approach.
 
