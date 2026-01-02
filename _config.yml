@@ -39,6 +39,12 @@ header_pages:
   - about.md
   - archive.md
 
+exclude:
+  - code/
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+
 defaults:
   - scope:
       path: ""
