@@ -1,0 +1,105 @@
+system_prompt: |
+  You are an assistant that helps with probability reasoning calculations. You will be given some conditional probability tables (CPTs) and a query.
+
+  ## CPT Format Guide
+
+  ### 1. Marginal CPTs (nodes with no parents)
+  ```
+  +----------------+------------+
+  | Node(Value)    | Probability|
+  +----------------+------------+
+  | A(yes)         | 0.3        |
+  +----------------+------------+
+  | A(no)          | 0.7        |
+  +----------------+------------+
+  ```
+  Each row means **P(Node=Value) = Probability**.
+
+  ### 2. Conditional CPTs (nodes with one or more parents)
+  - The **first rows** list all parent nodes
+  - Each **column** represents one combination of parent values
+  - **Child rows** give P(child=value | parent assignment) for that column
+  - Probabilities in each column **sum to 1**
+
+  **Example:**
+  ```
+  +----------+----------+----------+----------+----------+
+  | A        | A(yes)   | A(yes)   | A(no)    | A(no)    |
+  +----------+----------+----------+----------+----------+
+  | B        | B(yes)   | B(no)    | B(yes)   | B(no)    |
+  +----------+----------+----------+----------+----------+
+  | C(yes)   | 0.8      | 0.6      | 0.4      | 0.1      |
+  +----------+----------+----------+----------+----------+
+  | C(no)    | 0.2      | 0.4      | 0.6      | 0.9      |
+  +----------+----------+----------+----------+----------+
+  ```
+  **Interpretation:** Each column represents one parent assignment. Child rows give probabilities given that parent assignment.
+
+prompt_base: |
+  ## Task
+
+  Below you will find conditional probability tables and a query. Compute the exact probability for the query.
+
+  **Conditional Probability Tables (CPTs):**
+
+  {cpts}
+
+  ## Query
+
+  Compute the exact probability for the following query:
+
+  {query}
+
+  ## Output Format
+
+  Provide your final answer in this EXACT format:
+
+  Final Answer: P(<target_node>=<value> | <evidence>) = <numeric_probability>
+
+  Where <numeric_probability> is a decimal number between 0 and 1 (e.g., 0.1234).
+
+  CRITICAL REQUIREMENTS:
+  - The numeric probability must be a decimal number between 0 and 1
+  - Use EXACTLY the format: "Final Answer: P(...) = 0.1234"
+  - Do NOT include any additional text, explanations, or calculations after the numeric value
+  - If the probability is 0, write "0.0" not "0"
+  - If the probability is 1, write "1.0" not "1"
+  - Use at least 4 decimal places for precision
+  - The line must end immediately after the numeric value
+  - No trailing spaces, periods, or other characters
+
+prompt_base_code: |
+  ## Task
+
+  Below you will find conditional probability tables and a query. Write Python code to compute the exact probability for the query.
+
+  **Conditional Probability Tables (CPTs):**
+
+  {cpts}
+
+  ## Query
+
+  Write Python code to compute the exact probability for the following query:
+
+  {query}
+
+  ## Output Format
+
+  Provide your Python code in this EXACT format:
+
+  <code>
+  # Your Python code here
+  # The code should output ONLY the numeric probability (a decimal number between 0 and 1)
+  # Use print() to output the result
+  </code>
+
+  CRITICAL REQUIREMENTS:
+  - Output your code between <code></code> tags
+  - The code must output ONLY the numeric probability when executed (nothing else)
+  - The probability must be a decimal number between 0 and 1
+  - Use print() to output the result (e.g., print(0.1234))
+  - You have access to standard Python libraries, pgmpy, and pyAgrum
+  - The code should be executable and produce only the numeric value
+  - Use at least 4 decimal places for precision
+  - If the probability is 0, output "0.0" not "0"
+  - If the probability is 1, output "1.0" not "1"
