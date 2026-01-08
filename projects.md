@@ -6,6 +6,31 @@ nav: Projects
 ---
 
 <style>
+/* Hide page title for comparison */
+.page-content h1:first-of-type:not(.project-title),
+.page-header h1,
+h1.page-heading {
+  display: none;
+}
+/* Match page title size with blog page */
+.page-content h1:not(.project-title),
+h1.page-heading {
+  font-size: 2rem;
+  font-weight: 400;
+}
+/* Align project list with blog post list - match home layout spacing */
+.page-content {
+  margin-top: 0;
+  padding-top: 0;
+}
+.project-list {
+  margin-top: 0;
+  padding-top: 0;
+}
+.project-item:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
 .project-item {
   display: flex;
   margin-bottom: 3rem;
@@ -34,7 +59,7 @@ nav: Projects
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 400;
 }
 .project-description {
   color: #666;
@@ -43,7 +68,7 @@ nav: Projects
 .project-link {
   display: inline-block;
   margin-top: 10px;
-  font-weight: bold;
+  font-weight: 400;
   color: #007bff; /* Example blue, matches typical links */
   text-decoration: none;
 }
@@ -73,27 +98,26 @@ nav: Projects
       <img src="/assets/projects/bne_hemeroteca/BNE_logo.png" alt="BNE Hemeroteca OCR">
     </div>
     <div class="project-content">
-      <h3 class="project-title">BNE Hemeroteca OCR Dataset (XIX Century)</h3>
+      <h3 class="project-title">19th-Century Spanish OCR Dataset</h3>
       <div class="project-description">
         <p>
-          Full text OCR and page images for 19th century Spanish publications from the 
-          <a href="https://hemerotecadigital.bne.es/" target="_blank">Biblioteca Nacional de España (BNE) - Hemeroteca Digital</a>. 
-          This dataset contains over 40,000 PDF documents, more than 800,000 pages, and over 800 million text tokens.
+          A dataset of over 40,000 PDF documents comprising more than 800,000 pages and over 800 million text tokens, drawn from 19th-century Spanish publications in the 
+          <a href="https://hemerotecadigital.bne.es/" target="_blank">Biblioteca Nacional de España (BNE) – Hemeroteca Digital</a>. 
         </p>
-        <p>
-          Processed using <a href="https://huggingface.co/allenai/olmOCR-2-7B-1025-FP8" target="_blank">allenai/olmOCR-2-7B-1025-FP8</a>, 
-          the dataset covers 20 thematic collections from the 19th century, including literature, science, politics, and culture. 
-          It enables OCR benchmarking, text retrieval, RAG systems, and LLM pretraining on historical Spanish text.
-        </p>
-        <div style="margin-top: 10px;">
-          <a href="https://huggingface.co/datasets/ferjorosa/bne-hemeroteca-ocr-xix" target="_blank" title="HuggingFace Dataset" style="margin-right: 15px;">
-            <img src="https://huggingface.co/front/assets/huggingface_logo.svg" 
-                 alt="HuggingFace" 
-                 style="width:24px; height:24px; vertical-align:middle;">
-          </a>
-          <a href="https://github.com/ferjorosa/bne-hemeroteca-data" target="_blank" title="GitHub">
-            <img src="https://cdn.simpleicons.org/github" alt="GitHub" style="width:24px; height:24px;">
-          </a>
+        <div style="margin-top: 15px;">
+          <div style="margin-bottom: 8px; display: flex; gap: 20px; flex-wrap: wrap;">
+            <!-- <a href="#" class="project-link">Blog post</a> -->
+            <a href="https://huggingface.co/datasets/ferjorosa/bne-hemeroteca-ocr-xix" target="_blank" class="project-link" style="display: inline-flex; align-items: center; gap: 8px;">
+              <img src="https://huggingface.co/front/assets/huggingface_logo.svg" 
+                   alt="HuggingFace" 
+                   style="width:20px; height:20px;">
+              Dataset
+            </a>
+            <a href="https://github.com/ferjorosa/bne-hemeroteca-data" target="_blank" class="project-link" style="display: inline-flex; align-items: center; gap: 8px;">
+              <img src="https://cdn.simpleicons.org/github" alt="GitHub" style="width:20px; height:20px;">
+              Code
+            </a>
+          </div>
         </div>
       </div>
     </div>
