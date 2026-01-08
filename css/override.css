@@ -3,6 +3,17 @@ hr {
   margin-bottom: 20px;
 }
 
+.site-title {
+  font-size: 18px !important;
+}
+
+/* Match page title sizes - Projects and Blog should have same size */
+h1.page-heading,
+.page-content h1:first-of-type:not(.project-title) {
+  font-size: 2rem;
+  font-weight: 400;
+}
+
 /* Gradio-specific CSS isolation (only applied when Gradio is present) */
 
 /* Isolate Gradio container to prevent CSS leakage */
