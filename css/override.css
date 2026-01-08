@@ -3,6 +3,10 @@ hr {
   margin-bottom: 20px;
 }
 
+.site-title {
+  font-size: 18px !important;
+}
+
 /* Gradio-specific CSS isolation (only applied when Gradio is present) */
 
 /* Isolate Gradio container to prevent CSS leakage */
