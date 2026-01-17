@@ -48,6 +48,47 @@ title: Fernando Rodriguez
     width: 24px;
     height: 24px;
   }
+  .project-item {
+    display: flex;
+    margin-top: 1rem;
+    align-items: flex-start;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+  .project-image {
+    flex: 0 0 120px;
+    margin-right: 25px;
+  }
+  .project-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  .project-content {
+    flex: 1;
+  }
+  .project-title {
+    margin-top: 0;
+    margin-bottom: 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .project-description {
+    color: #666;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 768px) {
+    .project-item {
+      flex-direction: column;
+    }
+    .project-image {
+      margin-right: 0;
+      margin-bottom: 15px;
+      flex: 0 0 auto;
+      width: 120px;
+    }
+  }
 </style>
 
 <div class="profile-header">
@@ -86,6 +127,9 @@ title: Fernando Rodriguez
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
         </svg>
         </a>
+        <a href="https://cynosural.org/" title="Cynosural AI" target="_blank">
+        <img src="/assets/cynosural/cynosural_logo_small.png" alt="Cynosural AI" style="width:27px; height:27px; vertical-align:middle;">
+        </a>
     </div>
   </div>
 </div>
@@ -94,34 +138,12 @@ I work as a Lead AI Engineer at <a href="https://www.ailylabs.com/">Aily Labs</a
 
 I hold a PhD in Artificial Intelligence from the Polytechnic University of Madrid, where I worked on learning Bayesian networks with latent variables for clustering and density estimation. My advisors were [Pedro Larrañaga](https://dia.fi.upm.es/personaldia/pedro-larranaga/) and [Concha Bielza](https://muia.dia.fi.upm.es/es/personal/bielza-lozoya-concepcion/).
 
-In my spare time, I work on open-source projects (like doing [OCR dataset on historical data](https://ferjorosa.github.io/projects/). I like to write about AI and other topics on my [blog](https://ferjorosa.github.io/blog/). I also enjoy 3D printing and painting miniatures, mostly from the Warhammer universe.
+In my spare time, I run [Cynosural AI](https://cynosural.org/), an open-science initiative focused on projects that benefit society. It is currently focused on making [Spanish historical archives more accessible](https://huggingface.co/datasets/ferjorosa/bne-hemeroteca-ocr-xix). I also write about AI on my [blog](https://ferjorosa.github.io/blog/) and enjoy 3D printing and painting <a href="https://x.com/ferjorosa/status/1936136612317938016">Warhammer miniatures</a>.
 
----
-
-### AI Research Setup
-
-I bought my PC pre-built from <a href="https://epical-q.com/">Epical-Q</a> and simply added another SSD.
-
-<img src="/assets/2026-01-17-code-fix-wifi/Epical-Q-ProBex-1.webp" alt="Epical-Q ProBex PC" style="height: 300px; width: auto; max-width: 100%; display: block; margin: 0 auto;">
-
-<div style="text-align: center; margin-top: 10px;"><em>This bad boy can generate so much heat</em></div>
-
-**Processing Power:**
-- **CPU**: Intel Core i9 14900KF
-- **GPU**: NVIDIA RTX 5090 32GB (MSI Ventus)
-- **Memory**: 2x 32GB DDR5 6000MHz
-- **Storage**: 2x Samsung 990 EVO Plus 2TB NVMe PCIe 4.0
-
-**System:**
-- **Motherboard**: MSI Z790 GAMING PLUS WIFI D5
-- **Cooling**: Valkyrie-A 360mm AIO Liquid Cooling
-- **Power Supply**: ASUS ROG THOR 1200W 80+ Platinum Modular
-- **Case**: Cougar Duoface PRO RGB Black
-
-### 3D Printing Setup
-
-I use a Bambu Lab A1 Mini. It is easy to use with great output quality, though I'd recommend having a separate room since it generates a moderate level of noise.
-
-<img src="/assets/2026-01-17-code-fix-wifi/bambu-lab-a1-mini.png" alt="Bambu Lab A1 Mini" style="height: 300px; width: auto; max-width: 100%; display: block; margin: 0 auto;">
-
-<div style="text-align: center; margin-top: 10px;"><em>Little noise machine</em></div>
+<!-- <div style="text-align: center; margin-top: 1.5rem;">
+  <a href="https://cynosural.org/" target="_blank">
+    <img src="/assets/cynosural/cynosural_logo_v4.png" alt="Cynosural AI" style="width: 120px; height: auto; opacity: 0.9; transition: opacity 0.2s;">
+  </a>
+<br>
+  Cynosural AI
+</div> -->
