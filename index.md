@@ -56,8 +56,15 @@ title: Fernando Rodriguez
   </div>
   <div class="profile-desc">
     <h1>Fernando Rodriguez Sanchez</h1>
-    <h2><i>I like to create cool things</i> 🤖 🏞️ 🖌️</h2>
+    <h2><i>Building cool things and writing about them</i></h2>
     <div class="social-icons">
+        <a href="https://scholar.google.es/citations?hl=es&user=iYjOAYQAAAAJ" title="Google Scholar" target="_blank" style="margin-right: 10px;">
+        <svg role="img" viewBox="0 0 24 24" style="width:24px;vertical-align:middle; fill: #4285F4;" 
+                xmlns="http://www.w3.org/2000/svg">
+            <title>Google Scholar</title>
+            <path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/>
+        </svg>
+        </a>
         <a href="https://github.com/ferjorosa" title="GitHub"><img src="https://cdn.simpleicons.org/github" alt="GitHub"></a>
         <a href="https://huggingface.co/ferjorosa" title="HuggingFace">
         <img src="https://huggingface.co/front/assets/huggingface_logo.svg" 
@@ -71,55 +78,50 @@ title: Fernando Rodriguez
             <title>Twitter</title>
             <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
         </svg>
-        </a>      
-        <!-- <a href="https://linkedin.com/in/ferjorosa" title="LinkedIn"><img src="https://api.iconify.design/simple-icons/linkedin.svg?color=%230077b5" alt="LinkedIn"></a> -->
+        </a>
+        <a href="https://www.linkedin.com/in/ferjorosa/" title="LinkedIn" target="_blank" style="margin-right: 10px;">
+        <svg role="img" viewBox="0 0 24 24" style="width:24px;vertical-align:middle; fill: #0077B5;" 
+                xmlns="http://www.w3.org/2000/svg">
+            <title>LinkedIn</title>
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        </a>
     </div>
   </div>
 </div>
 
-I am currently a Senior AI Engineer at Aliy Labs, where I focus on Natural Language Processing and Agentic Reasoning. My work primarily involves integrating Large Language Models with Probabilistic Graphical Models. Before joining Aliy Labs, I worked as a Senior Research Scientist at Nielsen IQ.
+I work as a Lead AI Engineer at <a href="https://www.ailylabs.com/">Aily Labs</a>, where I focus on Software Engineering and Agentic Reasoning. Before joining Aily Labs, I worked as a Senior Research Scientist at Nielsen IQ on Natural Language Processing.
 
-I hold a PhD in Artificial Intelligence from the Polytechnic University of Madrid. My PhD focused on on learning Bayesian networks with multiple latent variables for clustering and density estimation of  continuous, categorical, and mixed data. My advisors were [Pedro Larrañaga](https://dia.fi.upm.es/personaldia/pedro-larranaga/) and [Concha Bielza](https://muia.dia.fi.upm.es/es/personal/bielza-lozoya-concepcion/).
+I hold a PhD in Artificial Intelligence from the Polytechnic University of Madrid, where I worked on learning Bayesian networks with latent variables for clustering and density estimation. My advisors were [Pedro Larrañaga](https://dia.fi.upm.es/personaldia/pedro-larranaga/) and [Concha Bielza](https://muia.dia.fi.upm.es/es/personal/bielza-lozoya-concepcion/).
 
-I enjoy 3D printing and painting miniatures, mostly from the Warhammer universe.
+In my spare time, I work on open-source projects (like doing [OCR dataset on historical data](https://ferjorosa.github.io/projects/). I like to write about AI and other topics on my [blog](https://ferjorosa.github.io/blog/). I also enjoy 3D printing and painting miniatures, mostly from the Warhammer universe.
 
-### Teaching
+---
 
-45+ lecture hours in Machine Learning, Deep Learning and Generative AI, including:
+### AI Research Setup
 
-- [LangChain for Python Development](https://openwebinars.net/cursos/langchain-python/) (OpenWebinars, 2024)
+I bought my PC pre-built from <a href="https://epical-q.com/">Epical-Q</a> and simply added another SSD.
 
-- Deep Learning with TensorFlow (Tokio School, 2023)
+<img src="/assets/2026-01-17-code-fix-wifi/Epical-Q-ProBex-1.webp" alt="Epical-Q ProBex PC" style="height: 300px; width: auto; max-width: 100%; display: block; margin: 0 auto;">
 
-- Machine Learning with Python (Telefónica Talentum, 2020)
+<div style="text-align: center; margin-top: 10px;"><em>This bad boy can generate so much heat</em></div>
 
-<!-- <a href="https://openwebinars.net/cursos/langchain-python/" target="_blank">
-  <img src="https://img.youtube.com/vi/MUqpC-F1FIk/maxresdefault.jpg" alt="Curso Desarrollo de Apps Impulsadas por LangChain en Python" width="180" style="float:left; margin-right:15px;"/>
-</a>
+**Processing Power:**
+- **CPU**: Intel Core i9 14900KF
+- **GPU**: NVIDIA RTX 5090 32GB (MSI Ventus)
+- **Memory**: 2x 32GB DDR5 6000MHz
+- **Storage**: 2x Samsung 990 EVO Plus 2TB NVMe PCIe 4.0
 
-<div style="clear: both;"></div>
-<br> -->
+**System:**
+- **Motherboard**: MSI Z790 GAMING PLUS WIFI D5
+- **Cooling**: Valkyrie-A 360mm AIO Liquid Cooling
+- **Power Supply**: ASUS ROG THOR 1200W 80+ Platinum Modular
+- **Case**: Cougar Duoface PRO RGB Black
 
-### Publications
+### 3D Printing Setup
 
-<!-- #### PhD Thesis
+I use a Bambu Lab A1 Mini. It is easy to use with great output quality, though I'd recommend having a separate room since it generates a moderate level of noise.
 
-* **Rodríguez-Sánchez, F.** (2021). [Multi-partition clustering of mixed data with Bayesian networks](https://oa.upm.es/72625/). -->
+<img src="/assets/2026-01-17-code-fix-wifi/bambu-lab-a1-mini.png" alt="Bambu Lab A1 Mini" style="height: 300px; width: auto; max-width: 100%; display: block; margin: 0 auto;">
 
-#### Journal Papers
-
-* **Rodríguez-Sánchez, F.**, Bielza, C., & Larrañaga, P. (2022). [Multi-partition clustering of mixed data with Bayesian networks](https://onlinelibrary.wiley.com/doi/abs/10.1002/int.22770). *International Journal of Intelligent Systems*, 37, 2188–2218.
-
-* **Rodríguez-Sánchez, F.**, et al. (2021). [Identifying Parkinson's disease subtypes with motor and non-motor symptoms via model-based clustering](https://www.nature.com/articles/s41598-021-03118-w). *Scientific Reports*, 11, 1–10.
-
-* **Rodríguez-Sánchez, F.**, Larrañaga, P., & Bielza, C. (2020). [Incremental learning of latent forests](https://ieeexplore.ieee.org/document/9207730). *IEEE Access*, 8, 224420–224432.
-
-#### Conference Papers
-
-* Abbes, I., Prato, G., Fournier, Q., **Rodríguez, F.**, Boukhary, A., Elwood, A., & Chandar, S. (2025). [Small Encoders Can Rival Large Decoders in Detecting Groundedness](https://aclanthology.org/2025.findings-acl.1134/). *Findings of the Association for Computational Linguistics: ACL 2025*, 21998–22005.
-
-* **Rodríguez-Sánchez, F.**, Larrañaga, P., & Bielza, C. (2018). [Discrete model-based clustering with overlapping subsets of attributes](https://proceedings.mlr.press/v72/rodriguez-sanchez18a/rodriguez-sanchez18a.pdf). *Proceedings of the 9th International Conference on Probabilistic Graphical Models*, 72, 392–403.
-
-#### Technical Reports
-
-* **Rodríguez-Sánchez, F.**, Larrañaga, P., & Bielza, C. (2017). [Multi-facet determination for clustering with Bayesian networks](https://oa.upm.es/48177/1/TR_UPM_ETSIINF_DIA_2017_1.pdf). *Technical Report, Universidad Politécnica de Madrid*.
+<div style="text-align: center; margin-top: 10px;"><em>Little noise machine</em></div>
