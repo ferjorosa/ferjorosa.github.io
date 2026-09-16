@@ -97,7 +97,7 @@ title: Fernando Rodriguez
   </div>
   <div class="profile-desc">
     <h1>Fernando Rodriguez Sanchez</h1>
-    <h2><i>Building cool things and writing about them</i></h2>
+    <h2><i>I like building cool things</i></h2>
     <div class="social-icons">
         <a href="https://scholar.google.es/citations?hl=es&user=iYjOAYQAAAAJ" title="Google Scholar" target="_blank" style="margin-right: 10px;">
         <svg role="img" viewBox="0 0 24 24" style="width:24px;vertical-align:middle; fill: #4285F4;" 
