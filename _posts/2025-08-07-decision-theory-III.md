@@ -655,25 +655,18 @@ function loadGradioIsolated() {
   
   document.head.appendChild(isolationStyle);
   
-  // Load Gradio with isolation
-  var script = document.createElement('script');
-  script.type = 'module';
-  script.src = 'https://gradio.s3-us-west-2.amazonaws.com/5.31.0/gradio.js';
-  
-  // Apply additional isolation on load
-  script.onload = function() {
-    var gradioApp = document.createElement('gradio-app');
-    gradioApp.setAttribute('src', 'https://ferjorosa-oil-field-purchase-decision.hf.space');
-    container.appendChild(gradioApp);
-    
-    // Apply final isolation styles
-    setTimeout(function() {
-      gradioApp.style.contain = 'layout style';
-      gradioApp.style.isolation = 'isolate';
-    }, 100);
-  };
-  
-  document.head.appendChild(script);
+  // Embed the Space via an iframe. The <gradio-app> custom element fetches
+  // the Space's /config endpoint with credentials: 'include', which the
+  // Hugging Face proxy rejects on the CORS preflight, so it never loads.
+  var gradioApp = document.createElement('iframe');
+  gradioApp.setAttribute('src', 'https://ferjorosa-oil-field-purchase-decision.hf.space');
+  gradioApp.setAttribute('width', '100%');
+  gradioApp.setAttribute('height', '900');
+  gradioApp.setAttribute('frameborder', '0');
+  gradioApp.setAttribute('loading', 'lazy');
+  gradioApp.style.border = '1px solid #ddd';
+  gradioApp.style.borderRadius = '4px';
+  container.appendChild(gradioApp);
 }
 
 // Wait for page to be fully loaded
